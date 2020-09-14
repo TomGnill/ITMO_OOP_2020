@@ -1,0 +1,13 @@
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\bin\Debug\netcoreapp3.1\Lab_1.exe
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\bin\Debug\netcoreapp3.1\Lab_1.deps.json
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\bin\Debug\netcoreapp3.1\Lab_1.runtimeconfig.json
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\bin\Debug\netcoreapp3.1\Lab_1.runtimeconfig.dev.json
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\bin\Debug\netcoreapp3.1\Lab_1.dll
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\bin\Debug\netcoreapp3.1\Lab_1.pdb
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\obj\Debug\netcoreapp3.1\Lab_1.csprojAssemblyReference.cache
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\obj\Debug\netcoreapp3.1\Lab_1.AssemblyInfoInputs.cache
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\obj\Debug\netcoreapp3.1\Lab_1.AssemblyInfo.cs
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\obj\Debug\netcoreapp3.1\Lab_1.csproj.CoreCompileInputs.cache
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\obj\Debug\netcoreapp3.1\Lab_1.dll
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\obj\Debug\netcoreapp3.1\Lab_1.pdb
+C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\obj\Debug\netcoreapp3.1\Lab_1.genruntimeconfig.cache
