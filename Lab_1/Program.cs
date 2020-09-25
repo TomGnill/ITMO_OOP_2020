@@ -32,7 +32,6 @@ namespace CFG_mng
                 Console.WriteLine($"Значение параметра: {cfg_value}");
             }
 
-
         };
     char open_cat = '[', close_cat = ']', value_indecator = '=';
         private string Pathfile { get; }
