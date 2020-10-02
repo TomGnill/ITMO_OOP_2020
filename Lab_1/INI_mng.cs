@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 
 
 namespace CFG_mng
@@ -12,7 +10,7 @@ namespace CFG_mng
     {
         Dictionary<param_obj, string> param_list = new Dictionary<param_obj, string>();
         string catlog = @"C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\config_test.ini";
-        private string Pathfile { get; }
+        public string Pathfile { get; set; }
 
         public UInt16 numstring
         {
@@ -39,6 +37,12 @@ namespace CFG_mng
             set { name_of_sector = value; }
         }
 
+       public void ini_open(string path)
+        {
+            Pathfile = path;
+            numstring = 0;
+            ini_reader();
+        }
         enum func_num
         {
             open_file = 1,
@@ -64,7 +68,7 @@ namespace CFG_mng
                     ;
                     break;
                 case func_num.exit:
-                    exit_interactive();
+                    exit_interactive(y_n);
                     ;
                     break;
                 default:
@@ -74,21 +78,24 @@ namespace CFG_mng
             }
         }
 
-
+         static public void exit_interactive(char y_n)
+        {
+            switch (y_n)
+            {
+                case 'y': Environment.Exit(0);break;
+                case 'n':inter_menu(func_num.open_file);
+                    break;
+                default: Console.WriteLine("Y/N?");
+                    exit_interactive(y_n);break;
+            }
+            
+        }
 
         public struct param_obj
         {
             public string param_name;
             public string param_sector;
         }
-
-        public ini_open(string path)
-        {
-            Pathfile = path;
-            numstring = 0;
-            ini_reader();
-        }
-
         void new_param()
         {
             var record_param = new param_obj
@@ -107,19 +114,44 @@ namespace CFG_mng
             }
 
         }
-
-        public int string_reader(string file_string)
+        public bool string_reader(string file_string)
         {
             if (file_string.Trim().Length == 0)
-                return 0;
+                return false;
+
+            if (file_string.StartsWith(" "))
+                throw new Exception(" Некорректный формат строки " + Convert.ToString(numstring));
+
+            file_string = file_string.Trim();
+
             if (file_string.StartsWith("[") && file_string.EndsWith("]"))
             {
+                var sectornameSubstring = file_string.Substring(1, file_string.Length - 2);
+                var alphavet = Regex.Matches(sectornameSubstring, "[A-Z_]");
+                if (alphavet.Count != sectornameSubstring.Length)
+                {
+                    throw new Exception("Имя раздела имеет нестандартный вид" + Convert.ToString(numstring));
+                }
 
+                name_of_sector = sectornameSubstring;
+                return false;
             }
-            if 
 
+
+            var parline = file_string.Split(new[] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parline.Length != 2)
+            {
+                throw new Exception("Некорректный формат параметра" + Convert.ToString(numstring));
+            }
+
+            var alfavetCollection1 = Regex.Matches(parline[0], "[A-Za-z0-9_/]");
+            var alfavetCollection2 = Regex.Matches(parline[1], "[A-Za-z0-9_/]");
+            name_of_parametr = parline[0];
+            value_of_parametr = parline[1];
+            return true;
 
         }
+
         public void ini_reader()
         {
 
@@ -130,11 +162,11 @@ namespace CFG_mng
                 {
                     using (StreamReader sr = new StreamReader(catlog, System.Text.Encoding.Default))
                     {
-                        string textLine;
-                        while ((textLine = sr.ReadLine()) != null)
+                        string file_string;
+                        while ((file_string = sr.ReadLine()) != null)
                         {
                             numstring++;
-                            if (string_reader(file_string) == 1)
+                            if (string_reader(file_string))
                             {
                                 new_param();
                             }
@@ -153,121 +185,7 @@ namespace CFG_mng
                 throw new FileNotFoundException("Место расположения недоступно " + Pathfile);
             }
         }
+
     }
-
-    /*struct cfg_obj
-        {
-            public string cfg_name;
-            public string cfg_value;
-            public string cfg_sector;
-
-            public cfg_obj(string gl_name, string name, string value)
-            {
-                cfg_sector = gl_name;
-                cfg_name = name;
-                cfg_value = value;
-            }
-
-            public void GetInfo()
-            {
-                Console.WriteLine($"Раздел: {cfg_sector} параметр: {cfg_name} значение параметра: {cfg_value}");
-            }
-
-            public void GetValue()
-            {
-                Console.WriteLine($"Значение параметра: {cfg_value}");
-            }
-
-
-        };
-    char open_cat = '[', close_cat = ']', value_indecator = '=';
-        private string Pathfile { get; }
-
-        UInt16 numstring
-        {
-            get { return numstring; }
-
-            set { numstring = value; }
-        }
-
-        private string value_of_parametr
-        {
-            get { return value_of_parametr; }
-
-            set { value_of_parametr = value; }
-        }
-
-     private string name_of_parametr
-        {
-            get { return name_of_parametr; }
-
-            set { name_of_parametr = value; }
-        }
-
-     private string name_of_sector
-     {
-        get
-         {
-             return name_of_sector;
-         }
-        set
-         {
-             name_of_sector = value;
-         }
-     }
-
-      string catlog = @"C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\config_test.ini";
-        public interactive_parser(string path)
-        {
-            Pathfile = path;
-            numstring = 0;
-            ReadINI();
-        }
-
-        void NewRec()
-        {
-            var RecP = new cfg_obj
-            {
-                cfg_value = value_of_parametr,
-                cfg_name = name_of_parametr,
-                cfg_sector = name_of_sector
-            };
-
-        }
-        public void ReadINI()
-
-        {
-            var fileInfo = new FileInfo(Pathfile);
-            if (fileInfo.Exists && fileInfo.Extension == ".ini")
-            {
-                try
-                {
-                    using (StreamReader sr = new StreamReader(catlog, System.Text.Encoding.Default))
-                    {
-                        string textLine;
-                        while ((textLine = sr.ReadLine()) != null))
-                        {
-                            numstring++;
-                            if///
-
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.Message + " in " + Pathfile);
-                    throw;
-                }
-            }
-            else
-            {
-                throw new FileNotFoundException("Место расположения недоступно " + Pathfile);
-            }
-        }
-        public bool objectString(string textline)
-        {
-
-
-        } */
 }
 
