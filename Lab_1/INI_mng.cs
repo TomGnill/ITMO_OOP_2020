@@ -93,11 +93,25 @@ namespace CFG_mng
 
         public void ParamList() 
         {
-            foreach (var (key, value) in param_list)
+            foreach (var (key,value) in param_list)
             {
                 Console.WriteLine(key.param_name + " - " + key.param_sector + " - " + key.param_value);
             }
+            Console.WriteLine("Введите имя параметра, для поиска по имени:");
+            string key1 = Console.ReadLine();
+            findparam(key1);
+        }
 
+
+         public void findparam(string enter_key)
+        { 
+            foreach (var (key,value) in param_list)
+            {
+                if (key.param_name == enter_key)
+                {
+                    Console.WriteLine($"{key.param_value}");
+                }
+            }
         }
         public bool string_reader(string file_string)
         {
@@ -122,6 +136,11 @@ namespace CFG_mng
                 return false;
             }
 
+            var comments = file_string.IndexOf(';');
+            if (comments != -1)
+            {
+                file_string = file_string.Substring(0, comments);
+            }
 
             var parline = file_string.Split(new[] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
             if (parline.Length != 2)
