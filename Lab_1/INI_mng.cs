@@ -126,9 +126,8 @@ namespace CFG_mng
                     using (StreamReader sr = new StreamReader(catlog, System.Text.Encoding.Default))
                     {
                         string file_string;
-                        while ((file_string = sr.ReadLine()) != null)
+                       for (numstring=1; (file_string = sr.ReadLine()) != null; numstring++)
                         {
-                            numstring++;
                             if (string_reader(file_string))
                             {
                                 new_param();
