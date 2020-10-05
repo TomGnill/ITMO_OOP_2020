@@ -4,7 +4,7 @@ namespace CFG_mng
     { 
         static void Main()
         {
-            interactive_parser parser1 = new interactive_parser("C:/Users/Андрейка/source/repos/OOP_LABS_AD/Lab_1/config_test.ini");
+            InteractiveParser parser1 = new InteractiveParser("C:/Users/Андрейка/source/repos/OOP_LABS_AD/Lab_1/config_test.ini");
         }
     }
 }
