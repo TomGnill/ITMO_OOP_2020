@@ -8,7 +8,6 @@ namespace CFG_mng
 {
     public class interactive_parser
     {
-        string catlog = @"C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\config_test.ini";
         Dictionary<param_obj, string> param_list = new Dictionary<param_obj, string>();
         public string Pathfile { get; set; }
 
