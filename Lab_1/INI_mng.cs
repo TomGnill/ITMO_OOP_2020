@@ -8,18 +8,18 @@ namespace CFG_mng
 {
     public class interactive_parser
     {
-        Dictionary<param_obj, string> param_list = new Dictionary<param_obj, string>();
         string catlog = @"C:\Users\Андрейка\source\repos\OOP_LABS_AD\Lab_1\config_test.ini";
+        Dictionary<param_obj, string> param_list = new Dictionary<param_obj, string>();
         public string Pathfile { get; set; }
 
         private UInt16 numstring;
         public string value_of_parametr;
         public string name_of_parametr;
         public string name_of_sector;
-        public  interactive_parser(string path)
+        public  interactive_parser(string catlog)
        {
             name_of_sector = null;
-            Pathfile = path;
+            Pathfile = catlog;
             numstring = 0;
             ini_reader();
        }
