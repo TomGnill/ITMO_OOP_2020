@@ -44,7 +44,7 @@ namespace CFG_mng
         {
             foreach (var (key,value) in param_list)
             {
-                Console.WriteLine(key.param_name + " - " + key.param_sector + " - " + key.param_value);
+                Console.WriteLine(key.param_name + " сектор: " + key.param_sector + " значение: " + key.param_value);
             }
             Console.WriteLine("Введите имя параметра, для поиска по имени или по значению, для выхода введите exit:");
             string key1 = Console.ReadLine();
