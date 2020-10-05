@@ -23,57 +23,6 @@ namespace CFG_mng
             numstring = 0;
             ini_reader();
        }
-        /*   enum func_num
-        {
-            open_file = 1,
-            par_list,
-            int_search,
-            exit,
-        }
-
-        static void inter_menu(func_num number_of_func)
-        {
-
-            switch (number_of_func)
-            {
-                case func_num.open_file:
-                    ini_open();
-                    break;
-                case func_num.par_list:
-                    printList();
-                    ;
-                    break;
-                case func_num.int_search:
-                    searchParam();
-                    ;
-                    break;
-                case func_num.exit:
-                    exit_interactive();
-                    ;
-                    break;
-                default:
-                    Console.WriteLine(" Вы выбрали несуществующее действие!");
-                    break;
-
-            }
-        }
-
-         static public void exit_interactive()
-         {
-
-             string y_n = Console.ReadLine();
-
-            switch (y_n)
-            {
-                case ("yes"): Environment.Exit(0);break;
-                case ("no") :inter_menu(func_num.open_file);
-                    break;
-                default: Console.WriteLine("Yes/No?");
-                    exit_interactive();break;
-            }
-            
-        }*/
-
         public struct param_obj
         {
             public string param_name;
@@ -97,7 +46,7 @@ namespace CFG_mng
             {
                 Console.WriteLine(key.param_name + " - " + key.param_sector + " - " + key.param_value);
             }
-            Console.WriteLine("Введите имя параметра, для поиска по имени:");
+            Console.WriteLine("Введите имя параметра, для поиска по имени или по значению, для выхода введите exit:");
             string key1 = Console.ReadLine();
             findparam(key1);
         }
@@ -109,9 +58,20 @@ namespace CFG_mng
             {
                 if (key.param_name == enter_key)
                 {
-                    Console.WriteLine($"{key.param_value}");
+                    Console.WriteLine($"Value = {key.param_value}");
+                }
+
+                if (key.param_value == enter_key)
+                {
+                    Console.WriteLine($"param name = {key.param_name}");
+                }
+
+                if (enter_key == "exit")
+                {
+                    Environment.Exit(0);
                 }
             }
+            ParamList();
         }
         public bool string_reader(string file_string)
         {
