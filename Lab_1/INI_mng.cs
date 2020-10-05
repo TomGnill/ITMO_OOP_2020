@@ -7,12 +7,13 @@ using System.Text.RegularExpressions;
 namespace CFG_mng
 {
     public class InteractiveParser
+    //add getint getstr getdoub
     {
         Dictionary<ParamObj, string> _paramList = new Dictionary<ParamObj, string>();
         public string Pathfile { get; set; }
 
         private UInt16 _numstring;
-        public string ValueOfParametr;
+        public string ValueOfParametr;//---
         public string NameOfParametr;
         public string NameOfSector;
         public  InteractiveParser(string catlog)
@@ -39,7 +40,7 @@ namespace CFG_mng
             _paramList.Add(recordParam, NameOfSector);
         }
 
-        public void ParamList() 
+        public void ParamList() //new class
         {
             foreach (var (key,value) in _paramList)
             {
@@ -51,7 +52,7 @@ namespace CFG_mng
         }
 
 
-         public void Findparam(string enterKey)
+         public void Findparam(string enterKey)//new class
         { 
             foreach (var (key,value) in _paramList)
             {
@@ -72,7 +73,7 @@ namespace CFG_mng
             }
             ParamList();
         }
-        public bool string_reader(string fileString)
+        public bool string_reader(string fileString)//red
         {
             if (fileString.Trim().Length == 0)
                 return false;
