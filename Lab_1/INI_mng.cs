@@ -6,22 +6,19 @@ using System.Text.RegularExpressions;
 
 namespace CFG_mng
 {
-    public class InteractiveParser
-    //add getint getstr getdoub
+    public class Parser
     {
-        Dictionary<ParamObj, string> _paramList = new Dictionary<ParamObj, string>();
+      public static Dictionary<ParamObj, string> ParamList = new Dictionary<ParamObj, string>();
         public string Pathfile { get; set; }
 
         private UInt16 _numstring;
-        public string ValueOfParametr;//---
-        public string NameOfParametr;
         public string NameOfSector;
-        public  InteractiveParser(string catlog)
-       {
+        public Parser(string catlog)
+        {
             NameOfSector = null;
             Pathfile = catlog;
             _numstring = 0;
-            ini_reader();
+            OpenAndRead();
        }
         public struct ParamObj
         {
@@ -29,61 +26,36 @@ namespace CFG_mng
             public string ParamSector;
             public string ParamValue;
         }
-        void new_param()
+        void addObj(string NameParam, string ValueParam)
         {
             var recordParam = new ParamObj
             {
-                ParamName = NameOfParametr,
+                ParamName = NameParam,
                 ParamSector = NameOfSector,
-                ParamValue = ValueOfParametr
+                ParamValue = ValueParam
             };
-            _paramList.Add(recordParam, NameOfSector);
+            ParamList.Add(recordParam, NameOfSector);
         }
 
-        public void ParamList() //new class
+       public static void getInt(string value)                
+         {
+             int ParamValue = Convert.ToInt32(value);
+             Console.WriteLine($"intValue = {ParamValue}");
+         }
+       public static void getDouble(string value)
+         {
+             Double ParamValue = Convert.ToDouble(value);
+             Console.WriteLine($"doubleValue = {ParamValue}");
+        }
+       public static void getStr(string value)
+         {
+             string ParamValue = Convert.ToString(value);
+             Console.WriteLine($"stringValue = {ParamValue}");
+        }
+
+        public bool ParseString(string fileString)//red
         {
-            foreach (var (key,value) in _paramList)
-            {
-                Console.WriteLine(key.ParamName + " сектор: " + key.ParamSector + " значение: " + key.ParamValue);
-            }
-            Console.WriteLine("Введите имя параметра, для поиска по имени или по значению, для выхода введите exit:");
-            string key1 = Console.ReadLine();
-            Findparam(key1);
-        }
-
-
-         public void Findparam(string enterKey)//new class
-        { 
-            foreach (var (key,value) in _paramList)
-            {
-                if (key.ParamName == enterKey)
-                {
-                    Console.WriteLine($"Value = {key.ParamValue}");
-                }
-
-                if (key.ParamValue == enterKey)
-                {
-                    Console.WriteLine($"param name = {key.ParamName}");
-                }
-
-                if (enterKey == "exit")
-                {
-                    Environment.Exit(0);
-                }
-            }
-            ParamList();
-        }
-        public bool string_reader(string fileString)//red
-        {
-            if (fileString.Trim().Length == 0)
-                return false;
-
-            if (fileString.StartsWith(" "))
-                throw new Exception(" Некорректный формат строки " + Convert.ToString(_numstring));
-
-            fileString = fileString.Trim();
-
-            if (fileString.StartsWith("[") && fileString.EndsWith("]"))
+            if (fileString.StartsWith("[") && fileString.EndsWith("]"))                                             //узнаём сектор
             {
                 var sectornameSubstring = fileString.Substring(1, fileString.Length - 2);
                 var alphavet = Regex.Matches(sectornameSubstring, "[A-Z_]");
@@ -95,28 +67,31 @@ namespace CFG_mng
                 NameOfSector = sectornameSubstring;
                 return false;
             }
-
-            var comments = fileString.IndexOf(';');
+            var comments = fileString.IndexOf(';');                                                             //чистим комменты
             if (comments != -1)
             {
                 fileString = fileString.Substring(0, comments);
             }
+            if (fileString.StartsWith(" "))                                                                       
+                throw new Exception(" Некорректный формат строки " + Convert.ToString(_numstring));
+            fileString = fileString.Trim();
 
-            var parline = fileString.Split(new[] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries);
-            if (parline.Length != 2)
+            if (fileString.Trim().Length == 0)
+                return false;
+
+            var parline = fileString.Split(new[] { ' ', '=' }, StringSplitOptions.RemoveEmptyEntries); //Добавляем параметры 
+            if (parline.Length != 2) 
             {
                 throw new Exception("Некорректный формат параметра" + Convert.ToString(_numstring));
             }
-
-            var alfavetCollection1 = Regex.Matches(parline[0], "[A-Za-z0-9_/]");
-            var alfavetCollection2 = Regex.Matches(parline[1], "[A-Za-z0-9_/]");
-            NameOfParametr = parline[0];
-            ValueOfParametr = parline[1];
-            return true;
+            Regex.Matches(parline[0], "[A-Za-z0-9_/]");
+            Regex.Matches(parline[1], "[A-Za-z0-9_/]");
+            addObj(parline[0],  parline[1]);
+           return true;
 
         }
 
-        public void ini_reader()
+        public void OpenAndRead()
         {
 
             var fileInfo = new FileInfo(Pathfile);
@@ -129,13 +104,10 @@ namespace CFG_mng
                         string fileString;
                        for (_numstring = 1; (fileString = sr.ReadLine()) != null; _numstring++)
                         {
-                            if (string_reader(fileString))
+                            if (ParseString(fileString))
                             {
-                                new_param();
                             }
-
                         }
-                        ParamList();
                     } 
                 }
                 catch (Exception exception)
@@ -148,6 +120,50 @@ namespace CFG_mng
             {
                 throw new FileNotFoundException("Место расположения недоступно " + Pathfile);
             }
+        }
+
+    }
+
+    public class Interactive
+    {
+        public Interactive(Parser parser)
+        {
+          SnowParam();
+        }
+        public void SnowParam() 
+        {
+            foreach (var (key, value) in Parser.ParamList)
+            {
+                Console.WriteLine(key.ParamName + " сектор: " + key.ParamSector + " значение: " + key.ParamValue);
+            }
+            Console.WriteLine("Введите имя параметра, для поиска по имени или по значению, для выхода введите exit:");
+
+            string key1 = Console.ReadLine();
+            Findparam(key1);
+        }
+
+
+        public void Findparam(string enterKey)//new class
+        {
+            foreach (var (key, value) in Parser.ParamList)
+            {
+                if (key.ParamName == enterKey)
+                {
+
+                    Parser.getInt(key.ParamValue);
+                }
+
+                if (key.ParamValue == enterKey)
+                {
+                    Console.WriteLine($"param name = {key.ParamName}");
+                }
+
+                if (enterKey == "exit")
+                {
+                    Environment.Exit(0);
+                }
+            }
+            SnowParam();
         }
 
     }
