@@ -7,25 +7,28 @@ using ShopsAssist;
 
 namespace ShopsAssist
 {
-    public class Shop
+    public class Shop 
    {
-       private int ShopID;
-      
-        public Shop(string catlog)
+       public struct Magazine
         {
-            ShopID = 0;
-            ShopName;
-            public static Dictionary<SetPrice.Product, int> PriceList = new Dictionary<SetPrice.Product, int>();
-
-
-        }
-    struct Magazine
-        {
-            private int ShopID;
-            FormPriceList(string catlog);
+           public int ShopID;
+            public string ShopName;
+            public string Adress;
+            public static Dictionary<SetPrice.Product, int> PriceList;
         }
 
-      
+       public void addMagazine(int ID, string Name, string adr)
+       {
+           var newMagazine = new Magazine
+           {
+               ShopID = ID,
+               ShopName = Name,
+               Adress = adr,
+               public static Dictionary<SetPrice.Product, int> PriceList = new Dictionary<SetPrice.Product, int>();
+           };
+           Starter.MagazinesList.Add(newMagazine, PriceList);
+       }
+
     }
 
     class SetPrice : Shop
@@ -106,7 +109,7 @@ namespace ShopsAssist
             public int ProductQuantity; 
             int ProductPrice;
         }
-      public  void addProduct(string ProdName, int ProdID, int ProdQ)
+      public void addProduct(string ProdName, int ProdID, int ProdQ)
         {
             var newProduct = new Product
             {
