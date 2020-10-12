@@ -19,7 +19,7 @@ namespace CFG_mng
             Pathfile = catlog;
             _numstring = 0;
             OpenAndRead();
-       }
+        }
         public struct ParamObj
         {
             public string ParamName;

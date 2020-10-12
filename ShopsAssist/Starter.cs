@@ -5,11 +5,10 @@ using System.Text;
 
 namespace ShopsAssist
 {
-    class Starter
+    public class Starter
     {
+        
         public static Dictionary<Shop.Magazine, Dictionary<SetPrice.Product, int>> MagazinesList = new Dictionary<Shop.Magazine, Dictionary<SetPrice.Product, int>>();
-
-
         enum selectGlobal
         {
             magazines = 1,
@@ -37,7 +36,7 @@ namespace ShopsAssist
             switch (commands)
             {
                 case selectGlobal.magazines:
-
+                    MenusFitues.ShowMagazinesList();
                     Console.WriteLine("Выбери магазин:")
                     ;
                     break;
@@ -71,6 +70,7 @@ namespace ShopsAssist
         }
         static void Main()
         {
+            Shop.addThreeShops();
             while (true)
             {
                 Console.WriteLine("1.Список магазинов");

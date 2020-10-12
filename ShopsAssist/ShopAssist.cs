@@ -1,44 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using ShopsAssist;
 
 
 namespace ShopsAssist
 {
-    public class Shop 
-   {
-       public struct Magazine
+    public class Shop
+    {
+
+        public struct Magazine
         {
-           public int ShopID;
+            public int ShopID;
             public string ShopName;
             public string Adress;
-            public static Dictionary<SetPrice.Product, int> PriceList;
+        }
+        public static Dictionary<SetPrice.Product, int> PriceList = new Dictionary<SetPrice.Product, int>();
+
+        public static void addMagazine(int ID, string Name, string adr)
+        {
+            var newMagazine = new Magazine
+            {
+                ShopID = ID,
+                ShopName = Name,
+                Adress = adr,
+            };
+            var NewPriceList = new Dictionary<SetPrice.Product, int>();
+
+            Starter.MagazinesList.Add(newMagazine, NewPriceList);
         }
 
-       public void addMagazine(int ID, string Name, string adr)
-       {
-           var newMagazine = new Magazine
-           {
-               ShopID = ID,
-               ShopName = Name,
-               Adress = adr,
-               public static Dictionary<SetPrice.Product, int> PriceList = new Dictionary<SetPrice.Product, int>();
-           };
-           Starter.MagazinesList.Add(newMagazine, PriceList);
-       }
+        public static void addThreeShops() //тестовое добаление магазинов 
+        {
+            addMagazine(121, "Пятёрочка", "Бульвар 4");
+            addMagazine(142, "Магнит", "Соседний бульвар 4");
+            addMagazine(521, "Обрыгаловка", "Параллельный бульвар 4");
+        }
 
     }
 
-    class SetPrice : Shop
+    public class SetPrice : Shop
     {
-    
+
         public string Pathfile { get; set; }
-        public static Dictionary<Product, int> PriceList = new Dictionary<Product, int>();
         private UInt16 numstring;
         public int ProductPrice;
-        public  SetPrice(string catlog)
+
+        public SetPrice(string catlog)
         {
             numstring = 0;
             Pathfile = catlog;
@@ -79,22 +89,22 @@ namespace ShopsAssist
         public bool SetShopPrice(string filestring)
         {
             filestring = filestring.Trim();
-        if (filestring.Trim().Length == 0)
+            if (filestring.Trim().Length == 0)
                 return false;
 
-        var parline = filestring.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-        if (parline.Length != 3)
+            var parline = filestring.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+            if (parline.Length != 3)
             {
                 throw new Exception("Некорректный формат параметра" + Convert.ToString(numstring));
             }
-        
+
             Regex.Matches(parline[0], "[A-Za-z0-9_/]");
             Regex.Matches(parline[1], "[A-Za-z0-9_/]");
             int ProdID = Convert.ToInt32(parline[1]);
             Regex.Matches(parline[2], "[A-Za-z0-9_/]");
             int ProdQ = Convert.ToInt32(parline[2]);
             addProduct(parline[0], ProdID, ProdQ);
-       
+
 
             Console.WriteLine($"Введите цену для продукта {parline[0]} :");
             int IPrice = Console.Read();
@@ -106,11 +116,12 @@ namespace ShopsAssist
         {
             public string ProductName;
             public int ProductID;
-            public int ProductQuantity; 
-            int ProductPrice;
+            public int ProductQuantity;
         }
-      public void addProduct(string ProdName, int ProdID, int ProdQ)
+
+        public void addProduct(string ProdName, int ProdID, int ProdQ)
         {
+
             var newProduct = new Product
             {
                 ProductName = ProdName,
@@ -119,8 +130,18 @@ namespace ShopsAssist
             };
             PriceList.Add(newProduct, ProductPrice);
         }
-      
+    }
 
+    public class MenusFitues
+    {
+    public static void ShowMagazinesList()
+        {
+            foreach (var (key, value) in Starter.MagazinesList)
+            {
+                Console.WriteLine("Уникальный номер:" + key.ShopID + " Имя магазина: " + key.ShopName + " Адрес: " + key.Adress);
+            }
+        }
+    }
 }
     
 
