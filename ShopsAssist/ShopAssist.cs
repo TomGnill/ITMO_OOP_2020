@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
@@ -33,17 +35,37 @@ namespace ShopsAssist
         public struct Product
         {
             public string ProductName;
+
+           
             public int ProductID;
             public int ProductQuantity;
             public int ProductPrice;
+
+            public int getID()
+            {
+                return ProductID;
+            }
+            public string getName()
+            {
+                return ProductName;
+            }
             public void editQuantity(int ProdQ)
 
             {
                 ProductQuantity += ProdQ;
             }
+
+            public int getQuantity()
+            {
+                return ProductQuantity;
+            }
             public void editPrice(int ProdP)
             {
                 ProductPrice = ProdP;
+            }
+            public int qetPrice()
+            {
+                return ProductPrice;
             }
         }
 
@@ -85,7 +107,6 @@ namespace ShopsAssist
 
         public static string Pathfile { get; set; }
         private static UInt16 numstring;
-        public static int ProductPrice;
 
         public void SetPriceList(string catlog)
         {
@@ -185,15 +206,19 @@ namespace ShopsAssist
             }
         }
 
-        
+
         public static void addSupplyList(int ID, string catlog)
         {
             foreach (var (key, value) in Starter.MagazinesList)
             {
                 if (key.ShopID == ID)
                 {
-                    Shop.SetShopPrice(catlog);
+                   Shop.SetShopPrice(catlog);
 
+                }
+                else
+                {
+                    throw new Exception("Такого магазина  нет");
                 }
             }
 
@@ -201,7 +226,7 @@ namespace ShopsAssist
 
         public static void editPrice(int shopID, string ProdName, int newPrice)
         {
-            foreach (var (key,value) in Starter.MagazinesList)
+            foreach (var (key, value) in Starter.MagazinesList)
             {
                 if (key.ShopID == shopID)
                 {
@@ -211,11 +236,102 @@ namespace ShopsAssist
                         {
                             p.editPrice(newPrice);
                         }
+                        else
+                        {
+                            throw new Exception("Такого товара в магазине нет");
+                        }
                     }
+                }
+                else
+                {
+                    throw new Exception("Такого магазина  нет");
                 }
             }
         }
-        
+
+        public static void Bomj(int ID, int wallet)
+        {
+            foreach (var (key, value) in Starter.MagazinesList)
+            {
+                if (key.ShopID == ID)
+                {
+                    foreach (Shop.Product p in Shop.newPriceList)
+                    {
+                        for (int i = 0; i < Shop.newPriceList.Count; i++)
+                        {
+                            string Name = Shop.newPriceList[i].getName();
+                            int price = Shop.newPriceList[i].qetPrice();
+                            int max = Shop.newPriceList[i].getQuantity();
+                            for (int Quantity = 0; Quantity < max; Quantity++)
+                            {
+                                int sum = price * Quantity;
+                                if ((sum > wallet) && (Quantity == 1))
+                                {
+                                    Console.WriteLine(
+                                        $"В этом магазине вы не сможете купить {Name}, так как цена за одну штуку составляет {price}");
+                                }
+
+                                if (sum > wallet)
+                                {
+                                    sum -= price;
+                                    Console.WriteLine($"Можно купить {Name} , в количестве {Quantity}, на сумму {sum}");
+                                }
+
+                            }
+
+
+                        }
+
+                    }
+                }
+                else
+                {
+                    throw new Exception("Такого магазина  нет");
+                }
+            }
+        }
+
+        public static void CalcLot(int ShopID, int ProdID, int ProdQ)
+        {
+            foreach (var (key, value) in Starter.MagazinesList)
+            {
+                if (key.ShopID == ShopID)
+                {
+                    foreach (Shop.Product p in Shop.newPriceList)
+                    {
+                        if (p.ProductID == ProdID)
+                        {
+                            if (ProdQ <= p.ProductQuantity)
+                            {
+                                int sum = ProdQ * p.ProductPrice;
+                                Console.WriteLine($"Сумма покупки: {sum}");
+                            }
+                            else
+                            {
+                                throw new Exception("В магазине нет столько товаров");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Такого товара в магазине нет");
+                        }
+
+                    }
+                }
+                else
+                {
+                    throw new Exception("Такого магазина  нет");
+                }
+            }
+
+        }
+
+        public static void AloneBuyHelp(int prodID)
+        {
+
+        }
+
+        public static void ListBuyHelp()
     }
 }
 
