@@ -1,97 +1,96 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
+
 
 namespace ShopsAssist
 {
     public class Starter
     {
         
-        public static Dictionary<Shop.Magazine, Dictionary<SetPrice.Product, int>> MagazinesList = new Dictionary<Shop.Magazine, Dictionary<SetPrice.Product, int>>();
-        enum selectGlobal
-        {
-            magazines = 1,
-            helper,
-        };
-
-        enum selectMagazines
-        {
-            Supply = 1,
-            ShowPriceList,
-            SelectProduct,
-            BuyHelp,
-            Cardlist,
-        };
-
-        enum selectHelp
-        {
-            ShowList = 1,
-            Hepler,
-
-        };
-
-        static void MenuGl(selectGlobal commands)
-        {
-            switch (commands)
-            {
-                case selectGlobal.magazines:
-                    MenusFitues.ShowMagazinesList();
-                    Console.WriteLine("Выбери магазин:")
-                    ;
-                    break;
-                case selectGlobal.helper: 
-                    Console.WriteLine("1.Найти товар по самой выгодной цене");
-                    Console.WriteLine("2.Где купить набор товаров выгоднее всего");
-                    int helpSelect = Console.Read();
-                    if (helpSelect == 1)
-                    {
-                        MenuHl(selectHelp.Hepler);
-                    }
-
-                    if (helpSelect == 2)
-                    {
-                        MenuHl(selectHelp.ShowList);
-                    }
-                    break;
-                default: Console.WriteLine("Вы выбрали несуществующее действие");
-                    break;
-            }
-        }
-
-        static void MenuHl(selectHelp commands)
-        {
-            //дописать методы высчитывания 
-        }
-
-        static void MenuSh(selectMagazines commands)
-        {
-            //сделаю список магазинов 
-        }
+        public static Dictionary<Shop.Magazine, List<Shop.Product>> MagazinesList = new Dictionary<Shop.Magazine, List<Shop.Product>>();
+        
         static void Main()
         {
-            Shop.addThreeShops();
+            
             while (true)
             {
-                Console.WriteLine("1.Список магазинов");
+                Console.WriteLine("1.Операции с магазином");
                 Console.WriteLine("2.Делаем покупки выгодными");
                 Console.WriteLine("Выбери пункт:");
                 int select = Console.Read();
-                if (select == 1)
-                {
-                    MenuGl(selectGlobal.magazines);
-                }
 
-                if (select == 2)
-                {
-                    MenuGl(selectGlobal.helper);
-                }
+                switch (select)
+                    {
+                        case 1 :
+                           Console.WriteLine("1.Доставить в магазин партию товаров(необходим список в формате .txt и путь к нему");
+                           Console.WriteLine("2.Создать магазин, также необходим список товаров, для открытия");
+                           Console.WriteLine("3.Изменить цену на конкретный товар в конкретном магазине");
+                           Console.WriteLine("4.Что я можно купить на заданное количество рублей в конкретном магазине");
+                           Console.WriteLine("5.Сколько будет стоить партия товаров в конкретном магазине ");
+                           Console.WriteLine("Действие:");
+                           int command = Console.Read();
+                           switch (command)
+                           {
+                            case 1:
+                                Console.WriteLine("Введи ID магазина");
+                                int shopID = Console.Read();
+                                Console.WriteLine("Путь к списку товаров");
+                                string catlog1 = Console.ReadLine();
+                                MenusFitues.addSupplyList(shopID,catlog1);
+                                break;
+                            case 2:
+                                
+                                Console.WriteLine("ID вашего магазина:");
+                                int newshopID = Console.Read();
+                                Console.WriteLine("Имя вашего магазина:");
+                                string newshopName = Console.ReadLine();
 
-                else
-                {
-                    Console.WriteLine("Пункт не выбран");
-                    Main();
-                }
+                                Console.WriteLine("Адрес вашего магазина:");
+                                string newshopAdress = Console.ReadLine();
+                                Console.WriteLine("путь к списку товаров:");
+                                string catlog2 = Console.ReadLine();
+                                Shop newShop = new Shop(newshopID, newshopName, newshopAdress, catlog2);
+                                break;
+
+                            case 3: 
+                                Console.WriteLine("Введите ID магазина");
+                                int ID = Console.Read();
+                                Console.WriteLine("Введите название продукта");
+                                string ProductName = Console.ReadLine();
+                                Console.WriteLine("Введите новую цену");
+                                string newPrice = Console.ReadLine();
+                                int NewPrice = Convert.ToInt32(newPrice);
+                                MenusFitues.editPrice(ID,ProductName,NewPrice);
+                                break
+                                    ;
+                           }
+
+
+                            break
+                                ;
+                        case 2:
+                            Console.WriteLine("1.Помогу найти продукт по выгодной цене");
+                            Console.WriteLine("2.Помогу купить несколько покупок выгодно");
+                            Console.WriteLine("Действие:");
+                            int SelectHelp = Console.Read();
+                            switch (SelectHelp)
+                            {
+                            case 1: AloneBuyHelp();
+                                break;
+                            case 2: ListBuyHelp();
+                                break;
+                            default : Console.WriteLine("Такого действия нет");
+                                break;
+                            }
+                            break;
+                        default:
+                            {
+                                Console.WriteLine("Пункт не выбран");
+                                Main();
+                            }
+                            break;
+                    }
+                
             }
             // SetPrice pricelist1 = new SetPrice("C:/Users/Андрейка/source/repos/OOP_LABS_AD/Lab_1/SupplyList.txt");
         }
