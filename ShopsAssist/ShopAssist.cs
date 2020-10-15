@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -11,18 +10,18 @@ namespace ShopsAssist
 {
     public class Shop
     {
-       
-        public Shop(int ID, string Name, string adr, string SupplyList) 
+
+        public Shop(int ID, string Name, string adr, string SupplyList)
         {
             var newMagazine = new Magazine
             {
                 ShopID = ID,
                 ShopName = Name,
                 Adress = adr,
-            }; 
-           
+            };
+
             SetPriceList(SupplyList);
-                Starter.MagazinesList.Add(newMagazine, newPriceList);
+            Starter.MagazinesList.Add(newMagazine, newPriceList);
         }
 
         public static List<Product> newPriceList = new List<Product>();
@@ -37,11 +36,13 @@ namespace ShopsAssist
             {
                 return ShopID;
             }
+
             public string getName()
             {
                 return ShopName;
             }
-            public string  getAdr()
+
+            public string getAdr()
             {
                 return Adress;
             }
@@ -51,7 +52,7 @@ namespace ShopsAssist
         {
             public string ProductName;
 
-           
+
             public int ProductID;
             public int ProductQuantity;
             public int ProductPrice;
@@ -60,10 +61,12 @@ namespace ShopsAssist
             {
                 return ProductID;
             }
+
             public string getName()
             {
                 return ProductName;
             }
+
             public void editQuantity(int ProdQ)
 
             {
@@ -74,15 +77,18 @@ namespace ShopsAssist
             {
                 return ProductQuantity;
             }
+
             public void editPrice(int ProdP)
             {
                 ProductPrice = ProdP;
             }
+
             public int getPrice()
             {
                 return ProductPrice;
             }
         }
+
         public static void addProduct(string ProdName, int ProdID, int ProdQ, int ProdP) //метод создать продукт
         {
             Product newProduct = new Product
@@ -95,6 +101,7 @@ namespace ShopsAssist
             newPriceList.Add(newProduct);
 
         }
+
         public static string Pathfile { get; set; }
         private static UInt16 numstring;
 
@@ -159,7 +166,7 @@ namespace ShopsAssist
 
             int ProdID = Convert.ToInt32(parline[1]);
 
-           
+
 
             Regex.Matches(parline[2], "[A-Za-z0-9_/]");
 
@@ -203,10 +210,10 @@ namespace ShopsAssist
             {
                 if (key.ShopID == ID)
                 {
-                   Shop.SetPriceList(catlog);
+                    Shop.SetPriceList(catlog);
 
                 }
-               
+
             }
 
         }
@@ -249,18 +256,25 @@ namespace ShopsAssist
                             string Name = p.getName();
                             int price = p.getPrice();
                             int max = p.getQuantity();
+                            int sum = 0;
                             for (int Quantity = 0; Quantity < max; Quantity++)
                             {
-                                int sum = price * Quantity;
-                                if ((sum > wallet) && (Quantity == 1))
+                                if (wallet > sum)
                                 {
-                                    Console.WriteLine($"В этом магазине вы не сможете купить {Name}, так как цена за одну штуку составляет {price}"); break;
-                                    
+                                     sum = price * Quantity;
                                 }
+
+                                if (sum > wallet && Quantity == 1)
+                                {
+                                    Console.WriteLine($"В этом магазине вы не сможете купить {Name}, так как цена за одну штуку составляет {price}");
+                                    break;
+
+                                }
+
                                 if (sum > wallet)
                                 {
                                     sum -= price;
-                                    Console.WriteLine($"Можно купить {Name} , в количестве {Quantity}, на сумму {sum}");
+                                    Console.WriteLine($"Можно купить {Name} , в количестве {Quantity - 1}, на сумму {sum}");
                                     break;
                                 }
 
@@ -280,14 +294,16 @@ namespace ShopsAssist
             {
                 if (kvp.Key.ShopID == ShopID)
                 {
+                    int sum = 0;
                     foreach (Shop.Product p in kvp.Value)
                     {
                         if (p.ProductID == ProdID)
                         {
                             if (ProdQ <= p.ProductQuantity)
                             {
-                                int sum = ProdQ * p.ProductPrice;
-                                Console.WriteLine($"Сумма покупки: {sum}");
+
+                                 sum = ProdQ * p.ProductPrice;
+                               
                             }
                             else
                             {
@@ -295,8 +311,9 @@ namespace ShopsAssist
                             }
                         }
                     }
+                    Console.WriteLine($"Сумма покупки: {sum}");
                 }
-                
+
             }
 
         }
@@ -304,33 +321,34 @@ namespace ShopsAssist
         public static void AloneBuyHelp(int prodID)
         {
             int savePrice = 999999;
-            int saveID = 0;
-            string savdName = null;
-            string saveAdr = null;
-            foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
+            int iterator = 0;
+            foreach (var (key, value) in Starter.MagazinesList)
             {
-                foreach (Shop.Product price in kvp.Value)
+                foreach (Shop.Product price in value)
                 {
                     if (price.ProductID == prodID)
                     {
+
                         if (savePrice > price.ProductPrice)
                         {
-                            
                             savePrice = price.ProductPrice;
-                            
-                            savdName = kvp.Key.getName();
-                            saveID = kvp.Key.getID();
-                            saveAdr = kvp.Key.getAdr();
-                            Console.WriteLine($"{saveID}, {savePrice}");
+                            iterator++;
                         }
                     }
                 }
-            }
-            Console.WriteLine($"Дешевле в магазине : {savdName} ({saveID}), цена продукта : {savePrice}");
-            Console.WriteLine($"Адрес магазина : {saveAdr}");
 
+                if (key.ShopID == iterator)
+                {
+                    Console.WriteLine(
+                        $"Дешевле в магазине : {key.ShopName} ({key.ShopID}), цена продукта : {savePrice}");
+                    Console.WriteLine($"Адрес магазина : {key.Adress}");
+
+                }
+            }
+
+
+
+            //public static void ListBuyHelp()
         }
-        //public static void ListBuyHelp()
     }
 }
-
