@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Immutable;
+using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic.FileIO;
+
 
 
 namespace ShopsAssist
 {
     public class Shop
     {
-        public Shop(int ID, string Name, string adr, string SupplyList) //метод создать магазин
+       
+        public Shop(int ID, string Name, string adr, string SupplyList) 
         {
             var newMagazine = new Magazine
             {
                 ShopID = ID,
                 ShopName = Name,
                 Adress = adr,
-            };
-            SetPriceList(SupplyList); //метод завоза партии товаров в магазин(цены назначаются отдельно для каждого товара)
-            Starter.MagazinesList.Add(newMagazine, newPriceList);
+            }; 
+           
+            SetPriceList(SupplyList);
+                Starter.MagazinesList.Add(newMagazine, newPriceList);
         }
 
         public static List<Product> newPriceList = new List<Product>();
@@ -30,6 +32,19 @@ namespace ShopsAssist
             public int ShopID;
             public string ShopName;
             public string Adress;
+
+            public int getID()
+            {
+                return ShopID;
+            }
+            public string getName()
+            {
+                return ShopName;
+            }
+            public string  getAdr()
+            {
+                return Adress;
+            }
         }
 
         public struct Product
@@ -63,52 +78,27 @@ namespace ShopsAssist
             {
                 ProductPrice = ProdP;
             }
-            public int qetPrice()
+            public int getPrice()
             {
                 return ProductPrice;
             }
         }
-
-        public static void addMagazine(int ID, string Name, string adr)
-        {
-            var newMagazine = new Magazine
-            {
-                ShopID = ID,
-                ShopName = Name,
-                Adress = adr,
-            };
-            Starter.MagazinesList.Add(newMagazine, newPriceList);
-        }
-
         public static void addProduct(string ProdName, int ProdID, int ProdQ, int ProdP) //метод создать продукт
         {
-            Console.WriteLine($"Введите цену для продукта {ProdName} :");
-            string price = Console.ReadLine();
-            int ProductPrice = Convert.ToInt32(price);
-
             Product newProduct = new Product
             {
                 ProductName = ProdName,
                 ProductID = ProdID,
                 ProductQuantity = ProdQ,
                 ProductPrice = ProdP
-                
             };
             newPriceList.Add(newProduct);
 
         }
-
-        public static void addThreeShops() //тестовое добаление магазинов 
-        {
-            //addMagazine(121, "Пятёрочка", "Бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList2.txt");
-            //addMagazine(142, "Магнит", "Соседний бульвар 4");
-            //addMagazine(521, "Обрыгаловка", "Параллельный бульвар 4");
-        }
-
         public static string Pathfile { get; set; }
         private static UInt16 numstring;
 
-        public void SetPriceList(string catlog)
+        public static void SetPriceList(string catlog)
         {
             numstring = 0;
             Pathfile = catlog;
@@ -156,7 +146,7 @@ namespace ShopsAssist
                 return false;
             }
 
-            var parline = filestring.Split(new[] {'.', '.'}, StringSplitOptions.RemoveEmptyEntries);
+            var parline = filestring.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
 
             if (parline.Length != 4)
             {
@@ -175,15 +165,15 @@ namespace ShopsAssist
 
             int ProdQ = Convert.ToInt32(parline[2]);
 
-            foreach (Product p in newPriceList)
+            foreach (Product p in new List<Product>())
             {
                 if (p.ProductID == ProdID)
                 {
                     p.editQuantity(ProdQ);
                     return true;
                 }
-
             }
+
 
             Regex.Matches(parline[3], "[A-Za-z0-9_/]");
 
@@ -213,13 +203,10 @@ namespace ShopsAssist
             {
                 if (key.ShopID == ID)
                 {
-                   Shop.SetShopPrice(catlog);
+                   Shop.SetPriceList(catlog);
 
                 }
-                else
-                {
-                    throw new Exception("Такого магазина  нет");
-                }
+               
             }
 
         }
@@ -230,7 +217,7 @@ namespace ShopsAssist
             {
                 if (key.ShopID == shopID)
                 {
-                    foreach (Shop.Product p in Shop.newPriceList)
+                    foreach (Shop.Product p in value)
                     {
                         if (p.ProductName == ProdName)
                         {
@@ -255,26 +242,26 @@ namespace ShopsAssist
             {
                 if (key.ShopID == ID)
                 {
-                    foreach (Shop.Product p in Shop.newPriceList)
+                    foreach (Shop.Product p in value)
                     {
-                        for (int i = 0; i < Shop.newPriceList.Count; i++)
+                        for (int i = 100; i < p.getID(); i++)
                         {
-                            string Name = Shop.newPriceList[i].getName();
-                            int price = Shop.newPriceList[i].qetPrice();
-                            int max = Shop.newPriceList[i].getQuantity();
+                            string Name = p.getName();
+                            int price = p.getPrice();
+                            int max = p.getQuantity();
                             for (int Quantity = 0; Quantity < max; Quantity++)
                             {
                                 int sum = price * Quantity;
                                 if ((sum > wallet) && (Quantity == 1))
                                 {
-                                    Console.WriteLine(
-                                        $"В этом магазине вы не сможете купить {Name}, так как цена за одну штуку составляет {price}");
+                                    Console.WriteLine($"В этом магазине вы не сможете купить {Name}, так как цена за одну штуку составляет {price}"); break;
+                                    
                                 }
-
                                 if (sum > wallet)
                                 {
                                     sum -= price;
                                     Console.WriteLine($"Можно купить {Name} , в количестве {Quantity}, на сумму {sum}");
+                                    break;
                                 }
 
                             }
@@ -284,20 +271,16 @@ namespace ShopsAssist
 
                     }
                 }
-                else
-                {
-                    throw new Exception("Такого магазина  нет");
-                }
             }
         }
 
         public static void CalcLot(int ShopID, int ProdID, int ProdQ)
         {
-            foreach (var (key, value) in Starter.MagazinesList)
+            foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
             {
-                if (key.ShopID == ShopID)
+                if (kvp.Key.ShopID == ShopID)
                 {
-                    foreach (Shop.Product p in Shop.newPriceList)
+                    foreach (Shop.Product p in kvp.Value)
                     {
                         if (p.ProductID == ProdID)
                         {
@@ -311,27 +294,43 @@ namespace ShopsAssist
                                 throw new Exception("В магазине нет столько товаров");
                             }
                         }
-                        else
-                        {
-                            throw new Exception("Такого товара в магазине нет");
-                        }
-
                     }
                 }
-                else
-                {
-                    throw new Exception("Такого магазина  нет");
-                }
+                
             }
 
         }
 
         public static void AloneBuyHelp(int prodID)
         {
+            int savePrice = 999999;
+            int saveID = 0;
+            string savdName = null;
+            string saveAdr = null;
+            foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
+            {
+                foreach (Shop.Product price in kvp.Value)
+                {
+                    if (price.ProductID == prodID)
+                    {
+                        if (savePrice > price.ProductPrice)
+                        {
+                            
+                            savePrice = price.ProductPrice;
+                            
+                            savdName = kvp.Key.getName();
+                            saveID = kvp.Key.getID();
+                            saveAdr = kvp.Key.getAdr();
+                            Console.WriteLine($"{saveID}, {savePrice}");
+                        }
+                    }
+                }
+            }
+            Console.WriteLine($"Дешевле в магазине : {savdName} ({saveID}), цена продукта : {savePrice}");
+            Console.WriteLine($"Адрес магазина : {saveAdr}");
 
         }
-
-        public static void ListBuyHelp()
+        //public static void ListBuyHelp()
     }
 }
 

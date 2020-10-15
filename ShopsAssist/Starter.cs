@@ -6,12 +6,14 @@ namespace ShopsAssist
 {
     public class Starter
     {
-        
+
         public static Dictionary<Shop.Magazine, List<Shop.Product>> MagazinesList = new Dictionary<Shop.Magazine, List<Shop.Product>>();
-        
+
         static void Main()
         {
-            
+            Shop shop1 = new Shop(01, "Пятёрочка", "Бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList2.txt");
+            Shop shop2 = new Shop(02, "Магнит", "Соседний бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList1.txt");
+            Shop shop3 = new Shop(03, "Обрыгаловка", "Параллельный бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList3.txt");
             while (true)
             {
                 Console.WriteLine("1.Операции с магазином");
@@ -20,7 +22,7 @@ namespace ShopsAssist
 
                 Console.WriteLine("Выбери пункт:");
 
-                int select = Console.Read();
+                int select = Convert.ToInt32(Console.ReadLine());
 
                 switch (select)
                     {
@@ -31,7 +33,7 @@ namespace ShopsAssist
                            Console.WriteLine("4.Что я можно купить на заданное количество рублей в конкретном магазине");
                            Console.WriteLine("5.Сколько будет стоить партия товаров в конкретном магазине ");
                            Console.WriteLine("Действие:");
-                           int command = Console.Read();
+                           int command = Convert.ToInt32(Console.ReadLine());
                            switch (command)
                            {
                                case 1:
@@ -122,7 +124,7 @@ namespace ShopsAssist
                             Console.WriteLine("1.Помогу найти продукт по выгодной цене");
                             Console.WriteLine("2.Помогу купить несколько покупок выгодно");
                             Console.WriteLine("Действие:");
-                            int SelectHelp = Console.Read();
+                            int SelectHelp = Convert.ToInt32(Console.ReadLine());
                             switch (SelectHelp)
                             {
                             case 1:
@@ -131,7 +133,7 @@ namespace ShopsAssist
                                 MenusFitues.AloneBuyHelp(ProdID);
                                 break;
                             case 2: 
-                                MenusFitues.ListBuyHelp();
+                             //   MenusFitues.ListBuyHelp();
                                 break;
                             default : Console.WriteLine("Такого действия нет");
                                 break;
