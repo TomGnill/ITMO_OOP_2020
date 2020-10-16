@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
+using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -21,7 +21,9 @@ namespace ShopsAssist
             };
 
             SetPriceList(SupplyList);
-            Starter.MagazinesList.Add(newMagazine, newPriceList);
+            List<Product> newPriceList1 = new List<Product>(newPriceList);
+            Starter.MagazinesList.Add(newMagazine, newPriceList1);
+           
         }
 
         public static List<Product> newPriceList = new List<Product>();
@@ -107,6 +109,7 @@ namespace ShopsAssist
 
         public static void SetPriceList(string catlog)
         {
+            newPriceList.Clear();
             numstring = 0;
             Pathfile = catlog;
             OpenList();
@@ -245,47 +248,28 @@ namespace ShopsAssist
 
         public static void Bomj(int ID, int wallet)
         {
-            foreach (var (key, value) in Starter.MagazinesList)
-            {
-                if (key.ShopID == ID)
+            var shoplist = Starter.MagazinesList.ElementAt(ID-1);
+            var productlist = shoplist.Value.Count;
+            Console.WriteLine($"{productlist}");
+
+            var selectedProd = from prod in shoplist.Value
+                    where prod.ProductPrice < wallet
+                    select prod;
+                foreach (Shop.Product product in selectedProd)
                 {
-                    foreach (Shop.Product p in value)
+                    int sum, que;
+                    int max = product.getQuantity();
+                    que = wallet / product.ProductPrice;
+                    sum = que * product.ProductPrice;
+                    if (que <= max )
                     {
-                        for (int i = 100; i < p.getID(); i++)
-                        {
-                            string Name = p.getName();
-                            int price = p.getPrice();
-                            int max = p.getQuantity();
-                            int sum = 0;
-                            for (int Quantity = 0; Quantity < max; Quantity++)
-                            {
-                                if (wallet > sum)
-                                {
-                                     sum = price * Quantity;
-                                }
-
-                                if (sum > wallet && Quantity == 1)
-                                {
-                                    Console.WriteLine($"В этом магазине вы не сможете купить {Name}, так как цена за одну штуку составляет {price}");
-                                    break;
-
-                                }
-
-                                if (sum > wallet)
-                                {
-                                    sum -= price;
-                                    Console.WriteLine($"Можно купить {Name} , в количестве {Quantity - 1}, на сумму {sum}");
-                                    break;
-                                }
-
-                            }
-
-
-                        }
-
+                        Console.WriteLine(
+                            $"можно купить {product.getName()}, на сумму:{sum}, в количестве: {que}");
                     }
+
                 }
-            }
+
+            
         }
 
         public static void CalcLot(int ShopID, int ProdID, int ProdQ)
@@ -345,10 +329,45 @@ namespace ShopsAssist
 
                 }
             }
-
-
-
-            //public static void ListBuyHelp()
         }
+
+        public static void ListBuyHelp(List<(string,int)> userList)
+
+        {
+                List< int> chek = new List<int>();
+                int sum = 0;
+                int chekSumm = userList.Count;
+                string Adress = null;
+                string Name = null;
+                foreach (var (key , value) in Starter.MagazinesList)
+                {
+                string shopName = null;
+                int count = 0;
+                    var itemList = from item in userList
+                    select item;
+                    foreach (Shop.Product product in value)
+                    {
+                        foreach (var item in itemList)
+                        {
+                            int itemSum;
+                            if (item.Item1 == product.ProductName & item.Item2 <= product.ProductQuantity)
+                            {
+                                itemSum = item.Item2 * product.ProductPrice;
+                                sum += itemSum;
+                                count++;
+                            }
+
+                        }
+                    }
+
+                   if (chekSumm == count)
+                   {
+                    chek.Add(sum);
+                   }
+                }
+          
+            Console.WriteLine($"Сумма покупки:{chek.Min()}");
+        }
+        
     }
 }

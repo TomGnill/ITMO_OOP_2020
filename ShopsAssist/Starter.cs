@@ -11,8 +11,8 @@ namespace ShopsAssist
 
         static void Main()
         {
-            Shop shop1 = new Shop(01, "Пятёрочка", "Бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList2.txt");
-            Shop shop2 = new Shop(02, "Магнит", "Соседний бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList1.txt");
+            Shop shop1 = new Shop(01, "Пятёрочка", "Бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList1.txt");
+            Shop shop2 = new Shop(02, "Магнит", "Соседний бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList2.txt");
             Shop shop3 = new Shop(03, "Обрыгаловка", "Параллельный бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList3.txt");
             while (true)
             {
@@ -133,7 +133,26 @@ namespace ShopsAssist
                                 MenusFitues.AloneBuyHelp(ProdID);
                                 break;
                             case 2: 
-                             //   MenusFitues.ListBuyHelp();
+                                Console.WriteLine("Введите имена товаров, когда закончите введите stop ");
+                                
+                                List< (string,int)> shopping= new List<(string, int)>();
+                                int que;
+                                string name;
+                                while (true)
+                                {
+                                    Console.WriteLine("Имя товара:");
+                                    name = Console.ReadLine();
+                                    if (name == "stop")
+                                    { 
+                                        MenusFitues.ListBuyHelp(shopping);
+                                        break;
+                                    }
+                                    Console.WriteLine("Количество :");
+                                    que = Convert.ToInt32(Console.ReadLine());
+                                    shopping.Add((name,que));
+
+                                }
+                              
                                 break;
                             default : Console.WriteLine("Такого действия нет");
                                 break;
