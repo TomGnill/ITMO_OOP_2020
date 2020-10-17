@@ -27,27 +27,15 @@ namespace ShopsAssist
                 switch (select)
                     {
                         case 1 :
-                           Console.WriteLine("1.Доставить в магазин партию товаров(необходим список в формате .txt и путь к нему");
-                           Console.WriteLine("2.Создать магазин, также необходим список товаров, для открытия");
-                           Console.WriteLine("3.Изменить цену на конкретный товар в конкретном магазине");
-                           Console.WriteLine("4.Что я можно купить на заданное количество рублей в конкретном магазине");
-                           Console.WriteLine("5.Сколько будет стоить партия товаров в конкретном магазине ");
+                            Console.WriteLine("1.Создать магазин, также необходим список товаров, для открытия");
+                           Console.WriteLine("2.Изменить цену на конкретный товар в конкретном магазине");
+                           Console.WriteLine("3.Что я можно купить на заданное количество рублей в конкретном магазине");
+                           Console.WriteLine("4.Сколько будет стоить партия товаров в конкретном магазине ");
                            Console.WriteLine("Действие:");
                            int command = Convert.ToInt32(Console.ReadLine());
                            switch (command)
                            {
                                case 1:
-                                   Console.WriteLine("Введи ID магазина");
-
-                                   int shopID = Convert.ToInt32(Console.ReadLine());
-
-                                   Console.WriteLine("Путь к списку товаров");
-
-                                   string catlog1 = Console.ReadLine();
-                                   MenusFitues.addSupplyList(shopID, catlog1);
-                                   break;
-
-                               case 2:
 
                                    Console.WriteLine("ID вашего магазина:");
 
@@ -69,7 +57,7 @@ namespace ShopsAssist
 
                                    break;
 
-                               case 3:
+                               case 2:
                                    Console.WriteLine("Введите ID магазина");
 
                                    int ID = Convert.ToInt32(Console.ReadLine());
@@ -86,7 +74,7 @@ namespace ShopsAssist
 
                                    break
                                        ;
-                               case 4:
+                               case 3:
 
                                    Console.WriteLine("ID магазина:");
 
@@ -99,7 +87,7 @@ namespace ShopsAssist
                                    MenusFitues.Bomj(shopID2, wallet);
 
                                    break;
-                               case 5:
+                               case 4:
                                    Console.WriteLine("ID магазина:");
 
                                    int ShopID3 = Convert.ToInt32(Console.ReadLine());

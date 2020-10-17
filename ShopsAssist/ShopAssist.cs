@@ -115,6 +115,12 @@ namespace ShopsAssist
             OpenList();
         }
 
+        public static void AddPriceList(string catlog, List<Product> aList)
+        {
+            numstring = 0;
+            Pathfile = catlog;
+            OpenList();
+        }
         public static void OpenList()
         {
             var fileInfo = new FileInfo(Pathfile);
@@ -174,15 +180,18 @@ namespace ShopsAssist
             Regex.Matches(parline[2], "[A-Za-z0-9_/]");
 
             int ProdQ = Convert.ToInt32(parline[2]);
-
-            foreach (Product p in new List<Product>())
+            foreach (var (key,value) in Starter.MagazinesList)
             {
-                if (p.ProductID == ProdID)
+                foreach (Product p in value)
                 {
+                  if (p.ProductID == ProdID)
+                  {
                     p.editQuantity(ProdQ);
                     return true;
+                  }
                 }
             }
+            
 
 
             Regex.Matches(parline[3], "[A-Za-z0-9_/]");
@@ -206,27 +215,13 @@ namespace ShopsAssist
             }
         }
 
-
-        public static void addSupplyList(int ID, string catlog)
-        {
-            foreach (var (key, value) in Starter.MagazinesList)
-            {
-                if (key.ShopID == ID)
-                {
-                    Shop.SetPriceList(catlog);
-
-                }
-
-            }
-
-        }
-
         public static void editPrice(int shopID, string ProdName, int newPrice)
         {
             foreach (var (key, value) in Starter.MagazinesList)
             {
                 if (key.ShopID == shopID)
                 {
+                  
                     foreach (Shop.Product p in value)
                     {
                         if (p.ProductName == ProdName)
@@ -303,46 +298,51 @@ namespace ShopsAssist
         }
 
         public static void AloneBuyHelp(int prodID)
-        {
-            int savePrice = 999999;
+        {  int savePrice = 999999;
             int iterator = 0;
-            foreach (var (key, value) in Starter.MagazinesList)
+            string Adr = null;
+            string name = null;
+            int id = 0;
+            foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
             {
-                foreach (Shop.Product price in value)
+              
+                foreach (Shop.Product price in kvp.Value)
                 {
                     if (price.ProductID == prodID)
                     {
-
                         if (savePrice > price.ProductPrice)
-                        {
+                        { 
                             savePrice = price.ProductPrice;
                             iterator++;
                         }
                     }
                 }
 
-                if (key.ShopID == iterator)
+                if (kvp.Key.ShopID == iterator)
                 {
-                    Console.WriteLine(
-                        $"Дешевле в магазине : {key.ShopName} ({key.ShopID}), цена продукта : {savePrice}");
-                    Console.WriteLine($"Адрес магазина : {key.Adress}");
-
+                   name = kvp.Key.ShopName;
+                   id = kvp.Key.ShopID;
+                   Adr =  kvp.Key.Adress;
                 }
             }
+
+                    Console.WriteLine($"Дешевле в магазине : {name} ({id}), цена продукта : {savePrice}");
+                    Console.WriteLine($"Адрес магазина : {Adr}");
+
         }
 
         public static void ListBuyHelp(List<(string,int)> userList)
 
         {
                 List< int> chek = new List<int>();
-                int sum = 0;
                 int chekSumm = userList.Count;
                 string Adress = null;
                 string Name = null;
                 foreach (var (key , value) in Starter.MagazinesList)
                 {
-                string shopName = null;
-                int count = 0;
+                    int sum = 0;
+                    string shopName = null;
+                    int count = 0;
                     var itemList = from item in userList
                     select item;
                     foreach (Shop.Product product in value)
@@ -359,14 +359,15 @@ namespace ShopsAssist
 
                         }
                     }
+                    if (chekSumm == count)
+                    { 
+                        chek.Add(sum);
+                        sum = 0;
+                    }
 
-                   if (chekSumm == count)
-                   {
-                    chek.Add(sum);
-                   }
                 }
           
-            Console.WriteLine($"Сумма покупки:{chek.Min()}");
+                Console.WriteLine($"Сумма покупки:{chek.Min()}");
         }
         
     }
