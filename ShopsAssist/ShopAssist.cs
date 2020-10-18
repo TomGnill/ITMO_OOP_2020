@@ -395,7 +395,7 @@ namespace ShopsAssist
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage excelPackage = new ExcelPackage())
             {
-                //Set some properties of the Excel document
+             
                 excelPackage.Workbook.Properties.Author = "TomGnill";
                 excelPackage.Workbook.Properties.Title = "PriceList Shop1";
                 excelPackage.Workbook.Properties.Subject = "EPPlus demo export data";
@@ -425,8 +425,7 @@ namespace ShopsAssist
                     }
                 }
 
-                FileInfo fi =
-                    new FileInfo(
+                FileInfo fi = new FileInfo(
                         @"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
                 excelPackage.SaveAs(fi);
 
