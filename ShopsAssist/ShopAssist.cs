@@ -4,7 +4,6 @@ using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 using OfficeOpenXml;
-using Excel = Microsoft.Office.Interop.Excel;
 
 
 
@@ -123,6 +122,7 @@ namespace ShopsAssist
             Pathfile = catlog;
             OpenList();
         }
+
         public static void OpenList()
         {
             var fileInfo = new FileInfo(Pathfile);
@@ -164,7 +164,7 @@ namespace ShopsAssist
                 return false;
             }
 
-            var parline = filestring.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            var parline = filestring.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
 
             if (parline.Length != 4)
             {
@@ -182,20 +182,7 @@ namespace ShopsAssist
             Regex.Matches(parline[2], "[A-Za-z0-9_/]");
 
             int ProdQ = Convert.ToInt32(parline[2]);
-         /*   foreach (var (key, value) in Starter.MagazinesList)
-            {
-                foreach (Product p in value)
-                {
-                    if (p.ProductID == ProdID)
-                    {
-                        p.editQuantity(ProdQ);
-                        return true;
-                    }
-                }
-            }
-         */
-
-
+            
             Regex.Matches(parline[3], "[A-Za-z0-9_/]");
 
             int ProdP = Convert.ToInt32(parline[3]);
@@ -212,7 +199,8 @@ namespace ShopsAssist
         {
             foreach (var (key, value) in Starter.MagazinesList)
             {
-                Console.WriteLine("//Уникальный номер:" + key.ShopID + "// Имя магазина: " + key.ShopName + " //Адрес: " +
+                Console.WriteLine("//Уникальный номер:" + key.ShopID + "// Имя магазина: " + key.ShopName +
+                                  " //Адрес: " +
                                   key.Adress);
             }
         }
@@ -225,12 +213,14 @@ namespace ShopsAssist
                 {
                     foreach (Shop.Product aProduct in value)
                     {
-                        Console.WriteLine("//Уникальный номер:" + aProduct.ProductID + "// Имя продукта " + aProduct.ProductName + " //Цена: " +
-                                         aProduct.ProductPrice + "//Количество :" + aProduct.ProductQuantity);
+                        Console.WriteLine("//Уникальный номер:" + aProduct.ProductID + "// Имя продукта " +
+                                          aProduct.ProductName + " //Цена: " +
+                                          aProduct.ProductPrice + "//Количество :" + aProduct.ProductQuantity);
                     }
                 }
             }
         }
+
         public static void editPrice(int shopID, string ProdName, int newPrice)
         {
             foreach (var (key, value) in Starter.MagazinesList)
@@ -258,18 +248,19 @@ namespace ShopsAssist
         }
 
         public static List<string> Bomj(int ID, int wallet)
-        {   List<string> testList = new List<string>();
+        {
+            List<string> testList = new List<string>();
             int sum = 0, que = 0;
             var shoplist = Starter.MagazinesList.ElementAt(ID - 1);
             var productlist = shoplist.Value.Count;
             Console.WriteLine($"{productlist}");
 
             var selectedProd = from prod in shoplist.Value
-                               where prod.ProductPrice < wallet
-                               select prod;
+                where prod.ProductPrice < wallet
+                select prod;
             foreach (Shop.Product product in selectedProd)
             {
-               
+
                 int max = product.getQuantity();
                 que = wallet / product.ProductPrice;
                 sum = que * product.ProductPrice;
@@ -286,12 +277,13 @@ namespace ShopsAssist
         }
 
         public static int CalcLot(int ShopID, int ProdID, int ProdQ)
-        {int sum = 0;
+        {
+            int sum = 0;
             foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
             {
                 if (kvp.Key.ShopID == ShopID)
                 {
-                    
+
                     foreach (Shop.Product p in kvp.Value)
                     {
                         if (p.ProductID == ProdID)
@@ -308,10 +300,12 @@ namespace ShopsAssist
                             }
                         }
                     }
+
                     Console.WriteLine($"Сумма покупки: {sum}");
                 }
 
             }
+
             return sum;
         }
 
@@ -364,7 +358,7 @@ namespace ShopsAssist
                 string shopName = null;
                 int count = 0;
                 var itemList = from item in userList
-                               select item;
+                    select item;
                 foreach (Shop.Product product in value)
                 {
                     foreach (var item in itemList)
@@ -379,6 +373,7 @@ namespace ShopsAssist
 
                     }
                 }
+
                 if (chekSumm == count)
                 {
                     chek.Add(sum);
@@ -393,81 +388,50 @@ namespace ShopsAssist
 
     }
 
-   public class ExprotExcel
-    {
-      /*  public static void CreateExcel()
+    public class ExprotExcel
+    { 
+        public static void ExportExcel()
         {
-            var excelApp = new Excel.Application();
-            excelApp.Visible = true;
-            excelApp.Workbooks.Add();
-            Excel._Worksheet workSheet = (Excel.Worksheet) excelApp.ActiveSheet;
-            workSheet.Cells[1, "A"] = "Product ID";
-            workSheet.Cells[1, "B"] = "Product Name";
-            workSheet.Cells[1, "C"] = "Product Price";
-            workSheet.Cells[1, "D"] = "Product Quantity";
-
-            var row = 1;
-            foreach (var (key, value) in Starter.MagazinesList)
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (ExcelPackage excelPackage = new ExcelPackage())
             {
-                if (key.ShopID == 1)
+                //Set some properties of the Excel document
+                excelPackage.Workbook.Properties.Author = "TomGnill";
+                excelPackage.Workbook.Properties.Title = "PriceList Shop1";
+                excelPackage.Workbook.Properties.Subject = "EPPlus demo export data";
+                excelPackage.Workbook.Properties.Created = DateTime.Now;
+
+              
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
+                worksheet.Cells[1, 1].Value = "Product ID";
+                worksheet.Cells[1, 2].Value = "Product Name";
+                worksheet.Cells[1, 3].Value = "Product Price";
+                worksheet.Cells[1, 4].Value = "Product Quantity";
+                var row = 1;
+                foreach (var (key, value) in Starter.MagazinesList)
                 {
-                    foreach (Shop.Product product in value)
+                    if (key.ShopID == 1)
                     {
-                        row++;
-                        workSheet.Cells[row, "A"] = product.ProductID;
-                        workSheet.Cells[row, "B"] = product.ProductName;
-                        workSheet.Cells[row, "C"] = product.ProductPrice;
-                        workSheet.Cells[row, "D"] = product.ProductQuantity;
+                        foreach (Shop.Product product in value)
+                        {
+                            row++;
+                            worksheet.Cells[row, 1].Value = product.ProductID;
+                            worksheet.Cells[row, 2].Value = product.ProductName;
+                            worksheet.Cells[row, 3].Value = product.ProductPrice;
+                            worksheet.Cells[row, 4].Value = product.ProductQuantity;
+
+
+                        }
                     }
                 }
-                
+
+                FileInfo fi =
+                    new FileInfo(
+                        @"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
+                excelPackage.SaveAs(fi);
+
             }
-
-        }*/
-
-      public static void ExportExcel()
-      {
-          ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (ExcelPackage excelPackage = new ExcelPackage())
-          {
-              //Set some properties of the Excel document
-              excelPackage.Workbook.Properties.Author = "TomGnill";
-              excelPackage.Workbook.Properties.Title = "PriceList Shop1";
-              excelPackage.Workbook.Properties.Subject = "EPPlus demo export data";
-              excelPackage.Workbook.Properties.Created = DateTime.Now;
-
-              //Create the WorkSheet
-              ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
-              worksheet.Cells[1, 1].Value = "Product ID";
-              worksheet.Cells[1, 2].Value = "Product Name";
-              worksheet.Cells[1, 3].Value = "Product Price";
-              worksheet.Cells[1, 4].Value = "Product Quantity";
-              var row = 1;
-              foreach (var (key, value) in Starter.MagazinesList)
-              {
-                  if (key.ShopID == 1)
-                  {
-                      foreach (Shop.Product product in value)
-                      {
-                          row++;
-                          worksheet.Cells[row, 1].Value = product.ProductID;
-                          worksheet.Cells[row, 2].Value = product.ProductName;
-                          worksheet.Cells[row, 3].Value = product.ProductPrice;
-                          worksheet.Cells[row, 4].Value = product.ProductQuantity;
-
-
-                      }
-                  }
-              }
-
-           
-
-              //Save your file
-              FileInfo fi = new FileInfo(@"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
-              excelPackage.SaveAs(fi);
-
-          }
-      }
+        }
 
 
     }

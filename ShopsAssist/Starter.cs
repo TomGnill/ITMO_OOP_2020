@@ -181,7 +181,7 @@ namespace ShopsAssist
                     }
                 
             }
-            // SetPrice pricelist1 = new SetPrice("C:/Users/Андрейка/source/repos/OOP_LABS_AD/Lab_1/SupplyList.txt");
+           
         }
     }
 }
