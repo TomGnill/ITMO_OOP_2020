@@ -22,6 +22,8 @@ namespace ShopsAssist
 
                 Console.WriteLine("3. Тестирование функций");
 
+                Console.WriteLine("4.Dev//Перенос списка товаров в excel//");
+
                 Console.WriteLine("Выбери пункт:");
 
                 int select = Convert.ToInt32(Console.ReadLine());
@@ -173,6 +175,9 @@ namespace ShopsAssist
                                 Main();
                             }
                             break;
+
+                    case 4:
+                        ExprotExcel.ExportExcel();break;
                     }
                 
             }

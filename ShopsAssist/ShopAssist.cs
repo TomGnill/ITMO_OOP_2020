@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
+using OfficeOpenXml;
+using Excel = Microsoft.Office.Interop.Excel;
 
 
 
@@ -388,6 +390,85 @@ namespace ShopsAssist
             Console.WriteLine($"Сумма покупки:{chek.Min()}");
             return chek.Min();
         }
+
+    }
+
+   public class ExprotExcel
+    {
+      /*  public static void CreateExcel()
+        {
+            var excelApp = new Excel.Application();
+            excelApp.Visible = true;
+            excelApp.Workbooks.Add();
+            Excel._Worksheet workSheet = (Excel.Worksheet) excelApp.ActiveSheet;
+            workSheet.Cells[1, "A"] = "Product ID";
+            workSheet.Cells[1, "B"] = "Product Name";
+            workSheet.Cells[1, "C"] = "Product Price";
+            workSheet.Cells[1, "D"] = "Product Quantity";
+
+            var row = 1;
+            foreach (var (key, value) in Starter.MagazinesList)
+            {
+                if (key.ShopID == 1)
+                {
+                    foreach (Shop.Product product in value)
+                    {
+                        row++;
+                        workSheet.Cells[row, "A"] = product.ProductID;
+                        workSheet.Cells[row, "B"] = product.ProductName;
+                        workSheet.Cells[row, "C"] = product.ProductPrice;
+                        workSheet.Cells[row, "D"] = product.ProductQuantity;
+                    }
+                }
+                
+            }
+
+        }*/
+
+      public static void ExportExcel()
+      {
+          ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (ExcelPackage excelPackage = new ExcelPackage())
+          {
+              //Set some properties of the Excel document
+              excelPackage.Workbook.Properties.Author = "TomGnill";
+              excelPackage.Workbook.Properties.Title = "PriceList Shop1";
+              excelPackage.Workbook.Properties.Subject = "EPPlus demo export data";
+              excelPackage.Workbook.Properties.Created = DateTime.Now;
+
+              //Create the WorkSheet
+              ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
+              worksheet.Cells[1, 1].Value = "Product ID";
+              worksheet.Cells[1, 2].Value = "Product Name";
+              worksheet.Cells[1, 3].Value = "Product Price";
+              worksheet.Cells[1, 4].Value = "Product Quantity";
+              var row = 1;
+              foreach (var (key, value) in Starter.MagazinesList)
+              {
+                  if (key.ShopID == 1)
+                  {
+                      foreach (Shop.Product product in value)
+                      {
+                          row++;
+                          worksheet.Cells[row, 1].Value = product.ProductID;
+                          worksheet.Cells[row, 2].Value = product.ProductName;
+                          worksheet.Cells[row, 3].Value = product.ProductPrice;
+                          worksheet.Cells[row, 4].Value = product.ProductQuantity;
+
+
+                      }
+                  }
+              }
+
+           
+
+              //Save your file
+              FileInfo fi = new FileInfo(@"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
+              excelPackage.SaveAs(fi);
+
+          }
+      }
+
 
     }
 }

@@ -6,4 +6,9 @@
     <StartupObject>ShopsAssist.Starter</StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.4.0" />
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1000" />
+  </ItemGroup>
+
 </Project>
