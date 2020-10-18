@@ -20,6 +20,8 @@ namespace ShopsAssist
 
                 Console.WriteLine("2.Делаем покупки выгодными");
 
+                Console.WriteLine("3. Тестирование функций");
+
                 Console.WriteLine("Выбери пункт:");
 
                 int select = Convert.ToInt32(Console.ReadLine());
@@ -30,8 +32,10 @@ namespace ShopsAssist
                             Console.WriteLine("1.Создать магазин, также необходим список товаров, для открытия");
                            Console.WriteLine("2.Изменить цену на конкретный товар в конкретном магазине");
                            Console.WriteLine("3.Что я можно купить на заданное количество рублей в конкретном магазине");
-                           Console.WriteLine("4.Сколько будет стоить партия товаров в конкретном магазине ");
-                           Console.WriteLine("Действие:");
+                           Console.WriteLine("4. Сколько будет стоить партия товаров в конкретном магазине ");
+                            Console.WriteLine("5. получить список магазинов ");
+                            Console.WriteLine("6. получить список товаров  ");
+                            Console.WriteLine("Действие:");
                            int command = Convert.ToInt32(Console.ReadLine());
                            switch (command)
                            {
@@ -102,6 +106,15 @@ namespace ShopsAssist
 
                                 MenusFitues.CalcLot(ShopID3, prodID, Que);
                                    break;
+                            case 5: 
+                                MenusFitues.ShowMagazinesList();
+                                break;
+                            case 6:
+                                Console.WriteLine("Введите ID магазина");
+                                int ShopID = Convert.ToInt32(Console.ReadLine());
+                                MenusFitues.ShowPriceList(ShopID);
+                                break;
+
 
                            }
 
@@ -146,6 +159,14 @@ namespace ShopsAssist
                                 break;
                             }
                             break;
+
+                    case 3:
+                        Tests.Search();
+                        Tests.AloneBuy();
+                        Tests.bomj();
+                        Tests.ListBuyHelp();
+                        break;
+
                         default:
                             {
                                 Console.WriteLine("Пункт не выбран");

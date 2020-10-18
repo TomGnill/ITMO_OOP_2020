@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CFG_mng", "Lab_1\CFG_mng.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopsAssist", "ShopsAssist\ShopsAssist.csproj", "{6ABD5680-EFCF-4F1D-A257-A9FE87D41CEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trash", "trash\trash.csproj", "{39349EF2-F172-4752-8424-8435526246AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "trash", "trash\trash.csproj", "{39349EF2-F172-4752-8424-8435526246AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

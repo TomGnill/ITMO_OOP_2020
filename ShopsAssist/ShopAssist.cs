@@ -23,7 +23,7 @@ namespace ShopsAssist
             SetPriceList(SupplyList);
             List<Product> newPriceList1 = new List<Product>(newPriceList);
             Starter.MagazinesList.Add(newMagazine, newPriceList1);
-           
+
         }
 
         public static List<Product> newPriceList = new List<Product>();
@@ -162,7 +162,7 @@ namespace ShopsAssist
                 return false;
             }
 
-            var parline = filestring.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+            var parline = filestring.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (parline.Length != 4)
             {
@@ -180,18 +180,18 @@ namespace ShopsAssist
             Regex.Matches(parline[2], "[A-Za-z0-9_/]");
 
             int ProdQ = Convert.ToInt32(parline[2]);
-            foreach (var (key,value) in Starter.MagazinesList)
+         /*   foreach (var (key, value) in Starter.MagazinesList)
             {
                 foreach (Product p in value)
                 {
-                  if (p.ProductID == ProdID)
-                  {
-                    p.editQuantity(ProdQ);
-                    return true;
-                  }
+                    if (p.ProductID == ProdID)
+                    {
+                        p.editQuantity(ProdQ);
+                        return true;
+                    }
                 }
             }
-            
+         */
 
 
             Regex.Matches(parline[3], "[A-Za-z0-9_/]");
@@ -210,18 +210,32 @@ namespace ShopsAssist
         {
             foreach (var (key, value) in Starter.MagazinesList)
             {
-                Console.WriteLine("Уникальный номер:" + key.ShopID + " Имя магазина: " + key.ShopName + " Адрес: " +
+                Console.WriteLine("//Уникальный номер:" + key.ShopID + "// Имя магазина: " + key.ShopName + " //Адрес: " +
                                   key.Adress);
             }
         }
 
+        public static void ShowPriceList(int ID)
+        {
+            foreach (var (key, value) in Starter.MagazinesList)
+            {
+                if (key.ShopID == ID)
+                {
+                    foreach (Shop.Product aProduct in value)
+                    {
+                        Console.WriteLine("//Уникальный номер:" + aProduct.ProductID + "// Имя продукта " + aProduct.ProductName + " //Цена: " +
+                                         aProduct.ProductPrice + "//Количество :" + aProduct.ProductQuantity);
+                    }
+                }
+            }
+        }
         public static void editPrice(int shopID, string ProdName, int newPrice)
         {
             foreach (var (key, value) in Starter.MagazinesList)
             {
                 if (key.ShopID == shopID)
                 {
-                  
+
                     foreach (Shop.Product p in value)
                     {
                         if (p.ProductName == ProdName)
@@ -241,39 +255,41 @@ namespace ShopsAssist
             }
         }
 
-        public static void Bomj(int ID, int wallet)
-        {
-            var shoplist = Starter.MagazinesList.ElementAt(ID-1);
+        public static List<string> Bomj(int ID, int wallet)
+        {   List<string> testList = new List<string>();
+            int sum = 0, que = 0;
+            var shoplist = Starter.MagazinesList.ElementAt(ID - 1);
             var productlist = shoplist.Value.Count;
             Console.WriteLine($"{productlist}");
 
             var selectedProd = from prod in shoplist.Value
-                    where prod.ProductPrice < wallet
-                    select prod;
-                foreach (Shop.Product product in selectedProd)
+                               where prod.ProductPrice < wallet
+                               select prod;
+            foreach (Shop.Product product in selectedProd)
+            {
+               
+                int max = product.getQuantity();
+                que = wallet / product.ProductPrice;
+                sum = que * product.ProductPrice;
+                if (que <= max)
                 {
-                    int sum, que;
-                    int max = product.getQuantity();
-                    que = wallet / product.ProductPrice;
-                    sum = que * product.ProductPrice;
-                    if (que <= max )
-                    {
-                        Console.WriteLine(
-                            $"можно купить {product.getName()}, на сумму:{sum}, в количестве: {que}");
-                    }
-
+                    Console.WriteLine($"можно купить {product.getName()}, на сумму:{sum}, в количестве: {que}");
+                    testList.Add($"можно купить {product.getName()}, на сумму:{sum}, в количестве: {que}");
                 }
 
-            
+            }
+
+            return testList;
+
         }
 
-        public static void CalcLot(int ShopID, int ProdID, int ProdQ)
-        {
+        public static int CalcLot(int ShopID, int ProdID, int ProdQ)
+        {int sum = 0;
             foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
             {
                 if (kvp.Key.ShopID == ShopID)
                 {
-                    int sum = 0;
+                    
                     foreach (Shop.Product p in kvp.Value)
                     {
                         if (p.ProductID == ProdID)
@@ -281,8 +297,8 @@ namespace ShopsAssist
                             if (ProdQ <= p.ProductQuantity)
                             {
 
-                                 sum = ProdQ * p.ProductPrice;
-                               
+                                sum = ProdQ * p.ProductPrice;
+
                             }
                             else
                             {
@@ -294,24 +310,25 @@ namespace ShopsAssist
                 }
 
             }
-
+            return sum;
         }
 
-        public static void AloneBuyHelp(int prodID)
-        {  int savePrice = 999999;
+        public static int AloneBuyHelp(int prodID)
+        {
+            int savePrice = 999999;
             int iterator = 0;
             string Adr = null;
             string name = null;
             int id = 0;
             foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
             {
-              
+
                 foreach (Shop.Product price in kvp.Value)
                 {
                     if (price.ProductID == prodID)
                     {
                         if (savePrice > price.ProductPrice)
-                        { 
+                        {
                             savePrice = price.ProductPrice;
                             iterator++;
                         }
@@ -320,55 +337,57 @@ namespace ShopsAssist
 
                 if (kvp.Key.ShopID == iterator)
                 {
-                   name = kvp.Key.ShopName;
-                   id = kvp.Key.ShopID;
-                   Adr =  kvp.Key.Adress;
+                    name = kvp.Key.ShopName;
+                    id = kvp.Key.ShopID;
+                    Adr = kvp.Key.Adress;
                 }
             }
 
-                    Console.WriteLine($"Дешевле в магазине : {name} ({id}), цена продукта : {savePrice}");
-                    Console.WriteLine($"Адрес магазина : {Adr}");
+            Console.WriteLine($"Дешевле в магазине : {name} ({id}), цена продукта : {savePrice}");
+            Console.WriteLine($"Адрес магазина : {Adr}");
+            return savePrice;
 
         }
 
-        public static void ListBuyHelp(List<(string,int)> userList)
+        public static int ListBuyHelp(List<(string, int)> userList)
 
         {
-                List< int> chek = new List<int>();
-                int chekSumm = userList.Count;
-                string Adress = null;
-                string Name = null;
-                foreach (var (key , value) in Starter.MagazinesList)
+            List<int> chek = new List<int>();
+            int chekSumm = userList.Count;
+            string Adress = null;
+            string Name = null;
+            foreach (var (key, value) in Starter.MagazinesList)
+            {
+                int sum = 0;
+                string shopName = null;
+                int count = 0;
+                var itemList = from item in userList
+                               select item;
+                foreach (Shop.Product product in value)
                 {
-                    int sum = 0;
-                    string shopName = null;
-                    int count = 0;
-                    var itemList = from item in userList
-                    select item;
-                    foreach (Shop.Product product in value)
+                    foreach (var item in itemList)
                     {
-                        foreach (var item in itemList)
+                        int itemSum;
+                        if (item.Item1 == product.ProductName & item.Item2 <= product.ProductQuantity)
                         {
-                            int itemSum;
-                            if (item.Item1 == product.ProductName & item.Item2 <= product.ProductQuantity)
-                            {
-                                itemSum = item.Item2 * product.ProductPrice;
-                                sum += itemSum;
-                                count++;
-                            }
-
+                            itemSum = item.Item2 * product.ProductPrice;
+                            sum += itemSum;
+                            count++;
                         }
-                    }
-                    if (chekSumm == count)
-                    { 
-                        chek.Add(sum);
-                        sum = 0;
-                    }
 
+                    }
                 }
-          
-                Console.WriteLine($"Сумма покупки:{chek.Min()}");
+                if (chekSumm == count)
+                {
+                    chek.Add(sum);
+                    sum = 0;
+                }
+
+            }
+
+            Console.WriteLine($"Сумма покупки:{chek.Min()}");
+            return chek.Min();
         }
-        
+
     }
 }
