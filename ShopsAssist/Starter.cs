@@ -177,7 +177,9 @@ namespace ShopsAssist
                             break;
 
                     case 4:
-                        ExprotExcel.ExportExcel();break;
+                        ExprotExcel.ExportExcel();
+                        ExprotExcel.CreateShopEx();
+                        break;
                     }
                 
             }

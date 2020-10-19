@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -425,12 +426,53 @@ namespace ShopsAssist
                     }
                 }
 
-                FileInfo fi = new FileInfo(
-                        @"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
+                FileInfo fi = new FileInfo(@"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
                 excelPackage.SaveAs(fi);
 
             }
         }
+
+        public static void CreateShopEx()
+        {
+            Shop.newPriceList.Clear();
+          
+            FileInfo fi = new FileInfo(@"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
+            using (ExcelPackage excelPackage = new ExcelPackage(fi))
+            {
+                ExcelWorksheet firstWorksheet = excelPackage.Workbook.Worksheets["Sheet 1"];
+
+                var row = 1;
+                while (row < 8)
+                {
+                    row++;
+                    string sProdID = firstWorksheet.Cells[row, 1].Value.ToString();
+                    string ProdName = firstWorksheet.Cells[row, 2].Value.ToString();
+                    string sProdPrice = firstWorksheet.Cells[row, 3].Value.ToString();
+                    string sProdq = firstWorksheet.Cells[row, 4].Value.ToString();
+
+                    int ProdID = Convert.ToInt32(sProdID);
+                    int ProdPrice = Convert.ToInt32(sProdPrice);
+                    int ProdQ = Convert.ToInt32(sProdq);
+                    Shop.addProduct(ProdName,ProdID,ProdPrice,ProdQ);
+
+                }
+               
+
+                //Save your file
+                excelPackage.Save();
+            }  
+            var NewExShop = new Shop.Magazine
+            {
+                ShopID = 04,
+                ShopName = "SomeShopEx",
+                Adress = "Excel street 24"
+            };
+
+            List<Shop.Product> newListExcel = new List<Shop.Product>(Shop.newPriceList);
+            Starter.MagazinesList.Add(NewExShop,newListExcel);
+
+        }
+
 
 
     }
