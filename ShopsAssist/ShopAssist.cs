@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -28,9 +27,9 @@ namespace ShopsAssist
 
         }
 
-        public static List<Product> newPriceList = new List<Product>();
+        public static List<Product> newPriceList = new List<Product>();//--
 
-        public struct Magazine
+        public struct Magazine//---
         {
             public int ShopID;
             public string ShopName;

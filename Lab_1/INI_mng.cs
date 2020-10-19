@@ -37,21 +37,21 @@ namespace CFG_mng
             ParamList.Add(recordParam, NameOfSector);
         }
 
-       public static void getInt(string value)                
+       public static int getInt(string value)          //ret       
          {
              int ParamValue = Convert.ToInt32(value);
-             Console.WriteLine($"intValue = {ParamValue}");
+             return ParamValue;
          }
-       public static void getDouble(string value)
+       public static double getDouble(string value)
          {
              Double ParamValue = Convert.ToDouble(value);
-             Console.WriteLine($"doubleValue = {ParamValue}");
-        }
-       public static void getStr(string value)
-         {
+             return ParamValue;
+         }
+       public static string getStr(string value)
+       {
              string ParamValue = Convert.ToString(value);
-             Console.WriteLine($"stringValue = {ParamValue}");
-        }
+             return ParamValue;
+       }
 
         public bool ParseString(string fileString)//red
         {
@@ -95,30 +95,30 @@ namespace CFG_mng
         {
 
             var fileInfo = new FileInfo(Pathfile);
-            if (fileInfo.Exists && fileInfo.Extension == ".ini")
-            {
-                try
-                {
-                    using (StreamReader sr = new StreamReader(Pathfile, System.Text.Encoding.Default))
-                    { 
-                        string fileString;
-                       for (_numstring = 1; (fileString = sr.ReadLine()) != null; _numstring++)
-                        {
-                            if (ParseString(fileString))
-                            {
-                            }
-                        }
-                    } 
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.Message + " in " + Pathfile);
-                    throw;
-                }
-            }
-            else
+            if (!fileInfo.Exists || fileInfo.Extension != ".ini")
             {
                 throw new FileNotFoundException("Место расположения недоступно " + Pathfile);
+            }
+
+            try
+            {
+                using (StreamReader sr = new StreamReader(Pathfile, System.Text.Encoding.Default))
+                {
+                    string fileString;
+                    for (_numstring = 1; (fileString = sr.ReadLine()) != null;)
+                    {
+                      if(ParseString(fileString))
+                      {
+                          _numstring++;
+                      }
+                        
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message + " in " + Pathfile);
+                throw;
             }
         }
 
@@ -150,7 +150,7 @@ namespace CFG_mng
                 if (key.ParamName == enterKey)
                 {
 
-                    Parser.getInt(key.ParamValue);
+                    Console.WriteLine(Parser.getInt(key.ParamValue));
                 }
 
                 if (key.ParamValue == enterKey)
