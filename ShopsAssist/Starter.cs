@@ -7,13 +7,17 @@ namespace ShopsAssist
     public class Starter
     {
 
-        public static Dictionary<Shop.Magazine, List<Shop.Product>> MagazinesList = new Dictionary<Shop.Magazine, List<Shop.Product>>();
+        public static List<Shop> MagazinesList = new List<Shop>();
 
         static void Main()
         {
-            Shop shop1 = new Shop(01, "Пятёрочка", "Бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList1.txt");
-            Shop shop2 = new Shop(02, "Магнит", "Соседний бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList2.txt");
-            Shop shop3 = new Shop(03, "Обрыгаловка", "Параллельный бульвар 4", "C:/Users/Андрейка/Source/Repos/TomGnill/ITMO_OOP_2020/ShopsAssist/SupplyList3.txt");
+            Shop shop1 = new Shop(01, "Пятёрочка", "Бульвар 4", "Shop1");
+            MagazinesList.Add(shop1);
+            Shop shop2 = new Shop(02, "Магнит", "Соседний бульвар 4", "Shop2"); 
+            MagazinesList.Add(shop2);
+            Shop shop3 = new Shop(03, "Обрыгаловка", "Параллельный бульвар 4", "Shop3");
+            MagazinesList.Add(shop3);
+            
             while (true)
             {
                 Console.WriteLine("1.Операции с магазином");
@@ -21,8 +25,6 @@ namespace ShopsAssist
                 Console.WriteLine("2.Делаем покупки выгодными");
 
                 Console.WriteLine("3. Тестирование функций");
-
-                Console.WriteLine("4.Dev//Перенос списка товаров в excel//");
 
                 Console.WriteLine("Выбери пункт:");
 
@@ -55,11 +57,12 @@ namespace ShopsAssist
 
                                    string newshopAdress = Console.ReadLine();
 
-                                   Console.WriteLine("путь к списку товаров:");
+                                   Console.WriteLine("Название страницы с товарами в файле PriseList.xlsx:");
 
                                    string catlog2 = Console.ReadLine();
 
                                    Shop newShop = new Shop(newshopID, newshopName, newshopAdress, catlog2);
+                                   MagazinesList.Add(newShop);
 
                                    break;
 
@@ -76,7 +79,7 @@ namespace ShopsAssist
 
                                    int NewPrice = Convert.ToInt32(Console.ReadLine());
 
-                                   MenusFitues.editPrice(ID, ProductName, NewPrice);
+                                   Shop.EditPrice(ID, ProductName, NewPrice);
 
                                    break
                                        ;
@@ -90,7 +93,7 @@ namespace ShopsAssist
 
                                    int wallet = Convert.ToInt32(Console.ReadLine());
 
-                                   MenusFitues.Bomj(shopID2, wallet);
+                                   Shop.Bomj(shopID2, wallet);
 
                                    break;
                                case 4:
@@ -106,18 +109,16 @@ namespace ShopsAssist
 
                                    int Que = Convert.ToInt32(Console.ReadLine());
 
-                                MenusFitues.CalcLot(ShopID3, prodID, Que);
+                                Shop.CalcLot(ShopID3, prodID, Que);
                                    break;
                             case 5: 
-                                MenusFitues.ShowMagazinesList();
+                                Shop.ShowMagazinesList();
                                 break;
                             case 6:
                                 Console.WriteLine("Введите ID магазина");
                                 int ShopID = Convert.ToInt32(Console.ReadLine());
-                                MenusFitues.ShowPriceList(ShopID);
+                                Shop.ShowPriceList(ShopID);
                                 break;
-
-
                            }
 
 
@@ -133,7 +134,7 @@ namespace ShopsAssist
                             case 1:
                                 Console.WriteLine("введите ID товара");
                                 int ProdID = Convert.ToInt32(Console.ReadLine());
-                                MenusFitues.AloneBuyHelp(ProdID);
+                                Shop.AloneBuyHelp(ProdID);
                                 break;
                             case 2: 
                                 Console.WriteLine("Введите имена товаров, когда закончите введите stop ");
@@ -147,7 +148,7 @@ namespace ShopsAssist
                                     name = Console.ReadLine();
                                     if (name == "stop")
                                     { 
-                                        MenusFitues.ListBuyHelp(shopping);
+                                        Shop.ListBuyHelp(shopping);
                                         break;
                                     }
                                     Console.WriteLine("Количество :");
@@ -175,11 +176,6 @@ namespace ShopsAssist
                                 Main();
                             }
                             break;
-
-                    case 4:
-                        ExprotExcel.ExportExcel();
-                        ExprotExcel.CreateShopEx();
-                        break;
                     }
                 
             }

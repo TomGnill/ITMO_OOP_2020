@@ -1,273 +1,207 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
-using OfficeOpenXml;
-
-
 
 namespace ShopsAssist
 {
     public class Shop
     {
+        public int ShopId;
+        public string ShopName;
+        public string Adress;
+        public static string SupplyList { get; set; }
+        public List<Product> Products;
 
-        public Shop(int ID, string Name, string adr, string SupplyList)
+        public Shop(int id, string name, string adr, string supplyList11)
         {
-            var newMagazine = new Magazine
-            {
-                ShopID = ID,
-                ShopName = Name,
-                Adress = adr,
-            };
-
-            SetPriceList(SupplyList);
-            List<Product> newPriceList1 = new List<Product>(newPriceList);
-            Starter.MagazinesList.Add(newMagazine, newPriceList1);
-
+            ShopId = id;
+            ShopName = name;
+            Adress = adr;
+            SupplyList = supplyList11;
+            Products = SetPriceList();
         }
-
-        public static List<Product> newPriceList = new List<Product>();//--
-
-        public struct Magazine//---
-        {
-            public int ShopID;
-            public string ShopName;
-            public string Adress;
-
-            public int getID()
-            {
-                return ShopID;
-            }
-
-            public string getName()
-            {
-                return ShopName;
-            }
-
-            public string getAdr()
-            {
-                return Adress;
-            }
-        }
+        public static List<Product> priceList = new List<Product>();
 
         public struct Product
         {
             public string ProductName;
-
-
-            public int ProductID;
+            public int ProductId;
             public int ProductQuantity;
             public int ProductPrice;
 
-            public int getID()
+            public int GetId()
             {
-                return ProductID;
+                return ProductId;
             }
 
-            public string getName()
+            public string GetName()
             {
                 return ProductName;
             }
 
-            public void editQuantity(int ProdQ)
+            public void EditQuantity(int prodQ)
 
             {
-                ProductQuantity += ProdQ;
+                ProductQuantity += prodQ;
             }
 
-            public int getQuantity()
+            public int GetQuantity()
             {
                 return ProductQuantity;
             }
 
-            public void editPrice(int ProdP)
+            public void EditPrice(int prodP)
             {
-                ProductPrice = ProdP;
+                ProductPrice = prodP;
             }
 
-            public int getPrice()
+            public int GetPrice()
             {
                 return ProductPrice;
             }
         }
 
-        public static void addProduct(string ProdName, int ProdID, int ProdQ, int ProdP) //метод создать продукт
+        public static void AddProduct(string prodName, int prodId, int prodQ, int prodP) //метод создать продукт
         {
             Product newProduct = new Product
             {
-                ProductName = ProdName,
-                ProductID = ProdID,
-                ProductQuantity = ProdQ,
-                ProductPrice = ProdP
+                ProductName = prodName,
+                ProductId = prodId,
+                ProductQuantity = prodQ,
+                ProductPrice = prodP
             };
-            newPriceList.Add(newProduct);
+
+                priceList.Add(newProduct);
 
         }
 
-        public static string Pathfile { get; set; }
-        private static UInt16 numstring;
-
-        public static void SetPriceList(string catlog)
+        public static List<Product> SetPriceList()
         {
-            newPriceList.Clear();
-            numstring = 0;
-            Pathfile = catlog;
-            OpenList();
-        }
+            priceList.Clear();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+          
 
-        public static void AddPriceList(string catlog, List<Product> aList)
-        {
-            numstring = 0;
-            Pathfile = catlog;
-            OpenList();
-        }
+            byte[] bin = File.ReadAllBytes("C:/Users/Андрейка/source/repos/TomGnill/ITMO_OOP_2020/ShopsAssist/PriceList's/PriceList.xlsx");
 
-        public static void OpenList()
-        {
-            var fileInfo = new FileInfo(Pathfile);
-            if (fileInfo.Exists && fileInfo.Extension == ".txt")
+            using (MemoryStream stream = new MemoryStream(bin))
+            using (ExcelPackage excelPackage = new ExcelPackage(stream))
             {
-                try
+                ExcelWorksheet firstWorksheet = excelPackage.Workbook.Worksheets[SupplyList];
+
+
+                var row = 1;
+                while (row < firstWorksheet.Dimension.End.Row)
                 {
-                    using (StreamReader sr = new StreamReader(Pathfile, System.Text.Encoding.Default))
-                    {
-                        string fileString;
-                        for (numstring = 1; (fileString = sr.ReadLine()) != null;)
-                        {
-                            if (SetShopPrice(fileString))
-                            {
-                                numstring++;
-                            }
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.Message + " in " + Pathfile);
-                    throw;
-                }
-            }
-            else
-            {
-                throw new FileNotFoundException("Место расположения недоступно " + Pathfile);
-            }
+                    row++;
+                    string sProdId = firstWorksheet.Cells[row, 1].Value.ToString();
+                    string prodName = firstWorksheet.Cells[row, 2].Value.ToString();
+                    string sProdPrice = firstWorksheet.Cells[row, 3].Value.ToString();
+                    string sProdq = firstWorksheet.Cells[row, 4].Value.ToString();
+
+                    int prodId = Convert.ToInt32(sProdId);
+                    int prodPrice = Convert.ToInt32(sProdPrice);
+                    int prodQ = Convert.ToInt32(sProdq);
+                    AddProduct(prodName, prodId, prodQ, prodPrice);
+
+                } 
+              
+
+
+                //Save your file
+                excelPackage.Save();
+            } 
+            List<Product> priceList1 = new List<Product>(priceList);
+            return priceList1;
         }
 
-        public static bool SetShopPrice(string filestring)
-        {
-
-            filestring = filestring.Trim();
-
-            if (filestring.Trim().Length == 0)
-            {
-                return false;
-            }
-
-            var parline = filestring.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
-
-            if (parline.Length != 4)
-            {
-                throw new Exception("Некорректный формат параметра" + Convert.ToString(numstring));
-            }
-
-            Regex.Matches(parline[0], "[A-Za-z0-9_/]");
-
-            Regex.Matches(parline[1], "[A-Za-z0-9_/]");
-
-            int ProdID = Convert.ToInt32(parline[1]);
-
-
-
-            Regex.Matches(parline[2], "[A-Za-z0-9_/]");
-
-            int ProdQ = Convert.ToInt32(parline[2]);
-            
-            Regex.Matches(parline[3], "[A-Za-z0-9_/]");
-
-            int ProdP = Convert.ToInt32(parline[3]);
-
-            addProduct(parline[0], ProdID, ProdQ, ProdP);
-
-            return true;
-        }
-    }
-
-    public class MenusFitues
-    {
         public static void ShowMagazinesList()
         {
-            foreach (var (key, value) in Starter.MagazinesList)
+            foreach (Shop magazine in Starter.MagazinesList)
             {
-                Console.WriteLine("//Уникальный номер:" + key.ShopID + "// Имя магазина: " + key.ShopName +
+                Console.WriteLine("//Уникальный номер:" + magazine.ShopId + "// Имя магазина: " + magazine.ShopName +
                                   " //Адрес: " +
-                                  key.Adress);
+                                  magazine.Adress);
             }
         }
 
-        public static void ShowPriceList(int ID)
+
+        public static void ShowPriceList(int id)
         {
-            foreach (var (key, value) in Starter.MagazinesList)
+            foreach (Shop magazine in Starter.MagazinesList)
             {
-                if (key.ShopID == ID)
+                if (magazine.ShopId == id)
                 {
-                    foreach (Shop.Product aProduct in value)
+                    foreach (Product aProduct in magazine.Products)
                     {
-                        Console.WriteLine("//Уникальный номер:" + aProduct.ProductID + "// Имя продукта " +
-                                          aProduct.ProductName + " //Цена: " +
-                                          aProduct.ProductPrice + "//Количество :" + aProduct.ProductQuantity);
+                        Console.WriteLine("//Уникальный номер:" + aProduct.ProductId + "// Имя продукта " + aProduct.ProductName + " //Цена: " + aProduct.ProductPrice + "//Количество :" + aProduct.ProductQuantity);
                     }
                 }
             }
         }
 
-        public static void editPrice(int shopID, string ProdName, int newPrice)
+        public static void EditPrice(int shopId, string prodName, int newPrice)
         {
-            foreach (var (key, value) in Starter.MagazinesList)
+            int saveID;
+            string saveName;
+            int saveQ;
+            int index = 0;
+            Product newPriceProduct;
+            foreach (Shop magazine in Starter.MagazinesList)
             {
-                if (key.ShopID == shopID)
+                if (magazine.ShopId == shopId)
                 {
 
-                    foreach (Shop.Product p in value)
+                    foreach (Product p in magazine.Products)
                     {
-                        if (p.ProductName == ProdName)
+                       
+
+                        if (p.ProductName == prodName)
                         {
-                            p.editPrice(newPrice);
+                            saveID = p.ProductId;
+                            saveName = p.ProductName;
+                            saveQ = p.ProductQuantity;
+
+                            newPriceProduct = new Product()
+                            {
+                                ProductPrice = newPrice,
+                                ProductId = saveID,
+                                ProductQuantity = saveQ,
+                                ProductName = saveName
+                            };
+                            magazine.Products[index] = newPriceProduct;
+                            break;
                         }
-                        else
-                        {
-                            throw new Exception("Такого товара в магазине нет");
-                        }
+                        index++;
                     }
-                }
-                else
-                {
-                    throw new Exception("Такого магазина  нет");
                 }
             }
         }
 
-        public static List<string> Bomj(int ID, int wallet)
+        public static List<string> Bomj(int id, int wallet)
         {
             List<string> testList = new List<string>();
             int sum = 0, que = 0;
-            var shoplist = Starter.MagazinesList.ElementAt(ID - 1);
-            var productlist = shoplist.Value.Count;
+            var shoplist = Starter.MagazinesList.ElementAt(id - 1);
+            var productlist = shoplist.Products.Count;
             Console.WriteLine($"{productlist}");
 
-            var selectedProd = from prod in shoplist.Value
-                where prod.ProductPrice < wallet
-                select prod;
-            foreach (Shop.Product product in selectedProd)
+            var selectedProd = from prod in shoplist.Products
+                               where prod.ProductPrice < wallet
+                               select prod;
+            foreach (Product product in selectedProd)
             {
 
-                int max = product.getQuantity();
+                int max = product.GetQuantity();
                 que = wallet / product.ProductPrice;
                 sum = que * product.ProductPrice;
                 if (que <= max)
                 {
-                    Console.WriteLine($"можно купить {product.getName()}, на сумму:{sum}, в количестве: {que}");
-                    testList.Add($"можно купить {product.getName()}, на сумму:{sum}, в количестве: {que}");
+                    Console.WriteLine($"можно купить {product.GetName()}, на сумму:{sum}, в количестве: {que}");
+                    testList.Add($"можно купить {product.GetName()}, на сумму:{sum}, в количестве: {que}");
                 }
 
             }
@@ -276,22 +210,22 @@ namespace ShopsAssist
 
         }
 
-        public static int CalcLot(int ShopID, int ProdID, int ProdQ)
+        public static int CalcLot(int shopId, int prodId, int prodQ)
         {
             int sum = 0;
-            foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
+            foreach (Shop magazine in Starter.MagazinesList)
             {
-                if (kvp.Key.ShopID == ShopID)
+                if (magazine.ShopId == shopId)
                 {
 
-                    foreach (Shop.Product p in kvp.Value)
+                    foreach (Product p in magazine.Products)
                     {
-                        if (p.ProductID == ProdID)
+                        if (p.ProductId == prodId)
                         {
-                            if (ProdQ <= p.ProductQuantity)
+                            if (prodQ <= p.ProductQuantity)
                             {
 
-                                sum = ProdQ * p.ProductPrice;
+                                sum = prodQ * p.ProductPrice;
 
                             }
                             else
@@ -309,19 +243,20 @@ namespace ShopsAssist
             return sum;
         }
 
-        public static int AloneBuyHelp(int prodID)
+        public static int AloneBuyHelp(int prodId)
         {
             int savePrice = 999999;
             int iterator = 0;
-            string Adr = null;
+            string adr = null;
             string name = null;
+
             int id = 0;
-            foreach (KeyValuePair<Shop.Magazine, List<Shop.Product>> kvp in Starter.MagazinesList)
+            foreach (Shop magazine in Starter.MagazinesList)
             {
 
-                foreach (Shop.Product price in kvp.Value)
+                foreach (Product price in magazine.Products)
                 {
-                    if (price.ProductID == prodID)
+                    if (price.ProductId == prodId)
                     {
                         if (savePrice > price.ProductPrice)
                         {
@@ -331,16 +266,16 @@ namespace ShopsAssist
                     }
                 }
 
-                if (kvp.Key.ShopID == iterator)
+                if (magazine.ShopId == iterator)
                 {
-                    name = kvp.Key.ShopName;
-                    id = kvp.Key.ShopID;
-                    Adr = kvp.Key.Adress;
+                    name = magazine.ShopName;
+                    id = magazine.ShopId;
+                    adr = magazine.Adress;
                 }
             }
 
             Console.WriteLine($"Дешевле в магазине : {name} ({id}), цена продукта : {savePrice}");
-            Console.WriteLine($"Адрес магазина : {Adr}");
+            Console.WriteLine($"Адрес магазина : {adr}");
             return savePrice;
 
         }
@@ -350,16 +285,14 @@ namespace ShopsAssist
         {
             List<int> chek = new List<int>();
             int chekSumm = userList.Count;
-            string Adress = null;
-            string Name = null;
-            foreach (var (key, value) in Starter.MagazinesList)
+            foreach (Shop magazine in Starter.MagazinesList)
             {
                 int sum = 0;
-                string shopName = null;
+
                 int count = 0;
                 var itemList = from item in userList
-                    select item;
-                foreach (Shop.Product product in value)
+                               select item;
+                foreach (Product product in magazine.Products)
                 {
                     foreach (var item in itemList)
                     {
@@ -385,94 +318,5 @@ namespace ShopsAssist
             Console.WriteLine($"Сумма покупки:{chek.Min()}");
             return chek.Min();
         }
-
-    }
-
-    public class ExprotExcel
-    { 
-        public static void ExportExcel()
-        {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (ExcelPackage excelPackage = new ExcelPackage())
-            {
-             
-                excelPackage.Workbook.Properties.Author = "TomGnill";
-                excelPackage.Workbook.Properties.Title = "PriceList Shop1";
-                excelPackage.Workbook.Properties.Subject = "EPPlus demo export data";
-                excelPackage.Workbook.Properties.Created = DateTime.Now;
-
-              
-                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
-                worksheet.Cells[1, 1].Value = "Product ID";
-                worksheet.Cells[1, 2].Value = "Product Name";
-                worksheet.Cells[1, 3].Value = "Product Price";
-                worksheet.Cells[1, 4].Value = "Product Quantity";
-                var row = 1;
-                foreach (var (key, value) in Starter.MagazinesList)
-                {
-                    if (key.ShopID == 1)
-                    {
-                        foreach (Shop.Product product in value)
-                        {
-                            row++;
-                            worksheet.Cells[row, 1].Value = product.ProductID;
-                            worksheet.Cells[row, 2].Value = product.ProductName;
-                            worksheet.Cells[row, 3].Value = product.ProductPrice;
-                            worksheet.Cells[row, 4].Value = product.ProductQuantity;
-
-
-                        }
-                    }
-                }
-
-                FileInfo fi = new FileInfo(@"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
-                excelPackage.SaveAs(fi);
-
-            }
-        }
-
-        public static void CreateShopEx()
-        {
-            Shop.newPriceList.Clear();
-          
-            FileInfo fi = new FileInfo(@"C:\Users\Андрейка\source\repos\TomGnill\ITMO_OOP_2020\ShopsAssist\PriceList's\PriceList1.xlsx");
-            using (ExcelPackage excelPackage = new ExcelPackage(fi))
-            {
-                ExcelWorksheet firstWorksheet = excelPackage.Workbook.Worksheets["Sheet 1"];
-
-                var row = 1;
-                while (row < 8)
-                {
-                    row++;
-                    string sProdID = firstWorksheet.Cells[row, 1].Value.ToString();
-                    string ProdName = firstWorksheet.Cells[row, 2].Value.ToString();
-                    string sProdPrice = firstWorksheet.Cells[row, 3].Value.ToString();
-                    string sProdq = firstWorksheet.Cells[row, 4].Value.ToString();
-
-                    int ProdID = Convert.ToInt32(sProdID);
-                    int ProdPrice = Convert.ToInt32(sProdPrice);
-                    int ProdQ = Convert.ToInt32(sProdq);
-                    Shop.addProduct(ProdName,ProdID,ProdPrice,ProdQ);
-
-                }
-               
-
-                //Save your file
-                excelPackage.Save();
-            }  
-            var NewExShop = new Shop.Magazine
-            {
-                ShopID = 04,
-                ShopName = "SomeShopEx",
-                Adress = "Excel street 24"
-            };
-
-            List<Shop.Product> newListExcel = new List<Shop.Product>(Shop.newPriceList);
-            Starter.MagazinesList.Add(NewExShop,newListExcel);
-
-        }
-
-
-
     }
 }
