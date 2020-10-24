@@ -24,7 +24,6 @@ namespace ShopsAssist
             SupplyList = supplyList11;
             Products = SetPriceList();
         }
-        public static List<Product> priceList = new List<Product>();
 
         public struct Product
         {
@@ -33,39 +32,18 @@ namespace ShopsAssist
             public int ProductQuantity;
             public int ProductPrice;
 
-            public int GetId()
-            {
-                return ProductId;
-            }
-
             public string GetName()
             {
                 return ProductName;
-            }
-
-            public void EditQuantity(int prodQ)
-
-            {
-                ProductQuantity += prodQ;
             }
 
             public int GetQuantity()
             {
                 return ProductQuantity;
             }
-
-            public void EditPrice(int prodP)
-            {
-                ProductPrice = prodP;
-            }
-
-            public int GetPrice()
-            {
-                return ProductPrice;
-            }
         }
 
-        public static void AddProduct(string prodName, int prodId, int prodQ, int prodP) //метод создать продукт
+        public static Product AddProduct(string prodName, int prodId, int prodQ, int prodP) //метод создать продукт
         {
             Product newProduct = new Product
             {
@@ -75,14 +53,15 @@ namespace ShopsAssist
                 ProductPrice = prodP
             };
 
-                priceList.Add(newProduct);
+            return newProduct;
 
         }
 
         public static List<Product> SetPriceList()
         {
-            priceList.Clear();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            List<Product> priceList1 = new List<Product>();
+            Product newProduct;
           
 
             byte[] bin = File.ReadAllBytes("C:/Users/Андрейка/source/repos/TomGnill/ITMO_OOP_2020/ShopsAssist/PriceList's/PriceList.xlsx");
@@ -105,16 +84,13 @@ namespace ShopsAssist
                     int prodId = Convert.ToInt32(sProdId);
                     int prodPrice = Convert.ToInt32(sProdPrice);
                     int prodQ = Convert.ToInt32(sProdq);
-                    AddProduct(prodName, prodId, prodQ, prodPrice);
+                    newProduct = AddProduct(prodName, prodId, prodQ, prodPrice);
+                    priceList1.Add(newProduct);
 
-                } 
-              
-
-
-                //Save your file
+                }
                 excelPackage.Save();
             } 
-            List<Product> priceList1 = new List<Product>(priceList);
+          
             return priceList1;
         }
 
