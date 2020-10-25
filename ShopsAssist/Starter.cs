@@ -24,8 +24,6 @@ namespace ShopsAssist
 
                 Console.WriteLine("2.Делаем покупки выгодными");
 
-                Console.WriteLine("3. Тестирование функций");
-
                 Console.WriteLine("Выбери пункт:");
 
                 int select = Convert.ToInt32(Console.ReadLine());
@@ -163,12 +161,7 @@ namespace ShopsAssist
                             }
                             break;
 
-                    case 3:
-                        Tests.Search();
-                        Tests.AloneBuy();
-                        Tests.bomj();
-                        Tests.ListBuyHelp();
-                        break;
+                 
 
                         default:
                             {
