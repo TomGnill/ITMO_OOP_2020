@@ -1,10 +1,9 @@
 ﻿using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+
 
 namespace ShopsAssist
 {
@@ -31,16 +30,6 @@ namespace ShopsAssist
             public int ProductId;
             public int ProductQuantity;
             public int ProductPrice;
-
-            public string GetName()
-            {
-                return ProductName;
-            }
-
-            public int GetQuantity()
-            {
-                return ProductQuantity;
-            }
         }
 
         public static Product AddProduct(string prodName, int prodId, int prodQ, int prodP) //метод создать продукт
@@ -107,15 +96,9 @@ namespace ShopsAssist
 
         public static void ShowPriceList(int id)
         {
-            foreach (Shop magazine in Starter.MagazinesList)
+            foreach (var aProduct in Starter.MagazinesList.Where(magazine => magazine.ShopId == id).SelectMany(magazine => magazine.Products))
             {
-                if (magazine.ShopId == id)
-                {
-                    foreach (Product aProduct in magazine.Products)
-                    {
-                        Console.WriteLine("//Уникальный номер:" + aProduct.ProductId + "// Имя продукта " + aProduct.ProductName + " //Цена: " + aProduct.ProductPrice + "//Количество :" + aProduct.ProductQuantity);
-                    }
-                }
+                Console.WriteLine("//Уникальный номер:" + aProduct.ProductId + "// Имя продукта " + aProduct.ProductName + " //Цена: " + aProduct.ProductPrice + "//Количество :" + aProduct.ProductQuantity);
             }
         }
 
@@ -126,33 +109,27 @@ namespace ShopsAssist
             int saveQ;
             int index = 0;
             Product newPriceProduct;
-            foreach (Shop magazine in Starter.MagazinesList)
+            foreach (var magazine in Starter.MagazinesList.Where(magazine => magazine.ShopId == shopId))
             {
-                if (magazine.ShopId == shopId)
+                foreach (Product p in magazine.Products)
                 {
-
-                    foreach (Product p in magazine.Products)
+                    if (p.ProductName == prodName)
                     {
-                       
+                        saveID = p.ProductId;
+                        saveName = p.ProductName;
+                        saveQ = p.ProductQuantity;
 
-                        if (p.ProductName == prodName)
+                        newPriceProduct = new Product()
                         {
-                            saveID = p.ProductId;
-                            saveName = p.ProductName;
-                            saveQ = p.ProductQuantity;
-
-                            newPriceProduct = new Product()
-                            {
-                                ProductPrice = newPrice,
-                                ProductId = saveID,
-                                ProductQuantity = saveQ,
-                                ProductName = saveName
-                            };
-                            magazine.Products[index] = newPriceProduct;
-                            break;
-                        }
-                        index++;
+                            ProductPrice = newPrice,
+                            ProductId = saveID,
+                            ProductQuantity = saveQ,
+                            ProductName = saveName
+                        };
+                        magazine.Products[index] = newPriceProduct;
+                        break;
                     }
+                    index++;
                 }
             }
         }
@@ -171,13 +148,13 @@ namespace ShopsAssist
             foreach (Product product in selectedProd)
             {
 
-                int max = product.GetQuantity();
+                int max = product.ProductQuantity;
                 que = wallet / product.ProductPrice;
                 sum = que * product.ProductPrice;
                 if (que <= max)
                 {
-                    Console.WriteLine($"можно купить {product.GetName()}, на сумму:{sum}, в количестве: {que}");
-                    testList.Add($"можно купить {product.GetName()}, на сумму:{sum}, в количестве: {que}");
+                    Console.WriteLine($"можно купить {product.ProductName}, на сумму:{sum}, в количестве: {que}");
+                    testList.Add($"можно купить {product.ProductName}, на сумму:{sum}, в количестве: {que}");
                 }
 
             }
@@ -189,31 +166,24 @@ namespace ShopsAssist
         public static int CalcLot(int shopId, int prodId, int prodQ)
         {
             int sum = 0;
-            foreach (Shop magazine in Starter.MagazinesList)
+            foreach (var magazine in Starter.MagazinesList.Where(magazine => magazine.ShopId == shopId))
             {
-                if (magazine.ShopId == shopId)
+                foreach (Product p in magazine.Products)
                 {
-
-                    foreach (Product p in magazine.Products)
+                    if (p.ProductId != prodId) continue;
+                    if (prodQ <= p.ProductQuantity)
                     {
-                        if (p.ProductId == prodId)
-                        {
-                            if (prodQ <= p.ProductQuantity)
-                            {
 
-                                sum = prodQ * p.ProductPrice;
+                        sum = prodQ * p.ProductPrice;
 
-                            }
-                            else
-                            {
-                                throw new Exception("В магазине нет столько товаров");
-                            }
-                        }
                     }
-
-                    Console.WriteLine($"Сумма покупки: {sum}");
+                    else
+                    {
+                        throw new Exception("В магазине нет столько товаров");
+                    }
                 }
 
+                Console.WriteLine($"Сумма покупки: {sum}");
             }
 
             return sum;
@@ -229,25 +199,16 @@ namespace ShopsAssist
             int id = 0;
             foreach (Shop magazine in Starter.MagazinesList)
             {
-
-                foreach (Product price in magazine.Products)
+                foreach (var price in magazine.Products.Where(price => price.ProductId == prodId).Where(price => savePrice > price.ProductPrice))
                 {
-                    if (price.ProductId == prodId)
-                    {
-                        if (savePrice > price.ProductPrice)
-                        {
-                            savePrice = price.ProductPrice;
-                            iterator++;
-                        }
-                    }
+                    savePrice = price.ProductPrice;
+                    iterator++;
                 }
 
-                if (magazine.ShopId == iterator)
-                {
-                    name = magazine.ShopName;
-                    id = magazine.ShopId;
-                    adr = magazine.Adress;
-                }
+                if (magazine.ShopId != iterator) continue;
+                name = magazine.ShopName;
+                id = magazine.ShopId;
+                adr = magazine.Adress;
             }
 
             Console.WriteLine($"Дешевле в магазине : {name} ({id}), цена продукта : {savePrice}");
@@ -283,11 +244,9 @@ namespace ShopsAssist
                     }
                 }
 
-                if (chekSumm == count)
-                {
-                    chek.Add(sum);
-                    sum = 0;
-                }
+                if (chekSumm != count) continue;
+                chek.Add(sum);
+                sum = 0;
 
             }
 
