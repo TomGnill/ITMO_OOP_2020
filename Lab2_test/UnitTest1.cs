@@ -91,36 +91,5 @@ namespace Lab2_test
             var res1 = Shop.Bomj(02, 50);
             Assert.AreEqual(testList1, res1);
         }
-
-        [Test()]
-        public void Test9()
-        {
-            List<(string, int)> testShopping1 = new List<(string, int)>();
-
-            testShopping1.Add(("Конфеты", 5));
-            testShopping1.Add(("Консерва", 3));
-            testShopping1.Add(("Молоко", 5));
-
-            var res1 = Shop.ListBuyHelp(testShopping1);
-            Assert.AreEqual(790, res1);
-
-
-        }
-
-        [Test()]
-        public void Test10()
-        {
-            List<(string, int)> testShopping2 = new List<(string, int)>();
-
-            testShopping2.Add(("Молоко", 4));
-            testShopping2.Add(("Гвозди", 9));
-            testShopping2.Add(("Сметана", 2));
-            testShopping2.Add(("Хлеб", 2));
-            testShopping2.Add(("Колбаса", 2));
-            var res2 = Shop.ListBuyHelp(testShopping2);
-            Assert.AreEqual(1124, res2);
-
-
-        }
     }
 }
