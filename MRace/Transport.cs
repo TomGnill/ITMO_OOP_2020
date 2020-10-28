@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MRace
 {
-    class Transport
+    public class Transport
     {
         public struct LandTransport
         {
@@ -64,11 +64,12 @@ namespace MRace
        }
     }
 
-    class TypeRace
+   public class TypeRace
     {
         public List<double> StartLandRace(List<Transport.LandTransport> members, double distance)
         {  
             List<double> RaceResult = new List<double>();
+
             double result;
             
             int RelaxTimes;
