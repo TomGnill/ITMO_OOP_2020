@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace ShopsAssist
@@ -9,15 +10,15 @@ namespace ShopsAssist
 
         public static List<Shop> MagazinesList = new List<Shop>();
 
-        static void Main()
+        public static void Main()
         {
-            Shop shop1 = new Shop(01, "Пятёрочка", "Бульвар 4", "Shop1");
+            Shop shop1 = new Shop(01, "Пятёрочка", "Бульвар 4", "Shop1"); 
             MagazinesList.Add(shop1);
-            Shop shop2 = new Shop(02, "Магнит", "Соседний бульвар 4", "Shop2"); 
-            MagazinesList.Add(shop2);
+            Shop shop2 = new Shop(02, "Магнит", "Соседний бульвар 4", "Shop2");
+            AddMagazine(shop2);
             Shop shop3 = new Shop(03, "Обрыгаловка", "Параллельный бульвар 4", "Shop3");
-            MagazinesList.Add(shop3);
-            
+            AddMagazine(shop3);
+
             while (true)
             {
                 Console.WriteLine("1.Операции с магазином");
@@ -106,16 +107,17 @@ namespace ShopsAssist
                                    Console.WriteLine("Количество товара:");
 
                                    int Que = Convert.ToInt32(Console.ReadLine());
-
-                                Shop.CalcLot(ShopID3, prodID, Que);
+                                   
+                                   int sum = Shop.CalcLot(ShopID3, prodID, Que);
+                                   Console.WriteLine($"Сумма покупки:{sum}");
                                    break;
                             case 5: 
-                                Shop.ShowMagazinesList();
+                                ShowMagazinesList();
                                 break;
                             case 6:
                                 Console.WriteLine("Введите ID магазина");
                                 int ShopID = Convert.ToInt32(Console.ReadLine());
-                                Shop.ShowPriceList(ShopID);
+                                ShowPriceList(ShopID);
                                 break;
                            }
 
@@ -132,7 +134,8 @@ namespace ShopsAssist
                             case 1:
                                 Console.WriteLine("введите ID товара");
                                 int ProdID = Convert.ToInt32(Console.ReadLine());
-                                Shop.AloneBuyHelp(ProdID);
+                                
+                                Shop.LowestCost(ProdID);
                                 break;
                             case 2: 
                                 Console.WriteLine("Введите имена товаров, когда закончите введите stop ");
@@ -146,7 +149,8 @@ namespace ShopsAssist
                                     name = Console.ReadLine();
                                     if (name == "stop")
                                     { 
-                                        Shop.ListBuyHelp(shopping);
+                                       int answer =  Shop.ListBuyHelp(shopping);
+                                        Console.WriteLine($"Сумма покупки:{answer}");
                                         break;
                                     }
                                     Console.WriteLine("Количество :");
@@ -173,6 +177,36 @@ namespace ShopsAssist
                 
             }
            
+        }
+
+        public static void ShowMagazinesList()
+        {
+            foreach (Shop magazine in Starter.MagazinesList)
+            {
+                Console.WriteLine("//Уникальный номер:" + magazine.ShopId + "// Имя магазина: " + magazine.ShopName +
+                                  " //Адрес: " +
+                                  magazine.Adress);
+            }
+        }
+
+
+        public static void ShowPriceList(int id)
+        {
+            foreach (var aProduct in MagazinesList.Where(magazine => magazine.ShopId == id).SelectMany(magazine => magazine.Products))
+            {
+                Console.WriteLine("//Уникальный номер:" + aProduct.ProductId + "// Имя продукта " + aProduct.ProductName + " //Цена: " + aProduct.ProductPrice + "//Количество :" + aProduct.ProductQuantity);
+            }
+        }
+
+        public static void AddMagazine(Shop newShop)
+        {
+            foreach (Shop shop in MagazinesList)
+            {
+                if (shop.ShopId != newShop.ShopId)
+                {
+                    MagazinesList.Add(newShop);break;
+                }
+            }
         }
     }
 }

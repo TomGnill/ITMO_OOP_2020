@@ -1,4 +1,4 @@
-using System;
+
 using System.Collections.Generic;
 using NUnit.Framework;
 using ShopsAssist;
@@ -52,25 +52,25 @@ namespace Lab2_test
         [Test()]
         public void Test5()
         {
-            var res1 = Shop.AloneBuyHelp(103);
-            Assert.AreEqual(1, res1);
+            var res1 = Shop.LowestCost(103);
+            Assert.AreEqual((3,1), res1);
         }
 
         [Test()]
         public void Test6()
         {
-            var res2 = Shop.AloneBuyHelp(102);
-            Assert.AreEqual(300, res2);
+            var res2 = Shop.LowestCost(102);
+            Assert.AreEqual((1,300), res2);
         }
 
         [Test()]
         public void Test7()
         {
-            List<string> testList2 = new List<string>();
+            List< (int,int)> testList2 = new List<(int, int)>();
 
-            testList2.Add("можно купить \"ќвощи\", на сумму:80, в количестве: 2");
-            testList2.Add("можно купить \"‘рукты\", на сумму:50, в количестве: 1");
-            testList2.Add("можно купить \"ягоды\", на сумму:90, в количестве: 9");
+            testList2.Add((109, 2));
+            testList2.Add((110,1));
+            testList2.Add((111,9));
 
             var res1 = Shop.Bomj(03, 90);
             Assert.AreEqual(testList2, res1);
@@ -79,14 +79,14 @@ namespace Lab2_test
         [Test()]
         public void Test8()
         {
-            List<string> testList1 = new List<string>();
+            List<(int, int)> testList1 = new List<(int, int)>();
 
-            testList1.Add("можно купить \"√возди\", на сумму:50, в количестве: 25");
-            testList1.Add("можно купить \"’леб\", на сумму:50, в количестве: 2");
-            testList1.Add("можно купить \" онфеты\", на сумму:42, в количестве: 3");
-            testList1.Add("можно купить \"ќвощи\", на сумму:30, в количестве: 1");
-            testList1.Add("можно купить \"‘рукты\", на сумму:35, в количестве: 1");
-            testList1.Add("можно купить \"ягоды\", на сумму:40, в количестве: 2");
+            testList1.Add((103,25));
+            testList1.Add((104,2));
+            testList1.Add((105, 3));
+            testList1.Add((109, 1));
+            testList1.Add((109, 1));
+            testList1.Add((111, 2));
 
             var res1 = Shop.Bomj(02, 50);
             Assert.AreEqual(testList1, res1);
