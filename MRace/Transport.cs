@@ -1,166 +1,158 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-
+﻿
 namespace MRace
 {
-    public class Transport
+    public abstract class LandTransport : Transport
     {
-        public struct LandTransport
+        internal readonly int Speed;
+        internal double TimeToRelax;
+        internal double[] RelaxTime;
+        public override double GlSpeed()
         {
-            public int Speed;
-            public double TimeToRelax;
-            public double[] RelaxTime;
-
+            return Speed;
         }
-       public struct AirTransport
+
+        public LandTransport(int speed, double timeToRelax, double[] relaxTime)
         {
-            public int Speed;
-            public double[] DistanceReducer;
-
+            Speed = speed;
+            TimeToRelax = timeToRelax;
+            RelaxTime = relaxTime;
         }
-       public static double ReduceDistForIndividual(double distance, AirTransport someAir)
-       {
-           double realdist = 0;
-
-           if (someAir.DistanceReducer.Length == 1)
-           {
-               realdist = distance - distance * someAir.DistanceReducer[0];
-           }
-
-           if (someAir.DistanceReducer.Length == 2)
-           {
-               double Reducepers =  distance / 100000 ;
-               realdist = distance - distance * Reducepers;
-
-           }
-
-           if (someAir.DistanceReducer.Length == 4)
-           {
-               if (distance < 1000)
-               {
-                   realdist = distance;
-               }
-
-               if (distance < 5000 && distance >1000)
-               {
-                   realdist = distance - distance * someAir.DistanceReducer[1];
-               }
-
-               if (distance < 10000 & distance >5000)
-               {
-                   realdist = distance - distance * someAir.DistanceReducer[2];
-               }
-
-               if (distance > 10000)
-               {
-                   realdist = distance - distance * someAir.DistanceReducer[3];
-               }
-           }
-
-           return realdist;
-       }
     }
 
-   public class TypeRace
+    public abstract class AirTransport : Transport
     {
-        public List<double> StartLandRace(List<Transport.LandTransport> members, double distance)
-        {  
-            List<double> RaceResult = new List<double>();
-
-            double result;
-            
-            int RelaxTimes;
-          
-            foreach (Transport.LandTransport member in members)
-            {
-                double PlusRelaxTime=0;
-                double ConstRelax=0;
-                result = distance / member.Speed;
-                RelaxTimes = Convert.ToInt32(result / member.TimeToRelax)+1;
-                for (int index = 0; index < RelaxTimes-1; index++)
-                {
-                    if (member.RelaxTime.Length > index)
-                    {
-                        PlusRelaxTime += member.RelaxTime[index];
-                        ConstRelax = member.RelaxTime[index];
-                    }
-                    else
-                        PlusRelaxTime += ConstRelax;
-
-                }
-
-                result += PlusRelaxTime;
-                RaceResult.Add(result);
-            }
-
-            return RaceResult;
-
-        }
-        public  (Transport.LandTransport, double) SpotWinnerLand(List<double> Results, List<Transport.LandTransport> members)
+        internal double Speed;
+        public abstract double ReduceDistance(double distance);
+        public override double GlSpeed()
         {
-            var nullwinner = new Transport.LandTransport
-            {
-                Speed = 0,
-                TimeToRelax = 0,
-                RelaxTime = new Double[1] {0}
-            };
+            return Speed;
+        }
+        public AirTransport(double speed)
+        {
+            Speed = speed;
+        }
+    }
 
-            (Transport.LandTransport, double) winner = (nullwinner,  0);
+   public abstract class Transport
+    {
+        public abstract double GlSpeed();
         
-            double BestResult = 100000;
-            int indexator=0;
-            foreach (Transport.LandTransport member in members)
-            {
-                if (Results[indexator] < BestResult)
-                {
-                    BestResult = Results[indexator];
-                    winner = ((member, BestResult));
-                }
+    }
 
-                indexator++;
-            }
-            return winner;
-        }
+  
 
-        public List<double> StartAirRace(List<Transport.AirTransport> members, int distance)
+    public class Bactrian : LandTransport
+    {
+        public Bactrian() : base(10, 30, new double[2] {5, 8})
         {
-            List<double> RaceResult = new List<double>();
-            double result = 0;
-            foreach (Transport.AirTransport member in members)
-            {
-                result = Transport.ReduceDistForIndividual(distance, member) / member.Speed;
-                RaceResult.Add(result);
-
-            }
-            return RaceResult;
         }
+    };
 
-        public (Transport.AirTransport, double) SpotWinnerAir(List<double> Results, List<Transport.AirTransport> members)
+    public class SpeedCamel : LandTransport
+    {
+        public SpeedCamel() : base(40, 10, new double[3] { 5, 6.5, 8 })
         {
-            var nullwinner = new Transport.AirTransport
+        }
+    }
+    public class Centavr : LandTransport
+    {
+        public Centavr() : base(15, 8, new double[1] { 2 })
+        {
+        }
+    };
+
+    public class SuperBoots : LandTransport
+    {
+        public SuperBoots() : base(6, 60, new double[2] { 10, 5 })
+        {
+        }
+    };
+
+    public class MagicCarpet : AirTransport
+    {
+        public MagicCarpet() : base(10)
+        {
+        }
+        public  override double ReduceDistance(double distance)
+        {
+            double redDist = 0;
+            if (distance < 1000)
             {
-                Speed = 0,
-                DistanceReducer = new double[] {0}
-            };
-
-            (Transport.AirTransport, double) winner = (nullwinner, 0);
-
-            double BestResult = 100000;
-            int indexator = 0;
-            foreach (Transport.AirTransport member in members)
-            {
-                if (Results[indexator] < BestResult)
-                {
-                    BestResult = Results[indexator];
-                    winner = ((member, BestResult));
-                }
-
-                indexator++;
+                redDist = distance;
             }
-            return winner;
+
+            if (distance < 5000 && distance > 1000)
+            {
+                redDist = distance - distance * 0.03;
+            }
+
+            if (distance < 10000 & distance > 5000)
+            {
+                redDist = distance - distance * 0.10;
+            }
+
+            if (distance > 10000)
+            {
+                redDist = distance - distance * 0.05;
+            }
+
+            return redDist;
+        }
+    }
+    public class Yagalimousine : AirTransport
+    {
+        public Yagalimousine() : base(8)
+        {
+        }
+        public override double ReduceDistance(double distance)
+        {
+            double redDist = 0;
+
+            redDist = distance - distance * 0.06;
+
+
+            return redDist;
+        }
+    }
+
+    public class HarryBroom : AirTransport
+    {
+        public HarryBroom() : base(20)
+        {
+        }
+        public override double ReduceDistance(double distance)
+        {
+            double redDist = 0;
+            if (distance > 1000)
+            {
+                double Reducepers = distance / 100000;
+                redDist = distance - distance * Reducepers;
+            }
+            else
+            {
+                redDist = distance;
+            }
+            return redDist;
+        }
+    }
+
+    public class LandMystaryLooser : LandTransport
+    {
+        public LandMystaryLooser() : base(1, 10000, new double[1] { 100})
+        {
+        }
+    }
+
+    public class AirLandMystaryLooser : AirTransport
+    {
+        public AirLandMystaryLooser() : base(1000)
+        {
+        }
+        public override double ReduceDistance(double distance)
+        {
+            double redDist = 0;
+            redDist = distance ;
+            return redDist;
         }
     }
 }

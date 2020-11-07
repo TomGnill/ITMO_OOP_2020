@@ -9,45 +9,22 @@ namespace Lab3_test
         [SetUp]
         public void Setup()
         {
-           
-
-          
         }
 
         [Test()]
         public void Test1()
         {
-            var Bactrian = new Transport.LandTransport
-            {
-                Speed = 10,
-                TimeToRelax = 30,
-                RelaxTime = new double[2] { 5, 8 }
-            };
-            var SpeedCalel = new Transport.LandTransport
-            {
-                Speed = 40,
-                TimeToRelax = 10,
-                RelaxTime = new double[3] { 5, 6.5, 8 }
+            List<LandTransport> members = new List<LandTransport>();
+            Bactrian camel1 = new Bactrian();
+            Centavr cent = new Centavr();
+            SuperBoots runner = new SuperBoots();
 
-            };
-            var Centavr = new Transport.LandTransport
-            {
-                Speed = 15,
-                TimeToRelax = 8,
-                RelaxTime = new double[1] { 2 }
+            SpeedCamel camel2 = new SpeedCamel();
+            members.Add(camel1);
+            members.Add(camel2);
+            members.Add(cent);
+            members.Add(runner);
 
-            };
-            var SuperBoots = new Transport.LandTransport
-            {
-                Speed = 6,
-                TimeToRelax = 60,
-                RelaxTime = new double[2] { 10, 5 }
-            };
-            List<Transport.LandTransport> members = new List<Transport.LandTransport>();
-            members.Add(SpeedCalel);
-            members.Add(SuperBoots);
-            members.Add(Centavr);
-            members.Add(Bactrian);
 
             TypeRace newRace = new TypeRace();
             var startRace = newRace.StartLandRace(members, 4000);
@@ -58,26 +35,15 @@ namespace Lab3_test
         [Test()]
         public void Test2()
         {
-            var MagicCarpet = new Transport.AirTransport
-            {
-                Speed = 10,
-                DistanceReducer = new double[4] { 0, 0.03, 0.10, 0.05 }
-            };
-            var Yagalimousine = new Transport.AirTransport
-            {
-                Speed = 8,
-                DistanceReducer = new double[1] { 0.06 }
-            };
-            var HarryBroom = new Transport.AirTransport
-            {
-                Speed = 20,
-                DistanceReducer = new double[2] { 0.01, 0.01 }
-            };
 
-            List<Transport.AirTransport> Airmembers = new List<Transport.AirTransport>();
-            Airmembers.Add(MagicCarpet);
-            Airmembers.Add(Yagalimousine);
-            Airmembers.Add(HarryBroom);
+            List<AirTransport> Airmembers = new List<AirTransport>();
+            HarryBroom harry = new HarryBroom();
+            Yagalimousine Yaga = new Yagalimousine();
+            MagicCarpet Alladin = new MagicCarpet();
+            Airmembers.Add(harry);
+            Airmembers.Add(Yaga);
+            Airmembers.Add(Alladin);
+
 
             TypeRace newAirRace = new TypeRace();
             var startAirRace = newAirRace.StartAirRace(Airmembers, 8000);
