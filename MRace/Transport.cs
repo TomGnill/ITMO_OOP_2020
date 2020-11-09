@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace MRace
 {
     public abstract class LandTransport : Transport
@@ -17,26 +19,62 @@ namespace MRace
             TimeToRelax = timeToRelax;
             RelaxTime = relaxTime;
         }
+        public override double Calc(double distance)
+        {
+            double result;
+
+            int RelaxTimes;
+            double PlusRelaxTime = 0;
+            double ConstRelax = 0;
+            result = distance / Speed;
+            RelaxTimes = Convert.ToInt32(result / TimeToRelax) + 1;
+            for (int index = 0; index < RelaxTimes - 1; index++)
+            {
+                if (RelaxTime.Length > index)
+                {
+                    PlusRelaxTime += RelaxTime[index];
+                    ConstRelax = RelaxTime[index];
+                }
+                else
+                    PlusRelaxTime += ConstRelax;
+
+            }
+
+            result += PlusRelaxTime;
+            return result;
+        }
     }
 
     public abstract class AirTransport : Transport
     {
         internal double Speed;
         public abstract double ReduceDistance(double distance);
+
         public override double GlSpeed()
         {
             return Speed;
         }
+
         public AirTransport(double speed)
         {
             Speed = speed;
         }
+
+        public override double Calc(double disance)
+        {
+            double result = 0;
+
+            disance = ReduceDistance(disance);
+            result = disance / Speed;
+            return result;
+        }
     }
 
-   public abstract class Transport
+    public abstract class Transport
     {
         public abstract double GlSpeed();
-        
+        public abstract double Calc(double distance);
+
     }
 
   
