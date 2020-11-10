@@ -14,42 +14,39 @@ namespace Lab3_test
         [Test()]
         public void Test1()
         {
-            List<LandTransport> members = new List<LandTransport>();
             Bactrian camel1 = new Bactrian();
             Centavr cent = new Centavr();
             SuperBoots runner = new SuperBoots();
-
             SpeedCamel camel2 = new SpeedCamel();
-            members.Add(camel1);
-            members.Add(camel2);
-            members.Add(cent);
-            members.Add(runner);
+            List<Transport> Allmembers1 = new List<Transport>();
+            Allmembers1.Add(camel1);
+            Allmembers1.Add(cent);
+            Allmembers1.Add(runner);
+            Allmembers1.Add(camel2);
 
-
-            TypeRace newRace = new TypeRace();
-            var startRace = newRace.StartLandRace(members, 4000);
-            var winner = newRace.SpotWinnerLand(startRace, members);
-
-            Assert.AreEqual(175.5, winner.Item2);
+            TypeRace newRace1 = new TypeRace();
+            var StartNewRace1 = newRace1.StartRace(Allmembers1, 4000);
+            var Allwinner1 = newRace1.SpotLand(StartNewRace1, Allmembers1);
+            Assert.AreEqual(175.5, Allwinner1.Item2);
         }
         [Test()]
         public void Test2()
         {
 
-            List<AirTransport> Airmembers = new List<AirTransport>();
             HarryBroom harry = new HarryBroom();
             Yagalimousine Yaga = new Yagalimousine();
             MagicCarpet Alladin = new MagicCarpet();
-            Airmembers.Add(harry);
-            Airmembers.Add(Yaga);
-            Airmembers.Add(Alladin);
+            List<Transport> Allmembers = new List<Transport>();
+            Allmembers.Add(harry);
+            Allmembers.Add(Yaga);
+            Allmembers.Add(Alladin);
 
 
-            TypeRace newAirRace = new TypeRace();
-            var startAirRace = newAirRace.StartAirRace(Airmembers, 8000);
-            var Airwinner = newAirRace.SpotWinnerAir(startAirRace, Airmembers);
+            TypeRace newRace = new TypeRace();
+            var StartNewRace = newRace.StartRace(Allmembers, 8000);
+            var Allwinner = newRace.SpotLand(StartNewRace, Allmembers);
 
-            Assert.AreEqual(368, Airwinner.Item2);
+            Assert.AreEqual(368, Allwinner.Item2);
         }
     }
 }

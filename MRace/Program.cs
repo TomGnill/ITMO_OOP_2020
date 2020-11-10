@@ -9,38 +9,39 @@ namespace MRace
         static void Main(string[] args)
         {
            
-            List<LandTransport> members = new List<LandTransport>();
+          
             Bactrian camel1 = new Bactrian();
             Centavr cent = new Centavr();
             SuperBoots runner = new SuperBoots();
-           
             SpeedCamel camel2 = new SpeedCamel();
-            members.Add(camel1);
-            members.Add(camel2);
-            members.Add(cent);
-            members.Add(runner);
-         
+          
            
-            TypeRace newRace = new TypeRace();
-            var startRace = newRace.StartLandRace(members, 4000);
-            var winner = newRace.SpotWinnerLand(startRace, members);
-            Console.WriteLine($"{winner.Item2}");
-
-
-
-            List<AirTransport> Airmembers = new List<AirTransport>();
+           
             HarryBroom harry = new HarryBroom();
             Yagalimousine Yaga = new Yagalimousine();
             MagicCarpet Alladin = new MagicCarpet();
-            Airmembers.Add(harry);
-            Airmembers.Add(Yaga);
-            Airmembers.Add(Alladin);
-           
+            
+            List<Transport> Allmembers = new List<Transport>();
+            Allmembers.Add(harry);
+            Allmembers.Add(Yaga);
+            Allmembers.Add(Alladin);
+            TypeRace newRace = new TypeRace();
+            var StartNewRace = newRace.StartRace(Allmembers, 8000);
+            var Allwinner = newRace.SpotLand(StartNewRace, Allmembers);
+            Console.WriteLine($"{Allwinner.Item2}");
 
-            TypeRace newAirRace = new TypeRace();
-            var startAirRace = newAirRace.StartAirRace(Airmembers, 8000);
-            var Airwinner = newAirRace.SpotWinnerAir(startAirRace, Airmembers);
-            Console.WriteLine($"{Airwinner.Item2}");
+            List<Transport> Allmembers1 = new List<Transport>();
+            Allmembers1.Add(camel1);
+            Allmembers1.Add(cent);
+            Allmembers1.Add(runner);
+            Allmembers1.Add(camel2);
+            Allmembers1.Add(harry);
+
+            TypeRace newRace1 = new TypeRace();
+            var StartNewRace1 = newRace1.StartRace(Allmembers1, 4000);
+            var Allwinner1 = newRace1.SpotLand(StartNewRace1, Allmembers1);
+            Console.WriteLine($"{Allwinner1.Item2}");
+
 
         }
     }
