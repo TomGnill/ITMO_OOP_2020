@@ -32,10 +32,8 @@ namespace MRace
             {
                 throw new Exception("В гонке учавствуют разные типы транспорта!");
             }
-        
-
-
-        return raceResult;
+            
+            return raceResult;
         }
         public (Transport, double) SpotLand(List<double> Results, List<Transport> members)
         {
