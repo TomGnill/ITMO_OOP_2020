@@ -45,10 +45,10 @@ namespace BackupSystem
 
         public void BackupFile(string filePath, string path)
         {
-           File.Copy(filePath, path, true);
+            File.Copy(filePath, path, true);
         }
 
-        public void FullBackup(List<string> list)
+        public void GeneralBackup(List<string> list)
         {
             string sourcePath = @"C:\sourceBS";
             string targetPath = @$"C:\backup\Новый бекап({DateTime.Now.Hour})";
@@ -58,6 +58,7 @@ namespace BackupSystem
             {
                 dirInfo.Create();
             }
+
             for (int index = 0; index < list.Count; index++)
             {
                 string sourceFile = Path.Combine(sourcePath, list[index]);
@@ -67,13 +68,38 @@ namespace BackupSystem
             }
 
             ZipFile.CreateFromDirectory(targetPath, toZip);
+            Directory.Delete(targetPath, true);
+            Console.WriteLine($"Бекап прошёл успешно, файлы храняться в архиве: {targetPath}");
         }
 
+        public void SeparateBackup(List<string> list)
+        {
+            string sourcePath = @"C:\sourceBS";
 
+            for (int index = 0; index < list.Count; index++)
+            {
+                string targetPath = @$"C:\backup\Новый бекап({DateTime.Now.Hour})\SepFile";
+
+                DirectoryInfo dirInfo = new DirectoryInfo(targetPath);
+                if (!dirInfo.Exists)
+                {
+                    dirInfo.Create();
+                }
+
+                string toZip = $@"C:\backup\Новый бекап({DateTime.Now.Hour})\Testfile({index}).zip";
+                string sourceFile = Path.Combine(sourcePath, list[index]);
+                string backapedFile = Path.Combine(targetPath, list[index]);
+
+                BackupFile(sourceFile, backapedFile);
+                ZipFile.CreateFromDirectory(targetPath, toZip);
+                Directory.Delete(targetPath, true);
+                Console.WriteLine("Бекап прошёл успешно, каждый файл храниться в отдельном архиве!");
+            }
+        }
     }
 
 
-    class RestoreSysyem 
+class RestoreSysyem 
     {
         
     }

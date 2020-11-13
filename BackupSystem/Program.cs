@@ -17,9 +17,7 @@ namespace BackupSystem
             newSys.DelFile(1);
             newSys.ReadList();
             List<string> list = newSys.endEditing();
-            newSys.FullBackup(list);
-            
-            
+            newSys.GeneralBackup(list);
         }
     }
 }
