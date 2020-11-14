@@ -8,16 +8,17 @@ namespace BackupSystem
         static void Main(string[] args)
         {
             BackupSys newSys = new BackupSys();
-            string test1 = "Test1.txt";
-            string test2 = "Test2.txt";
-            string test3 = "Test3.txt";
-            newSys.AddFile(test1);
-            newSys.AddFile(test2);
-            newSys.AddFile(test3);
-            newSys.DelFile(1);
-            newSys.ReadList();
-            List<string> list = newSys.endEditing();
+            BackupFile.AbstractFile file1 = new BackupFile.AbstractFile("Test1", 100, DateTime.Now);
+            BackupFile.AbstractFile file2 = new BackupFile.AbstractFile("Test2", 100, DateTime.Now);
+            BackupFile.AbstractFile file3 = new BackupFile.AbstractFile("Test3", 100, DateTime.Now);
+            newSys.AddFile(file1);
+            newSys.AddFile(file2);
+            newSys.AddFile(file3);
+            List<BackupFile.AbstractFile> list = newSys.endEditing();
             newSys.GeneralBackup(list);
+            newSys.SeparateBackup(list);
+            newSys.ShowPoints();
+            newSys.ShowFilesInPoint(2);
         }
     }
 }
