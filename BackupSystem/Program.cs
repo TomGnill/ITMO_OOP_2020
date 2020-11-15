@@ -15,8 +15,13 @@ namespace BackupSystem
             newSys.AddFile(file2);
             newSys.AddFile(file3);
             List<BackupFile.AbstractFile> list = newSys.endEditing();
-            newSys.GeneralBackup(list);
-            newSys.SeparateBackup(list);
+            newSys.SeparateBackup(list,Type.Full);
+            newSys.DelFile(2);
+            newSys.SeparateBackup(list,Type.Incremental);
+            newSys.SeparateBackup(list, Type.Full);
+            newSys.SeparateBackup(list, Type.Incremental);
+            newSys.SeparateBackup(list, Type.Incremental);
+            newSys.RemoveBySize(700);
             newSys.ShowPoints();
             newSys.ShowFilesInPoint(2);
         }

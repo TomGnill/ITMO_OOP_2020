@@ -50,7 +50,7 @@ namespace BackupSystem
             return fileRestoreCopyInfo;
         }
 
-        public void SeparateBackup(List<BackupFile.AbstractFile> list) //Храним инфу про каждый файл который мы бекапим (раздельный бекап)
+        public void SeparateBackup(List<BackupFile.AbstractFile> list, Type type) //Храним инфу про каждый файл который мы бекапим (раздельный бекап)
         {
             int count = sysyem.Points.Count;
             List<BackupFile.FileRestoreCopyInfo> files = new List<BackupFile.FileRestoreCopyInfo>(); //храним инфу про каждый файл
@@ -68,12 +68,12 @@ namespace BackupSystem
                 count = 0;
             }
 
-            RestorePoint newPoint = new RestorePoint(count+1,DateTime.Now, size,files);
+            RestorePoint newPoint = new RestorePoint(count+1,DateTime.Now, size,files, type);
             sysyem.AddPoint(newPoint);
             Console.WriteLine($"Бекап прошёл успешно, файлы храняться в архиве");
         }
 
-        public void GeneralBackup(List<BackupFile.AbstractFile> list) //бекапим все файлы и не храним инфу про каждый файл в бекапе(совместное хранение)
+        public void GeneralBackup(List<BackupFile.AbstractFile> list, Type type) //бекапим все файлы и не храним инфу про каждый файл в бекапе(совместное хранение)
         {
             int count = sysyem.Points.Count;
             BackupFile.FileRestoreCopyInfo newFile;
@@ -89,7 +89,7 @@ namespace BackupSystem
                 count = 0;
             }
 
-            RestorePoint newPoint = new RestorePoint(count+1, DateTime.Now, size);
+            RestorePoint newPoint = new RestorePoint(count+1, DateTime.Now, size, type);
             sysyem.AddPoint(newPoint);
             Console.WriteLine($"Бекап прошёл успешно, файлы храняться в архиве");
         }
@@ -102,6 +102,16 @@ namespace BackupSystem
         public void ShowFilesInPoint(int ID)
         {
             sysyem.ShowRestoreFiles(ID);
+        }
+
+        public void RemoveByID(int maxPoint)
+        {
+            sysyem.CleanByID(maxPoint);
+        }
+
+        public void RemoveBySize(long size)
+        {
+            sysyem.CleanBySize(size);
         }
     }
 
