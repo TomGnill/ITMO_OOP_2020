@@ -21,9 +21,11 @@ namespace BackupSystem
             newSys.SeparateBackup(list, Type.Full);
             newSys.SeparateBackup(list, Type.Incremental);
             newSys.SeparateBackup(list, Type.Incremental);
-            newSys.RemoveBySize(700);
+            newSys.SeparateBackup(list, Type.Full);
+            newSys.SeparateBackup(list, Type.Incremental);
+            newSys.SeparateBackup(list, Type.Incremental);
+            newSys.RemoveBySize(500);
             newSys.ShowPoints();
-            newSys.ShowFilesInPoint(2);
         }
     }
 }

@@ -97,6 +97,7 @@ namespace BackupSystem
         public void ShowPoints()
         {
             sysyem.ShowRestorePoints();
+            sysyem.AnalyzePoints();
         }
 
         public void ShowFilesInPoint(int ID)
@@ -114,7 +115,4 @@ namespace BackupSystem
             sysyem.CleanBySize(size);
         }
     }
-
-
-    
 }
