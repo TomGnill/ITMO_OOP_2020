@@ -5,7 +5,7 @@ using System.IO.Compression;
 
 namespace BackupSystem
 {
-    class BackupSys
+   public class BackupSys
     {
         public List<BackupFile.AbstractFile> BackupList;
         RestoreSysyem sysyem = new RestoreSysyem();
@@ -94,15 +94,16 @@ namespace BackupSystem
             Console.WriteLine($"Бекап прошёл успешно, файлы храняться в архиве");
         }
 
-        public void ShowPoints()
+        public List<RestorePoint> ShowPoints()
         {
             sysyem.ShowRestorePoints();
-            sysyem.AnalyzePoints();
+            return sysyem.Points;
         }
 
-        public void ShowFilesInPoint(int ID)
+        public List<BackupFile.FileRestoreCopyInfo> ShowFilesInPoint(int ID)
         {
-            sysyem.ShowRestoreFiles(ID);
+          return  sysyem.ShowRestoreFiles(ID);
+
         }
 
         public void RemoveByID(int maxPoint)
@@ -113,6 +114,29 @@ namespace BackupSystem
         public void RemoveBySize(long size)
         {
             sysyem.CleanBySize(size);
+        }
+
+        public void RemoveBeforeDate(DateTime maxDate)
+        {
+            sysyem.CleanBeforeDate(maxDate);
+        }
+
+        /*  public void RemoveAfterDate(DateTime maxDate) 
+        {
+            sysyem.CleanAfterDate(maxDate);
+        }
+        */
+
+        public void RemoveIfOneTermTrue(int maxPoints, long maxSize, DateTime maxDate)
+        {
+            List<int> PointsToDelete = sysyem.CleaningTerms(maxPoints, maxSize, maxDate);
+            sysyem.HybridOne(PointsToDelete);
+        }
+
+        public void RemoveIfAllTermTrue(int maxPoints, long maxSize, DateTime maxDate)
+        {
+            List<int> PointsToDelete = sysyem.CleaningTerms(maxPoints, maxSize, maxDate);
+            sysyem.HybridAll(PointsToDelete);
         }
     }
 }
