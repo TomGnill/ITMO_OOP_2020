@@ -2,141 +2,85 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using BackupSystem;
+using Type = System.Type;
 
 namespace BackupSystem
 {
-   public class BackupSys
+    public class FileManager
     {
-        public List<BackupFile.AbstractFile> BackupList;
-        RestoreSysyem sysyem = new RestoreSysyem();
-
-        public BackupSys()
+        public List<AbstractFile> ListToBackup;
+        public FileManager()
         {
-            BackupList = new List<BackupFile.AbstractFile>();
+            ListToBackup = new List<AbstractFile>();
         }
 
-        public int AddFile(BackupFile.AbstractFile file)
+        public int AddFile(AbstractFile file)
         {
-            BackupList.Add(file);
-            int Count = BackupList.Count;
+            ListToBackup.Add(file);
+            int Count = ListToBackup.Count;
             return Count;
         }
 
         public int DelFile(int fileNum)
         {
-            BackupList.RemoveAt(fileNum);
-            int Count = BackupList.Count;
+            ListToBackup.RemoveAt(fileNum);
+            int Count = ListToBackup.Count;
             return Count;
         }
 
-        public void ReadList()
+        public void WriteList()
         {
-            for (int index = 0; index < BackupList.Count; index++)
+            for (int index = 0; index < ListToBackup.Count; index++)
             {
-                Console.WriteLine($"{index} , {BackupList[index].Filename}");
+                Console.WriteLine($"{index} , {ListToBackup[index].Filename}");
             }
         }
-
-        public List<BackupFile.AbstractFile> endEditing()
+        public List<AbstractFile> EndEditing()
         {
-            return BackupList;
+            return ListToBackup;
         }
-
-        BackupFile.FileRestoreCopyInfo CreateRestore(BackupFile.AbstractFile filePath)
+    }
+    public class StorageAlgorithms : RestoreSystem
+    {
+       
+        public (long,List<FileRestoreCopyInfo>, Type)  SeparateBackup(List<AbstractFile> list, Type type) //Храним инфу про каждый файл который мы бекапим (раздельный бекап)
         {
-
-            var fileRestoreCopyInfo = new BackupFile.FileRestoreCopyInfo(filePath.Filename, filePath.Filesize, DateTime.Now);
-            //File.Copy(filePath, _pathWhereWeNeedToStoreOurBackup); <- Вот эту часть мы можем скипать
-            return fileRestoreCopyInfo;
-        }
-
-        public void SeparateBackup(List<BackupFile.AbstractFile> list, Type type) //Храним инфу про каждый файл который мы бекапим (раздельный бекап)
-        {
-            int count = sysyem.Points.Count;
-            List<BackupFile.FileRestoreCopyInfo> files = new List<BackupFile.FileRestoreCopyInfo>(); //храним инфу про каждый файл
-            BackupFile.FileRestoreCopyInfo newFile;
-            long size=0;
-            for (int index = 0; index < list.Count; index++)
+          
+            List<FileRestoreCopyInfo> files = new List<FileRestoreCopyInfo>(); //храним инфу про каждый файл
+            long size = 0;
+            foreach (var t in list)
             {
-                size += list[index].Filesize;
-                newFile =  CreateRestore(list[index]);
+                size += t.Filesize;
+                var newFile = CreateRestore(t);
                 files.Add(newFile);
             }
 
-            if (sysyem.Points.Count is 0)
-            {
-                count = 0;
-            }
 
-            RestorePoint newPoint = new RestorePoint(count+1,DateTime.Now, size,files, type);
-            sysyem.AddPoint(newPoint);
-            Console.WriteLine($"Бекап прошёл успешно, файлы храняться в архиве");
+            (long, List<FileRestoreCopyInfo>, Type) restoreInfo = (size, files, type);
+            return restoreInfo;
         }
 
-        public void GeneralBackup(List<BackupFile.AbstractFile> list, Type type) //бекапим все файлы и не храним инфу про каждый файл в бекапе(совместное хранение)
+        public (long, Type) GeneralBackup(List<AbstractFile> list, Type type) //бекапим все файлы и не храним инфу про каждый файл в бекапе(совместное хранение)
         {
-            int count = sysyem.Points.Count;
-            BackupFile.FileRestoreCopyInfo newFile;
+            FileRestoreCopyInfo newFile;
             long size = 0;
-            for (int index = 0; index < list.Count; index++)
+            foreach (var t in list)
             {
-                size += list[index].Filesize;
-                newFile = CreateRestore(list[index]);
+                size += t.Filesize;
+                newFile = CreateRestore(t);
             }
 
-            if (sysyem.Points.Count is 0)
-            {
-                count = 0;
-            }
-
-            RestorePoint newPoint = new RestorePoint(count+1, DateTime.Now, size, type);
-            sysyem.AddPoint(newPoint);
-            Console.WriteLine($"Бекап прошёл успешно, файлы храняться в архиве");
+            int id = GetCorrectId();
+            (long, Type) restoreInfo = (size, type);
+            return restoreInfo;
         }
 
-        public List<RestorePoint> ShowPoints()
-        {
-            sysyem.ShowRestorePoints();
-            return sysyem.Points;
-        }
-
-        public List<BackupFile.FileRestoreCopyInfo> ShowFilesInPoint(int ID)
-        {
-          return  sysyem.ShowRestoreFiles(ID);
-
-        }
-
-        public void RemoveByID(int maxPoint)
-        {
-            sysyem.CleanByID(maxPoint);
-        }
-
-        public void RemoveBySize(long size)
-        {
-            sysyem.CleanBySize(size);
-        }
-
-        public void RemoveBeforeDate(DateTime maxDate)
-        {
-            sysyem.CleanBeforeDate(maxDate);
-        }
-
-        /*  public void RemoveAfterDate(DateTime maxDate) 
-        {
-            sysyem.CleanAfterDate(maxDate);
-        }
-        */
-
-        public void RemoveIfOneTermTrue(int maxPoints, long maxSize, DateTime maxDate)
-        {
-            List<int> PointsToDelete = sysyem.CleaningTerms(maxPoints, maxSize, maxDate);
-            sysyem.HybridOne(PointsToDelete);
-        }
-
-        public void RemoveIfAllTermTrue(int maxPoints, long maxSize, DateTime maxDate)
-        {
-            List<int> PointsToDelete = sysyem.CleaningTerms(maxPoints, maxSize, maxDate);
-            sysyem.HybridAll(PointsToDelete);
-        }
     }
 }
+
+  
+
+
+
+
