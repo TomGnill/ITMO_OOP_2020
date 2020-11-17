@@ -27,7 +27,7 @@ namespace BackupSystem
             var point2 =  algorithms.SeparateBackup(list, Type.Full);
             system.AddPoint(point2);
             system.ShowRestorePoints();
-            system.CleanByID(1);
+        
             system.ShowRestorePoints();
         }
     }
