@@ -187,6 +187,7 @@ namespace Lab4_test
             newChain.AddPoint(pointInfo8);
 
             var terms = newChain.CleaningTerms(3, 0, maxDate);
+
             newChain.HybridAll(terms);
 
             Assert.AreEqual(6, newChain.ShowRestorePoints().Count);
