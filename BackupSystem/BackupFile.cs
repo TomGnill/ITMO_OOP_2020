@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BackupSystem
 {
@@ -16,5 +17,19 @@ namespace BackupSystem
             FileRedTime = time;
         }
     }
-   
+    public class AbstractArchive
+    {
+       
+        public long Size;
+        public DateTime FileRedTime;
+        private List<AbstractFile> files;
+
+        public AbstractArchive( long size, DateTime time, List<AbstractFile> list)
+        {
+            Size = size;
+            FileRedTime = time;
+            files = list;
+        }
+    }
+
 }

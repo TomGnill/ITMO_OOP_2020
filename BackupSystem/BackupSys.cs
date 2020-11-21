@@ -57,18 +57,20 @@ namespace BackupSystem
             return restoreInfo;
         }
 
-        public (long, Type) GeneralBackup(List<AbstractFile> list, Type type) //бекапим все файлы и не храним инфу про каждый файл в бекапе(совместное хранение)
+        public (long, Type, AbstractArchive) GeneralBackup(List<AbstractFile> list, Type type) //бекапим все файлы и не храним инфу про каждый файл в бекапе(совместное хранение)
         {
             FileRestoreCopyInfo newFile;
+            List<AbstractFile> files = new List<AbstractFile>(list);
             long size = 0;
             foreach (var t in list)
             {
                 size += t.Filesize;
                 newFile = CreateRestore(t);
             }
+            AbstractArchive archive = new AbstractArchive(size, DateTime.Now, files);
 
             int id = GetCorrectId();
-            (long, Type) restoreInfo = (size, type);
+            (long, Type, AbstractArchive) restoreInfo = (size, type, archive);
             return restoreInfo;
         }
 
