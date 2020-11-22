@@ -27,7 +27,29 @@ namespace BackupSystem
             var point2 =  algorithms.SeparateBackup(list, Type.Full);
             system.AddPoint(point2);
             system.ShowRestorePoints();
+            CleanByPoints newByDate = new CleanByPoints(1);
+            newByDate.Clean(system.Points);
             system.ShowRestorePoints();
         }
     }
 }
+/*
+ * public BackupJob(
+    Backup backup,
+    IFileCopyCreateAlgorithm fileCopyCreateAlgorithm,
+    IPointCreateAlgorithm pointCreateAlgorithm,
+    IPointDeleteAlgorithm pointDeleteAlgorithm)
+{
+    _backup = backup;
+    _fileCopyCreateAlgorithm = fileCopyCreateAlgorithm;
+    _pointCreateAlgorithm = pointCreateAlgorithm;
+    _pointDeleteAlgorithm = pointDeleteAlgorithm;
+}
+
+public void Run()
+{
+    //_fileCopyCreateAlgorithm.CreateFor(_backup);
+    //_pointCreateAlgorithm.CreateFor(_backup);
+    //_pointDeleteAlgorithm.RemoveFrom(_backup);
+}
+ */

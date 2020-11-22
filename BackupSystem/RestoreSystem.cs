@@ -83,59 +83,55 @@ namespace BackupSystem
 
     public interface ICleaningPoints
     {
-        List<int> AnalyzePoints(); 
+        List<int> AnalyzePoints(List<RestorePoint> points); 
 
-        public string Clean();
+        public int Clean(List<RestorePoint> points);
 
-        public void DeletePoints(int Count);
+        public void DeletePoints(int Count, List<RestorePoint> points);
     }
     
 
   public  class CleanByPoints : ICleaningPoints
   {
-      public List<RestorePoint> Points;
       public int MaxPoints;
 
-      public CleanByPoints(List<RestorePoint> Chain, int size)
+      public CleanByPoints(int size)
       {
-          Points = Chain;
           MaxPoints = size;
       }
 
-        public List<int> AnalyzePoints()
+        public List<int> AnalyzePoints(List<RestorePoint> points)
         {
           List<int> WhatPointsToDelete = new List<int>();
           int amount = 1;
-          for (int i = 1; i < Points.Count; i++)
+          for (int i = 1; i < points.Count; i++)
           {
-              if (Points[i].PointType == Type.Full)
+              if (points[i].PointType == Type.Full)
               {
                   WhatPointsToDelete.Add(amount);
               }
-
               amount++;
           }
 
           WhatPointsToDelete.Add(amount);
           return WhatPointsToDelete;
         }
-        public string Clean()
+        public int Clean(List<RestorePoint> Points)
         {
             int pointsToDelete = Points.Count - MaxPoints;
-            DeletePoints(pointsToDelete);
-            return "Отчистка завершена";
+            DeletePoints(pointsToDelete,Points);
+            return pointsToDelete;
         }
-
-        public void DeletePoints(int PointsToDelete)
+        public void DeletePoints(int PointsToDelete, List<RestorePoint> points)
         {
-            List<int> DelPoints = AnalyzePoints();
+            List<int> DelPoints = AnalyzePoints(points);
             for (int i = 0; i < DelPoints.Count; i++)
             {
                 if ((DelPoints[i] <= PointsToDelete) && (DelPoints[i + 1] >= PointsToDelete))
                 {
                     for (int j = 0; j < DelPoints[i]; j++)
                     {
-                        Points.RemoveAt(0);
+                        points.RemoveAt(0);
                     }
                 }
             }
@@ -144,16 +140,13 @@ namespace BackupSystem
 
   public class CleanBySize : ICleaningPoints
   {
-      public List<RestorePoint> Points;
       public long MaxSize;
 
-      public CleanBySize(List<RestorePoint> Chain,long Size)
+      public CleanBySize(long Size)
       {
-          
-          Points = Chain;
           MaxSize = Size;
       }
-     public  string Clean()
+     public  int Clean(List<RestorePoint> Points)
      {
           long PointsSize = 0;
           int pointsToDelete = 0;
@@ -167,11 +160,11 @@ namespace BackupSystem
               }
           }
 
-          DeletePoints(pointsToDelete);
-          return "отчистка завершена";
+          DeletePoints(pointsToDelete,Points);
+          return pointsToDelete;
       }
-        public List<int> AnalyzePoints()
-      {
+        public List<int> AnalyzePoints(List<RestorePoint> Points)
+        {
           List<int> WhatPointsToDelete = new List<int>();
           int amount = 1;
           for (int i = 1; i < Points.Count; i++)
@@ -189,9 +182,9 @@ namespace BackupSystem
         }
 
 
-      public void DeletePoints(int PointsToDelete)
+      public void DeletePoints(int PointsToDelete, List<RestorePoint> Points)
       {
-          List<int> DelPoints = AnalyzePoints();
+          List<int> DelPoints = AnalyzePoints(Points);
           for (int i = 0; i < DelPoints.Count; i++)
           {
               if ((DelPoints[i] <= PointsToDelete) && (DelPoints[i + 1] >= PointsToDelete))
@@ -208,17 +201,14 @@ namespace BackupSystem
 
   public class CleanByDate : ICleaningPoints
   {
-      public List<RestorePoint> Points;
       public DateTime MaxDate;
 
-      public CleanByDate(List<RestorePoint> Chain, DateTime date)
+      public CleanByDate(DateTime date)
       {
-
-          Points = Chain;
           MaxDate = date;
       }
       
-      public List<int> AnalyzePoints()
+      public List<int> AnalyzePoints(List<RestorePoint> Points)
       {
           List<int> WhatPointsToDelete = new List<int>();
           int amount = 1;
@@ -236,7 +226,7 @@ namespace BackupSystem
           return WhatPointsToDelete;
       }
 
-      public string Clean()
+      public int Clean(List<RestorePoint> Points)
       {
 
           int pointsToDelete = 0;
@@ -248,13 +238,13 @@ namespace BackupSystem
               }
           }
 
-          DeletePoints(pointsToDelete);
-          return "отчистка завершена";
+          DeletePoints(pointsToDelete,Points);
+          return pointsToDelete;
       }
 
-        public void DeletePoints(int PointsToDelete)
+        public void DeletePoints(int PointsToDelete, List<RestorePoint> Points)
         {
-          List<int> DelPoints = AnalyzePoints();
+          List<int> DelPoints = AnalyzePoints(Points);
           for (int i = 0; i < DelPoints.Count; i++)
           {
               if ((DelPoints[i] <= PointsToDelete) && (DelPoints[i + 1] >= PointsToDelete))
@@ -271,19 +261,18 @@ namespace BackupSystem
 
   public class HybridCleanOneTerm : ICleaningPoints
   {
-      public List<RestorePoint> Points;
+  
       public DateTime MaxDate;
       public long MaxSize;
       public int MaxPoints;
 
-        public HybridCleanOneTerm(List<RestorePoint> Chain,int maxPoints,long size , DateTime date)
+        public HybridCleanOneTerm(int maxPoints,long size , DateTime date)
         {
-            Points = Chain;
-          MaxPoints = maxPoints;
+            MaxPoints = maxPoints;
           MaxSize = size;
           MaxDate = date;
         }
-        public List<int> AnalyzePoints()
+        public List<int> AnalyzePoints(List<RestorePoint> Points)
         {
             List<int> WhatPointsToDelete = new List<int>();
             int amount = 1;
@@ -301,7 +290,7 @@ namespace BackupSystem
             return WhatPointsToDelete;
         }
 
-        public string Clean()
+        public int Clean(List<RestorePoint> Points)
         {
             List<int> PointsToDelete = new List<int>();
             if (MaxPoints != 0)
@@ -342,12 +331,12 @@ namespace BackupSystem
 
                 PointsToDelete.Add(pointsToDelete);
             }
-            DeletePoints(PointsToDelete.Max());
-            return "Отчистка завершена";
+            DeletePoints(PointsToDelete.Max(),Points);
+            return PointsToDelete.Max();
         }
-        public void DeletePoints(int PointsToDelete)
+        public void DeletePoints(int PointsToDelete, List<RestorePoint> Points)
         {
-            List<int> DelPoints = AnalyzePoints();
+            List<int> DelPoints = AnalyzePoints(Points);
             for (int i = 0; i < DelPoints.Count; i++)
             {
                 if ((DelPoints[i] <= PointsToDelete) && (DelPoints[i + 1] >= PointsToDelete))
@@ -363,19 +352,17 @@ namespace BackupSystem
 
   public class HybridCleanAllTerm : ICleaningPoints
   {
-        public List<RestorePoint> Points;
-        public DateTime MaxDate;
+      public DateTime MaxDate;
         public long MaxSize;
         public int MaxPoints;
 
-        public HybridCleanAllTerm(List<RestorePoint> Chain, int maxPoints, long size, DateTime date)
+        public HybridCleanAllTerm(int maxPoints, long size, DateTime date)
         {
-            Points = Chain;
             MaxPoints = maxPoints;
             MaxSize = size;
             MaxDate = date;
         }
-        public List<int> AnalyzePoints()
+        public List<int> AnalyzePoints(List<RestorePoint> Points)
         {
             List<int> WhatPointsToDelete = new List<int>();
             int amount = 1;
@@ -393,7 +380,7 @@ namespace BackupSystem
             return WhatPointsToDelete;
         }
 
-        public string Clean()
+        public int Clean(List<RestorePoint> Points)
         {
             List<int> PointsToDelete = new List<int>();
             if (MaxPoints != 0)
@@ -434,12 +421,12 @@ namespace BackupSystem
 
                 PointsToDelete.Add(pointsToDelete);
             }
-            DeletePoints(PointsToDelete.Min());
-            return "Отчистка завершена";
+            DeletePoints(PointsToDelete.Min(),Points);
+            return PointsToDelete.Min();
         }
-        public void DeletePoints(int PointsToDelete)
+        public void DeletePoints(int PointsToDelete, List<RestorePoint> Points)
         {
-            List<int> DelPoints = AnalyzePoints();
+            List<int> DelPoints = AnalyzePoints(Points);
             for (int i = 0; i < DelPoints.Count; i++)
             {
                 if ((DelPoints[i] <= PointsToDelete) && (DelPoints[i + 1] >= PointsToDelete))
