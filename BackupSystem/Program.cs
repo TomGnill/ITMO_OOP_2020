@@ -26,15 +26,15 @@ namespace BackupSystem
             system.AddPoint(point1);
             var point2 =  algorithms.SeparateBackup(list, Type.Full);
             system.AddPoint(point2);
+            ICreateRestorePoint create = new CreateGeneralBackup(system); //через интерфейс.
+            create.CreateBackup(list, Type.Full);
             system.ShowRestorePoints();
-            CleanByPoints newByDate = new CleanByPoints(1);
-            newByDate.Clean(system.Points);
-            system.ShowRestorePoints();
+
         }
     }
 }
 /*
- * public BackupJob(
+ public BackupJob(
     Backup backup,
     IFileCopyCreateAlgorithm fileCopyCreateAlgorithm,
     IPointCreateAlgorithm pointCreateAlgorithm,

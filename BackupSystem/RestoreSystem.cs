@@ -35,7 +35,7 @@ namespace BackupSystem
         {
             for (int i = 0; i < Points.Count; i++)
             {
-                Console.WriteLine($"ID: {Points[i].ID} , Размер бекапа: {Points[i].BackupSize}mb, дата создания {Points[i].CreationTime}, {Points[i].PointType}");
+                Console.WriteLine($"ID: {Points[i].Id} , Размер бекапа: {Points[i].BackupSize}mb, дата создания {Points[i].CreationTime}, {Points[i].PointType}");
             }
 
             return Points;
@@ -50,7 +50,7 @@ namespace BackupSystem
             }
             else
             {
-                id = Points[^1].ID + 1;
+                id = Points[^1].Id + 1;
             }
 
             return id;
@@ -59,7 +59,7 @@ namespace BackupSystem
         public List<FileRestoreCopyInfo> ShowRestoreFiles(int ID)
         {
             List<FileRestoreCopyInfo> restoreFiles = new List<FileRestoreCopyInfo>();
-            foreach (var Rpoint in Points.Where(Rpoint => Rpoint.ID == ID))
+            foreach (var Rpoint in Points.Where(Rpoint => Rpoint.Id == ID))
             {
                 if (Rpoint.BackupedFiles != null)
                 {
@@ -267,7 +267,7 @@ namespace BackupSystem
       public int MaxPoints;
 
         public HybridCleanOneTerm(int maxPoints,long size , DateTime date)
-        {
+        { 
             MaxPoints = maxPoints;
           MaxSize = size;
           MaxDate = date;
@@ -463,16 +463,16 @@ namespace BackupSystem
 
     public class RestorePoint
     {
-        public int ID;
+        public int Id;
         public Type PointType;
         public DateTime CreationTime;
         public long BackupSize;
         public List<FileRestoreCopyInfo> BackupedFiles;
-        public AbstractArchive files;
+        public AbstractArchive Files;
 
         public RestorePoint(int id, DateTime time, long size, List<FileRestoreCopyInfo> files, Type type)
         {
-            ID = id;
+            Id = id;
             BackupSize = size;
             BackupedFiles = new List<FileRestoreCopyInfo>(files);
             CreationTime = time;
@@ -481,10 +481,10 @@ namespace BackupSystem
 
         public RestorePoint(int id, DateTime time, long size,AbstractArchive archive, Type type)
         {
-            ID = id;
+            Id = id;
             BackupSize = size;
             CreationTime = time;
-            files = archive;
+            Files = archive;
             PointType = type;
         }
     }
