@@ -35,8 +35,9 @@ namespace Lab4_test
             RestoreSystem newChain = new RestoreSystem();
             newChain.AddPoint(pointInfo1);
             newChain.AddPoint(pointInfo2);
-            CleaningAlgoritms Clean = new CleaningAlgoritms(newChain.Points);
-            Clean.CleanByID(1);
+            ICleaningPoints Clean = new CleanByPoints(1);
+
+            Clean.Clean(newChain.Points);
             Assert.AreEqual(1, newChain.ShowRestorePoints().Count);
         }
 
@@ -62,9 +63,9 @@ namespace Lab4_test
             RestoreSystem newChain = new RestoreSystem();
             newChain.AddPoint(pointInfo1);
             newChain.AddPoint(pointInfo2);
-            CleaningAlgoritms Clean = new CleaningAlgoritms(newChain.Points);
-            Clean.CleanByID(1);
-            Clean.CleanBySize(250); //Не совсем понимаю почему должен остаться один бекап если мы закидываем два FULL Backup(каждый по 200мб), то теоретически мы их можем удалять без последствий и удалим каждый с весом >150
+            ICleaningPoints Clean = new CleanBySize(250);
+         
+            Clean.Clean(newChain.Points); //Не совсем понимаю почему должен остаться один бекап если мы закидываем два FULL Backup(каждый по 200мб), то теоретически мы их можем удалять без последствий и удалим каждый с весом >150
             Assert.AreEqual(1, newChain.ShowRestorePoints().Count);
         }
 
@@ -187,11 +188,8 @@ namespace Lab4_test
 
             var pointInfo8 = algorithm.SeparateBackup(list1, Type.Incremental);
             newChain.AddPoint(pointInfo8);
-            CleaningAlgoritms Clean = new CleaningAlgoritms(newChain.Points);
-            var terms = Clean.CleaningTerms(3, 0, maxDate);
-
-            Clean.HybridAll(terms);
-
+            ICleaningPoints Clean = new HybridCleanAllTerm(3,0,maxDate);
+            Clean.Clean(newChain.Points);
             Assert.AreEqual(6, newChain.ShowRestorePoints().Count);
         }
         [Test()]
@@ -258,11 +256,8 @@ namespace Lab4_test
 
             var pointInfo8 = algorithm.SeparateBackup(list1, Type.Incremental);
             newChain.AddPoint(pointInfo8);
-            CleaningAlgoritms Clean = new CleaningAlgoritms(newChain.Points);
-            var terms = Clean.CleaningTerms(4, 2000, DateTime.MinValue);
-
-            Clean.HybridOne(terms);
-
+            ICleaningPoints Clean = new HybridCleanOneTerm(4,2000,DateTime.MinValue);
+            Clean.Clean(newChain.Points);
             Assert.AreEqual(6, newChain.ShowRestorePoints().Count);
         }
     }

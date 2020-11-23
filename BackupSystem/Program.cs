@@ -29,6 +29,9 @@ namespace BackupSystem
             ICreateRestorePoint create = new CreateGeneralBackup(system); //через интерфейс.
             create.CreateBackup(list, Type.Full);
             system.ShowRestorePoints();
+            ICleaningPoints Clean = new CleanByPoints(1);
+            Clean.Clean(system.Points);
+            system.ShowRestorePoints();
 
         }
     }

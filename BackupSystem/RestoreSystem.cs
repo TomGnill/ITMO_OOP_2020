@@ -114,6 +114,7 @@ namespace BackupSystem
           }
 
           WhatPointsToDelete.Add(amount);
+          WhatPointsToDelete.Add(100);
           return WhatPointsToDelete;
         }
         public int Clean(List<RestorePoint> Points)
@@ -187,7 +188,7 @@ namespace BackupSystem
           List<int> DelPoints = AnalyzePoints(Points);
           for (int i = 0; i < DelPoints.Count; i++)
           {
-              if ((DelPoints[i] <= PointsToDelete) && (DelPoints[i + 1] >= PointsToDelete))
+              if ((DelPoints[i] <= PointsToDelete) && ((DelPoints[i + 1] >= PointsToDelete) || (i == DelPoints.Count -1 )))
               {
                   for (int j = 0; j < DelPoints[i]; j++)
                   {
