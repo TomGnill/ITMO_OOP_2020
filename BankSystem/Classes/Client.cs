@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using System.Collections.Generic;
 namespace BankSystem.Classes
 {
    public class Client
@@ -16,6 +13,7 @@ namespace BankSystem.Classes
             Person = person;
             Accounts = accounts;
             status = ClientStatus.Active;
+            History = new List<Transaction>();
         }
 
         public BankAccount AddAccount(BankAccount newAccount)

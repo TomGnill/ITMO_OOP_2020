@@ -1,32 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using BankSystem.Classes;
+using BankSystem.Interfaces;
 
 namespace BankSystem
 {
-    public class Bank : IAbstractBank
+    public  class Bank : IAbstractBank
     {
         public List<Client> Clients;
-        
-        public Bank()
+        //Terms:
+        public List<(double,double)> procentOfDepozit; // начальная сумма : процент
+        public double ResidueProcent;
+        public double Commission;
+        public double CreditLimit;
+
+
+        public Bank(List<(double,double)> depositPrercent, double commission, double residueProcent, double creditLimit )
         {
             Clients = new List<Client>();
+            procentOfDepozit = depositPrercent;
+            Commission = commission;
+            ResidueProcent = residueProcent;
+            CreditLimit = creditLimit;
         }
 
-        public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash, Bank bank)
+        public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash)
         {
-            return new TransferOperation(account1,account2, cash , bank.Clients);
+            return new TransferOperation(account1,account2, cash , Clients);
         }
 
-        public IAccountOperation Replenishment(BankAccount account, double cash, Bank bank)
+        public IAccountOperation Replenishment(BankAccount account, double cash)
         {
-            return new Replenishment(account, cash, bank.Clients);
+            return new Replenishment(account, cash, Clients);
         }
 
-        public IAccountOperation CashWithdrawal(BankAccount account, double cash, Bank bank)
+        public IAccountOperation CashWithdrawal(BankAccount account, double cash)
         {
-            return new CashWithdrawal(account,cash, bank.Clients);
+            return new CashWithdrawal(account,cash, Clients);
+        }
+
+        public IAddAccount AddDepositAccount(Client client, double StartSum, DateTime startTime, DateTime endTime)
+        {
+            Deposit newDeposit =  new Deposit(StartSum,startTime,endTime,procentOfDepozit);
+            OpenAccount(client, newDeposit);
+            return newDeposit;
+        }
+
+        public IAddAccount AddDebitAccount(Client client, DateTime startTime)
+        {
+            DebitAccount newAccount = new DebitAccount(ResidueProcent, startTime);
+            OpenAccount(client, newAccount);
+            return newAccount;
+        }
+
+        public IAddAccount AddCreditAccount(Client client,  DateTime startTime)
+        {
+            CreditAccount newAccount = new CreditAccount(Commission, startTime, CreditLimit);
+            OpenAccount(client, newAccount);
+            return newAccount;
         }
 
         public void OpenAccount(Client client, BankAccount account)
@@ -40,6 +73,13 @@ namespace BankSystem
             }
         }
 
+        public Client CreateClient(Person person)
+        {
+            List<BankAccount> nullList = new List<BankAccount>();
+            Client newClient = new Client(person, nullList);
+            Clients.Add(newClient);
+            return newClient;
+        }
 
         public void AddClient(Client client)
         {
