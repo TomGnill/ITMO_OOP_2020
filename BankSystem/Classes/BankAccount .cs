@@ -37,6 +37,7 @@ namespace BankSystem
            double sum;
            double mounth = ((LastUsing - time).Duration().TotalDays)/30;
 
+           LastUsing = time;
            if (mounth > 1)
            {
                for (int i = 0; i < mounth; i++)
@@ -45,6 +46,7 @@ namespace BankSystem
                    PlusSum += sum;
                }
                AccountStatus += PlusSum;
+               PlusSum = 0;
            }
        }
    }
@@ -62,7 +64,7 @@ namespace BankSystem
 
 
         public Deposit(double startStatus, DateTime creatingDate, DateTime validity, List<(double,double)> terms)
-        {
+        { 
             AccountStatus = startStatus;
            StartStatus = startStatus;
            LastUsing = creatingDate;
@@ -76,9 +78,9 @@ namespace BankSystem
        {
 
            double Percent = 0 ;
-           for (int i = 0; i < DepositTerms.Count; i++)
+           for (int i = DepositTerms.Count -1 ; i >=0 ; i--)
            {
-               if (DepositTerms[i].Item1 > StartStatus)
+               if (DepositTerms[i].Item1 < StartStatus)
                {
                    Percent = DepositTerms[i].Item2;
                    break;
@@ -93,7 +95,7 @@ namespace BankSystem
            double sum; 
            double mounth = ((LastUsing - time).Duration().TotalDays) / 30;
 
-            if (time < Validity && mounth > 1)
+            if (time <= Validity && mounth > 1)
             {
                 for (int i = 0; i < mounth; i++)
                 {
@@ -103,9 +105,10 @@ namespace BankSystem
                 AccountStatus += Sum;
             }
 
-            if (time > Validity)
+            if (time >= Validity)
             {
                 Status = BankSystem.AccountStatus.Active;
+
             }
        }
    }
@@ -130,6 +133,10 @@ namespace BankSystem
         }
         public override void ReduceSum(DateTime time)
         {
+            if (AccountStatus < 0)
+            {
+                Credit += -1 * AccountStatus;
+            }
             if (limit < Credit)
             {
                 Status = BankSystem.AccountStatus.Sleep;

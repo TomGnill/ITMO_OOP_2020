@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChudoLaba1", "ChudoLaba1\Ch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankSystem", "BankSystem\BankSystem.csproj", "{D59D5B05-CC87-426D-B984-CCB1D0C335C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeTrash", "SomeTrash\SomeTrash.csproj", "{6ABE3E0E-7898-4DAC-96E1-BF80C19527EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SomeTrash", "SomeTrash\SomeTrash.csproj", "{6ABE3E0E-7898-4DAC-96E1-BF80C19527EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab5_test", "Lab5_test\Lab5_test.csproj", "{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -237,6 +239,26 @@ Global
 		{6ABE3E0E-7898-4DAC-96E1-BF80C19527EE}.Release|x64.Build.0 = Release|Any CPU
 		{6ABE3E0E-7898-4DAC-96E1-BF80C19527EE}.Release|x86.ActiveCfg = Release|Any CPU
 		{6ABE3E0E-7898-4DAC-96E1-BF80C19527EE}.Release|x86.Build.0 = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|x64.Build.0 = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Debug|x86.Build.0 = Debug|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|ARM.Build.0 = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|ARM64.Build.0 = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|x64.ActiveCfg = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|x64.Build.0 = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|x86.ActiveCfg = Release|Any CPU
+		{5CAD50E9-2EE3-4219-A632-57B4191D4DD5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,49 +12,50 @@ namespace BankSystem
     {
         static void Main(string[] args)
         {
-            PassportData newData = new PassportData(2000, 11111);
-            Adress newAdress = new Adress("КУКУЕВО", 12, "ХУЕВО");
+            List<(double, double)> TermForfirstBank = new List<(double, double)>();
+            List<(double, double)> TermForSecondtBank = new List<(double, double)>();
 
-            Person newPerson = new Person("Andrey" , "Loskutov", newAdress, newData);
+            TermForfirstBank.Add((10000, 0.1));
+            TermForfirstBank.Add((20000, 0.2));
 
-            Person newPerson1 = new Person("Kristina", "Motherload");
+            TermForSecondtBank.Add((10000, 0.3));
+            TermForSecondtBank.Add((30000, 0.4));
 
-            List<(double,double)> terms = new List<(double, double)>();
-            terms.Add((110000, 0.1));
-            terms.Add((210000, 0.2));
-            terms.Add((410000, 0.3));
+            Bank alfaBank = new Bank(TermForfirstBank, 0.1, 0.2, 10000, 3000);
+            Bank sberBank = new Bank(TermForSecondtBank, 0.2, 0.1, 5000, 1000);
+
+            IAbstractBank firstBank = alfaBank;
+            IAbstractBank secondBank = sberBank;
+
+            Adress newAdress = new Adress("Невского", 10, "Питер");
+            Adress additionalAdress = new Adress("Невского", 11, "Питер");
+
+            PassportData firstPersonData = new PassportData(1111, 22222);
+            PassportData secondPersonData = new PassportData(1111, 00000);
+
+            Person Andrey = new Person("Андрей", "Загудько", newAdress, firstPersonData);
+            Person Vasya = new Person("Вася", "Дударь");
+
+            Client clientAndrey = firstBank.CreateClient(Andrey);
+            Client clientVasya = secondBank.CreateClient(Vasya);
+
+            firstBank.AddDebitAccount(clientAndrey, DateTime.Now);
+            secondBank.AddDebitAccount(clientVasya, DateTime.Now);
+
+            BankAccount firstAndreyAccount = clientAndrey.Accounts.ElementAt(0);
+            BankAccount firstVasyaAccount = clientVasya.Accounts.ElementAt(0);
+
+            firstBank.Replenishment(firstAndreyAccount, 2000);
+            secondBank.Replenishment(firstVasyaAccount, 100);
+
+            firstBank.Transfer(firstAndreyAccount, firstVasyaAccount, 400, sberBank); // Переводим 400 рублей Васе, зная что его счёт принадлежит сбербанку.
+
+            firstBank.ReturnMoney(clientAndrey, 1); //тк это следующая посе пополнения операция, берём первый элемент из истории Андрея
+
+          
 
 
-            Bank alfaBank = new Bank(terms,0.2,0.4,20000);
-            Client newClient =  alfaBank.CreateClient(newPerson);
 
-            Client newClient1 = alfaBank.CreateClient(newPerson1);
-           // IAddAccount account =  alfaBank.AddDebitAccount(newClient, DateTime.Now);
-            DebitAccount account = new DebitAccount(0.4,DateTime.Now);
-            DebitAccount account2 = new DebitAccount(0.4, DateTime.Now);
-            alfaBank.OpenAccount(newClient, account);
-            alfaBank.OpenAccount(newClient1, account2);
-            
-            IAbstractBank abstractBank = alfaBank;
-            abstractBank.Replenishment(account, 1000);
-
-            double Status1 =  newClient.Accounts.ElementAt(0).AccountStatus;
-            double Status3 = newClient1.Accounts.ElementAt(0).AccountStatus;
-
-            Bank sberBank = new Bank(terms,0.2,0.4,20000);
-            IAbstractBank abstractBanknew = sberBank;
-
-
-            Client absrtactClient =  abstractBanknew.CreateClient(newPerson1); 
-            abstractBanknew.AddDebitAccount(absrtactClient, DateTime.Now);
-
-
-            BankAccount newAccount =  absrtactClient.Accounts.ElementAt(0);
-            abstractBanknew.Replenishment(newAccount, 2000);
-            abstractBanknew.Transfer(newAccount, account, 100, alfaBank);
-
-            Console.WriteLine(absrtactClient.Accounts.ElementAt(0).AccountStatus);
-            Console.WriteLine(newClient.Accounts.ElementAt(0).AccountStatus);
         }
     }
 }

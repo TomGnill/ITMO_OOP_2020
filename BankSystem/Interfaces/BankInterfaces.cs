@@ -23,11 +23,16 @@ namespace BankSystem
 
         public void AddClientInfo(Client client, Adress addAdress, PassportData addPassportData);
 
+        public void CancelOperation(Client client, Transaction transaction);
+
+        public double RefreshInfoAboutAccount(BankAccount account, DateTime time);
         public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash, Bank secondBank);
 
         public IAccountOperation Replenishment(BankAccount account,double cash);
 
         public IAccountOperation CashWithdrawal(BankAccount account, double cash);
+
+        public IAccountOperation ReturnMoney(Client client, int operationID);
 
         public IAddAccount AddDepositAccount(Client client, double startSum, DateTime startTime, DateTime endTime);
 

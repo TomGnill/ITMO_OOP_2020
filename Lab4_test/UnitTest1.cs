@@ -39,6 +39,7 @@ namespace Lab4_test
 
             Clean.Clean(newChain.Points);
             Assert.AreEqual(1, newChain.ShowRestorePoints().Count);
+            Assert.AreEqual(1, newChain.ShowRestorePoints().Count);
         }
 
 //Кейс #2

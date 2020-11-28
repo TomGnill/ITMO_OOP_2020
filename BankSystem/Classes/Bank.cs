@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using BankSystem.Classes;
 using BankSystem.Interfaces;
 
 namespace BankSystem
 {
-    public  class Bank : IAbstractBank
+    public class Bank : IAbstractBank
     {
         public List<Client> Clients;
         //Terms:
@@ -30,17 +28,22 @@ namespace BankSystem
 
         public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash, Bank secBank)
         {
-            return new TransferOperation(account1,account2, cash , Clients, secBank.Clients);
+            return new TransferOperation(account1,account2, cash , Clients, secBank.Clients, Commission, limitForDoubfulPerson);
         }
 
         public IAccountOperation Replenishment(BankAccount account, double cash)
         {
-            return new Replenishment(account, cash, Clients);
+            return new Replenishment(account, cash, Clients , Commission);
         }
 
         public IAccountOperation CashWithdrawal(BankAccount account, double cash)
         {
-            return new CashWithdrawal(account,cash, Clients);
+            return new CashWithdrawal(account,cash, Clients, Commission , limitForDoubfulPerson);
+        }
+
+        public IAccountOperation ReturnMoney(Client client, int operationID)
+        {
+            return new CancelOperation(client, operationID);
         }
 
         public IAddAccount AddDepositAccount(Client client, double StartSum, DateTime startTime, DateTime endTime)
@@ -64,6 +67,11 @@ namespace BankSystem
             return newAccount;
         }
 
+        public double RefreshInfoAboutAccount(BankAccount account, DateTime time)
+        {
+            account.ReduceSum(time);
+            return account.AccountStatus;
+        }
         public void OpenAccount(Client client, BankAccount account)
         {
             foreach (Client user in Clients)
@@ -136,23 +144,17 @@ namespace BankSystem
             }
         }
 
-        public bool CheckOperationTerms(Client client, double sum, BankAccount clientAccount)
+        public void CancelOperation(Client client, Transaction transaction)
         {
-            if (client.Person.Loyalty == PersonLoyalty.Doubtful && sum > limitForDoubfulPerson)
+            var cancelAc = transaction.Account;
+            double cancelSum = transaction.Sum;
+            for (int i = 0; i < client.Accounts.Count; i++)
             {
-                return false;
+                if (client.Accounts[i] == cancelAc)
+                {
+                    client.Accounts[i].AccountStatus += -1 * cancelSum;
+                }
             }
-
-            if (client.status == ClientStatus.Blocked)
-            {
-                return false;
-            }
-
-            if (clientAccount.Status == AccountStatus.Sleep)
-            {
-                return false;
-            }
-            return true;
         }
     }
 }
