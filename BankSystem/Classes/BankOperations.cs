@@ -7,19 +7,23 @@ namespace BankSystem.Classes
     public class TransferOperation : IAccountOperation
     {
         public List<Client> Bank;
+        public List<Client> Bank2;
         public BankAccount Client1;
         public BankAccount Client2;
         public double Sum;
 
-        public TransferOperation(BankAccount client1, BankAccount client2, double sum, List<Client> clients)
+        public TransferOperation(BankAccount client1, BankAccount client2, double sum, List<Client> clients, List<Client> clients2)
         {
             Client1 = client1;
             Client2 = client2;
             Sum = sum;
             Bank = clients;
+            Bank2 = clients2;
+            Operation();
         }
         public Client IdentefyClient(BankAccount account)
         {
+           
             foreach (Client client in Bank)
             {
                 foreach (BankAccount bankAccount in client.Accounts)
@@ -27,6 +31,19 @@ namespace BankSystem.Classes
                     if (bankAccount == account)
                     {
                         return client;
+                    }
+                }
+            } 
+            if (Bank != Bank2 && Bank2 != null)
+            {
+                foreach (Client client in Bank2)
+                {
+                    foreach (BankAccount bankAccount in client.Accounts)
+                    {
+                        if (bankAccount == account)
+                        {
+                            return client;
+                        }
                     }
                 }
             }
@@ -51,7 +68,6 @@ namespace BankSystem.Classes
 
                 Transaction transaction2 = new Transaction(Sum, Client2);
                 AddTransaction(client2, transaction2);
-
             }
             else
             {
@@ -77,6 +93,7 @@ namespace BankSystem.Classes
             Account = account;
             Sum = sum;
             Bank = clients;
+            Operation();
         }
         public Client IdentefyClient(BankAccount account)
         {
@@ -118,6 +135,7 @@ namespace BankSystem.Classes
             Account = account;
             Sum = sum;
             Bank = clients;
+            Operation();
         }
         public Client IdentefyClient(BankAccount account)
         {
@@ -138,7 +156,7 @@ namespace BankSystem.Classes
         {
             var client = IdentefyClient(Account);
             Account.AccountStatus += Sum;
-            Transaction transaction1 = new Transaction(-Sum, Account);
+            Transaction transaction1 = new Transaction(-Sum, Account, Transaction.TrasactionType.CashWithdrawal);
             AddTransaction(client, transaction1);
         }
         public Transaction AddTransaction(Client client, Transaction transaction)

@@ -14,6 +14,7 @@ namespace BankSystem
         {
             PassportData newData = new PassportData(2000, 11111);
             Adress newAdress = new Adress("КУКУЕВО", 12, "ХУЕВО");
+
             Person newPerson = new Person("Andrey" , "Loskutov", newAdress, newData);
 
             Person newPerson1 = new Person("Kristina", "Motherload");
@@ -35,20 +36,25 @@ namespace BankSystem
             alfaBank.OpenAccount(newClient1, account2);
             
             IAbstractBank abstractBank = alfaBank;
-            abstractBank.Replenishment(account, 1000).Operation();
+            abstractBank.Replenishment(account, 1000);
 
             double Status1 =  newClient.Accounts.ElementAt(0).AccountStatus;
             double Status3 = newClient1.Accounts.ElementAt(0).AccountStatus;
 
-           
-            
-            abstractBank.Transfer(account,account2, 200).Operation();
+            Bank sberBank = new Bank(terms,0.2,0.4,20000);
+            IAbstractBank abstractBanknew = sberBank;
 
 
+            Client absrtactClient =  abstractBanknew.CreateClient(newPerson1); 
+            abstractBanknew.AddDebitAccount(absrtactClient, DateTime.Now);
 
-            double Status2 = newClient.Accounts.ElementAt(0).AccountStatus;
-            double Status4 = newClient1.Accounts.ElementAt(0).AccountStatus;
-            Console.WriteLine(Status4);
+
+            BankAccount newAccount =  absrtactClient.Accounts.ElementAt(0);
+            abstractBanknew.Replenishment(newAccount, 2000);
+            abstractBanknew.Transfer(newAccount, account, 100, alfaBank);
+
+            Console.WriteLine(absrtactClient.Accounts.ElementAt(0).AccountStatus);
+            Console.WriteLine(newClient.Accounts.ElementAt(0).AccountStatus);
         }
     }
 }

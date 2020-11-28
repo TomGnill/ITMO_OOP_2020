@@ -8,9 +8,10 @@ namespace BankSystem
     public abstract class BankAccount : IAddAccount
     {
       public abstract double AccountStatus { get; set; }
-
-      public abstract Guid Id { get; set; }
-        public abstract void ReduceSum(DateTime time);
+      public abstract DateTime LastUsing { get; set; }
+        public abstract Guid Id { get; set; }
+      public abstract void ReduceSum(DateTime time);
+      public abstract AccountStatus Status { get; set; }
     }
 
     public class DebitAccount : BankAccount
@@ -19,20 +20,22 @@ namespace BankSystem
        public sealed override Guid Id { get; set; }
        public double PlusSum;
        public double Percent;
-       public DateTime CreatingDate;
+       public override DateTime LastUsing { get; set; }
+       public override AccountStatus Status { get; set; }
 
-       public DebitAccount(double percent, DateTime creatingDate)
-       {
+        public DebitAccount(double percent, DateTime creatingDate)
+        {
            AccountStatus = 0;
            Percent = percent;
-           CreatingDate = creatingDate;
+           LastUsing = creatingDate;
            Id = Guid.NewGuid();
-       }
+           Status = BankSystem.AccountStatus.Active;
+        }
 
        public override void ReduceSum(DateTime time)
        {
            double sum;
-           double mounth = ((CreatingDate - time).Duration().TotalDays)/30;
+           double mounth = ((LastUsing - time).Duration().TotalDays)/30;
 
            if (mounth > 1)
            {
@@ -50,20 +53,24 @@ namespace BankSystem
    {
        public override double AccountStatus { get; set; }
        public sealed override Guid Id { get; set; }
-        public double Sum;
+       public double Sum;
        public double StartStatus;
-       public DateTime CreatingDate;
+       public override DateTime LastUsing { get; set; }
        public DateTime Validity;
        public List<(double, double)> DepositTerms; //(Сумма начальная ; процент)
+       public override AccountStatus Status { get; set; }
 
-       public Deposit(double startStatus, DateTime creatingDate, DateTime validity, List<(double,double)> terms)
-       {
+
+        public Deposit(double startStatus, DateTime creatingDate, DateTime validity, List<(double,double)> terms)
+        {
+            AccountStatus = startStatus;
            StartStatus = startStatus;
-           CreatingDate = creatingDate;
+           LastUsing = creatingDate;
            Validity = validity;
            DepositTerms = terms;
            Id = Guid.NewGuid();
-       }
+           Status = BankSystem.AccountStatus.Sleep;
+        }
 
        public override void ReduceSum(DateTime time)
        {
@@ -84,7 +91,7 @@ namespace BankSystem
            }
 
            double sum; 
-           double mounth = ((CreatingDate - time).Duration().TotalDays) / 30;
+           double mounth = ((LastUsing - time).Duration().TotalDays) / 30;
 
             if (time < Validity && mounth > 1)
             {
@@ -95,6 +102,11 @@ namespace BankSystem
                 }
                 AccountStatus += Sum;
             }
+
+            if (time > Validity)
+            {
+                Status = BankSystem.AccountStatus.Active;
+            }
        }
    }
 
@@ -102,30 +114,32 @@ namespace BankSystem
    {
         public override double AccountStatus { get; set; }
         public sealed override Guid Id { get; set; }
-        public double Credit;
+        public double Credit { get; set; }
         public double Percent;
         public double limit;
-        public DateTime CreatingDate;
+        public override AccountStatus Status { get; set; }
+        public override DateTime LastUsing { get; set; }
 
         public CreditAccount(double terms, DateTime creatingDate, double maxLimit)
         {
             Percent = terms;
-            CreatingDate = creatingDate;
+            LastUsing = creatingDate;
             Id = Guid.NewGuid();
             limit = maxLimit;
+            Status = BankSystem.AccountStatus.Active;
         }
         public override void ReduceSum(DateTime time)
         {
-            double PlusCredit;
-            double mounth = ((CreatingDate - time).Duration().TotalDays) / 30;
-            if (AccountStatus < 0 || Credit > 0 && mounth > 1 )
+            if (limit < Credit)
             {
-                for (int i = 0; i < mounth; i++)
-                {
-                    PlusCredit = Credit * Percent;
-                    Credit += PlusCredit;
-                }
+                Status = BankSystem.AccountStatus.Sleep;
             }
         }
+   }
+
+   public enum AccountStatus
+   {
+       Active,
+       Sleep
    }
 }

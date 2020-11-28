@@ -6,6 +6,6 @@ namespace BankSystem.Interfaces
 { 
   public  interface IAddAccount
   { 
-        public void ReduceSum(DateTime time);
+      public void ReduceSum(DateTime time);
   }
 }

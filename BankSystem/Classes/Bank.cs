@@ -15,20 +15,22 @@ namespace BankSystem
         public double ResidueProcent;
         public double Commission;
         public double CreditLimit;
+        public double limitForDoubfulPerson;
 
 
-        public Bank(List<(double,double)> depositPrercent, double commission, double residueProcent, double creditLimit )
+        public Bank(List<(double,double)> depositPrercent, double commission, double residueProcent, double creditLimit, double limitForDoubfulPerson )
         {
             Clients = new List<Client>();
             procentOfDepozit = depositPrercent;
             Commission = commission;
             ResidueProcent = residueProcent;
             CreditLimit = creditLimit;
+            this.limitForDoubfulPerson = limitForDoubfulPerson;
         }
 
-        public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash)
+        public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash, Bank secBank)
         {
-            return new TransferOperation(account1,account2, cash , Clients);
+            return new TransferOperation(account1,account2, cash , Clients, secBank.Clients);
         }
 
         public IAccountOperation Replenishment(BankAccount account, double cash)
@@ -81,6 +83,20 @@ namespace BankSystem
             return newClient;
         }
 
+        public void AddClientInfo(Client client, Adress addAdress, PassportData addPassportData)
+        {
+            if (client.Person.Loyalty == PersonLoyalty.Doubtful)
+            {
+                client.Person.PersonAdress = addAdress;
+                client.Person.PersonData = addPassportData;
+                client.Person.Loyalty = PersonLoyalty.Verified;
+            }
+            else
+            {
+                Console.WriteLine("Клиент уже заполнил все необходимые данные!");
+            }
+        }
+
         public void AddClient(Client client)
         {
             Clients.Add(client);
@@ -118,6 +134,25 @@ namespace BankSystem
                     Clients[i].status = ClientStatus.Active;
                 }
             }
+        }
+
+        public bool CheckOperationTerms(Client client, double sum, BankAccount clientAccount)
+        {
+            if (client.Person.Loyalty == PersonLoyalty.Doubtful && sum > limitForDoubfulPerson)
+            {
+                return false;
+            }
+
+            if (client.status == ClientStatus.Blocked)
+            {
+                return false;
+            }
+
+            if (clientAccount.Status == AccountStatus.Sleep)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

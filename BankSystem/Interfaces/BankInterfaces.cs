@@ -8,6 +8,7 @@ namespace BankSystem
    
     public interface IAbstractBank
     {
+
         public void AddClient(Client client);
 
         public void OpenAccount(Client client, BankAccount account);
@@ -20,13 +21,15 @@ namespace BankSystem
 
         public Client CreateClient(Person person);
 
-        public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash);
+        public void AddClientInfo(Client client, Adress addAdress, PassportData addPassportData);
+
+        public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash, Bank secondBank);
 
         public IAccountOperation Replenishment(BankAccount account,double cash);
 
         public IAccountOperation CashWithdrawal(BankAccount account, double cash);
 
-        public IAddAccount AddDepositAccount(Client client, double StartSum, DateTime startTime, DateTime endTime);
+        public IAddAccount AddDepositAccount(Client client, double startSum, DateTime startTime, DateTime endTime);
 
         public IAddAccount AddDebitAccount(Client client, DateTime startTime);
 
