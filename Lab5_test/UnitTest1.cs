@@ -191,17 +191,36 @@ namespace Lab5_test
             Assert.AreEqual(1600, firstAndreyAccount.AccountStatus); // убеждаемся что Андрей отправил деньги
             Assert.AreEqual(500,firstVasyaAccount.AccountStatus); // Убеждаемся что Вася получил деньги 
 
-            firstBank.ReturnMoney(clientAndrey, 1); //тк это следующая посе пополнения операция, берём первый элемент из истории Андрея
+            firstBank.ReturnMoney(clientAndrey, 1); //тк это следующая после пополнения операция, берём первый элемент из истории операции Андрея
 
             Assert.AreEqual(2000, firstAndreyAccount.AccountStatus);// Деньги вернулись обратно
             Assert.AreEqual(100, firstVasyaAccount.AccountStatus);// а вот Васю кинули получается(
 
         }
 
-        [Test()]
+        [Test()]//по всей видимости не лишним будет протестировать кредитный аккаунт   
         public void Test5()
         {
-            Assert.Pass();
+            List<(double, double)> TermForfirstBank = new List<(double, double)>();
+            TermForfirstBank.Add((10000, 0.1));
+            TermForfirstBank.Add((20000, 0.2));
+
+            Bank alfaBank = new Bank(TermForfirstBank, 0.1, 0.02, 10000, 3000);
+
+            IAbstractBank firstBank = alfaBank;
+
+            Adress newAdress = new Adress("Невского", 10, "Питер");
+            PassportData firstPersonData = new PassportData(1111, 22222);
+            Person Andrey = new Person("Андрей", "Загудько", newAdress, firstPersonData);
+
+            Client clientAndrey = firstBank.CreateClient(Andrey);
+
+            firstBank.AddCreditAccount(clientAndrey, DateTime.Now);
+
+            BankAccount firstAndreyAccount = clientAndrey.Accounts.ElementAt(0);
+
+            firstBank.CashWithdrawal(firstAndreyAccount, 200);
+            Assert.AreEqual(-220, firstAndreyAccount.AccountStatus); //снимали 200, тк наш счёт 0,  комиссия 10% ещё -20 на наш счёт
         }
 
         [Test()]

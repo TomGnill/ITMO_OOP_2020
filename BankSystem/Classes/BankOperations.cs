@@ -75,12 +75,12 @@ namespace BankSystem.Classes
                 {
                     Client1.AccountStatus -= Sum;
 
-                    Transaction transaction1 = new Transaction(-Sum, Client1, Transaction.TrasactionType.Transfer);
+                    Transaction transaction1 = new Transaction(-Sum, Client1, Client2);
                     AddTransaction(client1, transaction1);
 
                     Client2.AccountStatus += Sum;
 
-                    Transaction transaction2 = new Transaction(Sum, Client2, Transaction.TrasactionType.Transfer);
+                    Transaction transaction2 = new Transaction(Sum, Client1, Client2);
                     AddTransaction(client2, transaction2);
                 }
                 else
@@ -120,6 +120,7 @@ namespace BankSystem.Classes
 
             if (clientAccount.Status < 0 && clientAccount is CreditAccount)
             {
+                Sum += Comission * sum;
                 return true;
             }
 
@@ -247,6 +248,7 @@ namespace BankSystem.Classes
 
             if (clientAccount.AccountStatus < sum && clientAccount  is  CreditAccount)
             {
+                Sum += sum * Comission;
                 return true;
             }
 
@@ -312,13 +314,8 @@ namespace BankSystem.Classes
                     }
                 }
 
-                for (int i = 0; i < client.Accounts.Count; i++)
-                {
-                    if (client.Accounts[i] == cancelAcSec)
-                    {
-                        cancelAcSec.AccountStatus += -1 * cancelSum;
-                    }
-                }
+              
+                cancelAcSec.AccountStatus +=  cancelSum;
             }
         }
     }

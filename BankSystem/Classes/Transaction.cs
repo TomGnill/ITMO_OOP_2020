@@ -20,6 +20,7 @@ namespace BankSystem.Classes
             Sum = sum;
             Account = account;
             AccountSec = accountSec;
+            Type = TrasactionType.Transfer;
         }
         public enum TrasactionType
         {
