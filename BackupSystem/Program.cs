@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using BackupSystem.Cleaning;
 
 namespace BackupSystem
 {
@@ -30,7 +31,7 @@ namespace BackupSystem
             create.CreateBackup(list, Type.Full);
             system.ShowRestorePoints();
             ICleaningPoints Clean = new CleanByPoints(1);
-            Clean.Clean(system.Points);
+            Clean.StartClean(system.Points);
             system.ShowRestorePoints();
 
         }
