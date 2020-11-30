@@ -15,12 +15,6 @@ namespace BankSystem.Classes
             status = ClientStatus.Active;
             History = new List<Transaction>();
         }
-
-        public BankAccount AddAccount(BankAccount newAccount)
-        {
-            Accounts.Add(newAccount);
-            return newAccount;
-        }
    }
 
   public enum ClientStatus 

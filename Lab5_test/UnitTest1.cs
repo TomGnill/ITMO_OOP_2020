@@ -222,34 +222,5 @@ namespace Lab5_test
             firstBank.CashWithdrawal(firstAndreyAccount, 200);
             Assert.AreEqual(-220, firstAndreyAccount.AccountStatus); //снимали 200, тк наш счёт 0,  комиссия 10% ещё -20 на наш счёт
         }
-
-        [Test()]
-        public void Test6()
-        {
-            Assert.Pass();
-        }
-
-        [Test()]
-        public void Test7()
-        {
-            Assert.Pass();
-        }
-
-        [Test()]
-        public void Test8()
-        {
-            Assert.Pass();
-        }
-
-        [Test()]
-        public void Test9()
-        {
-            Assert.Pass();
-        }
-        [Test()]
-        public void Test10()
-        {
-            Assert.Pass();
-        }
     }
 }

@@ -66,7 +66,7 @@ namespace BankSystem.Classes
             if (CheckOperationTerms(client1, Sum, Client1))
             {
                 
-                if (Client1 is CreditAccount && Client1.AccountStatus == 0)
+                if (Client1 is CreditAccount && Client1.AccountStatus <= 0)
                 {
                      Sum += Sum * Comission;
                 }
@@ -289,16 +289,9 @@ namespace BankSystem.Classes
             var transaction = identefyTransaction(TransactionNumber);
             if (transaction.Type != Transaction.TrasactionType.Transfer)
             {
-               
                 var cancelAc = transaction.Account;
                 double cancelSum = transaction.Sum;
-                for (int i = 0; i < client.Accounts.Count; i++)
-                {
-                    if (client.Accounts[i] == cancelAc)
-                    {
-                        cancelAc.AccountStatus += -1 * cancelSum;
-                    }
-                }
+                cancelAc.AccountStatus += -1 * cancelSum;
             }
             else
             {
@@ -306,15 +299,8 @@ namespace BankSystem.Classes
                 var cancelAcSec = transaction.AccountSec;
 
                 double cancelSum = transaction.Sum;
-                for (int i = 0; i < client.Accounts.Count; i++)
-                {
-                    if (client.Accounts[i] == canelAcFrst)
-                    {
-                        canelAcFrst.AccountStatus += -1 * cancelSum;
-                    }
-                }
 
-              
+                canelAcFrst.AccountStatus += -1 * cancelSum;
                 cancelAcSec.AccountStatus +=  cancelSum;
             }
         }

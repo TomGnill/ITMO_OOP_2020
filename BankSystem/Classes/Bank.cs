@@ -143,18 +143,5 @@ namespace BankSystem
                 }
             }
         }
-
-        public void CancelOperation(Client client, Transaction transaction)
-        {
-            var cancelAc = transaction.Account;
-            double cancelSum = transaction.Sum;
-            for (int i = 0; i < client.Accounts.Count; i++)
-            {
-                if (client.Accounts[i] == cancelAc)
-                {
-                    client.Accounts[i].AccountStatus += -1 * cancelSum;
-                }
-            }
-        }
     }
 }
