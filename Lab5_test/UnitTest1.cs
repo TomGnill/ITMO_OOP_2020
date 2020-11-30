@@ -133,6 +133,7 @@ namespace Lab5_test
             List<(double, double)> TermForfirstBank = new List<(double, double)>();
             TermForfirstBank.Add((10000, 0.05));
             TermForfirstBank.Add((20000, 0.10));
+            TermForfirstBank.Add((5000, 0.01));
 
             Bank alfaBank = new Bank(TermForfirstBank, 0.1, 0.02, 10000, 3000);
 
