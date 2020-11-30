@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using BackupSystem;
+using BackupSystem.Cleaning;
+using BackupSystem.Restore;
 using NUnit.Framework;
 using Type = BackupSystem.Type;
 
@@ -66,7 +68,7 @@ namespace Lab4_test
             newChain.AddPoint(pointInfo2);
             ICleaningPoints Clean = new CleanBySize(250);
          
-            Clean.Clean(newChain.Points); //Не совсем понимаю почему должен остаться один бекап если мы закидываем два FULL Backup(каждый по 200мб), то теоретически мы их можем удалять без последствий и удалим каждый с весом >150
+            Clean.StartClean(newChain.Points); //Не совсем понимаю почему должен остаться один бекап если мы закидываем два FULL Backup(каждый по 200мб), то теоретически мы их можем удалять без последствий и удалим каждый с весом >150
             Assert.AreEqual(1, newChain.ShowRestorePoints().Count);
         }
 
@@ -189,8 +191,19 @@ namespace Lab4_test
 
             var pointInfo8 = algorithm.SeparateBackup(list1, Type.Incremental);
             newChain.AddPoint(pointInfo8);
-            ICleaningPoints Clean = new HybridCleanAllTerm(3,0,maxDate);
-            Clean.Clean(newChain.Points);
+
+            List<ICleaningPoints> Hybrid1 = new List<ICleaningPoints>();
+            ICleaningPoints cleanByPoints = new CleanByPoints(3);
+            ICleaningPoints CleanByDate = new CleanByDate(maxDate);
+
+            Hybrid1.Add(cleanByPoints);
+            Hybrid1.Add(CleanByDate);
+
+
+            ICleaningPoints HybrydAllTerm = new HybridCleanAllTerm(Hybrid1);
+
+
+            HybrydAllTerm.StartClean(newChain.Points);
             Assert.AreEqual(6, newChain.ShowRestorePoints().Count);
         }
         [Test()]
@@ -257,8 +270,18 @@ namespace Lab4_test
 
             var pointInfo8 = algorithm.SeparateBackup(list1, Type.Incremental);
             newChain.AddPoint(pointInfo8);
-            ICleaningPoints Clean = new HybridCleanOneTerm(4,2000,DateTime.MinValue);
-            Clean.Clean(newChain.Points);
+
+
+            List<ICleaningPoints> Hybrid2 = new List<ICleaningPoints>();
+
+            ICleaningPoints cleanByPoints = new CleanByPoints(4);
+            ICleaningPoints cleanBySize = new CleanBySize(2000);
+
+            Hybrid2.Add(cleanBySize);
+            Hybrid2.Add(cleanByPoints);
+
+            ICleaningPoints CleanByOneTerm = new HybridCleanOneTerm(Hybrid2);
+            CleanByOneTerm.StartClean(newChain.Points);
             Assert.AreEqual(6, newChain.ShowRestorePoints().Count);
         }
     }

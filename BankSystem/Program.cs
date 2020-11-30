@@ -22,7 +22,14 @@ namespace BankSystem
 
             Adress newAdress = new Adress("Невского", 10, "Питер");
             PassportData firstPersonData = new PassportData(1111, 22222);
-            Person Andrey = new Person("Андрей", "Загудько", newAdress, firstPersonData);
+            //Person Andrey = new Person("Андрей", "Загудько", newAdress, firstPersonData);
+
+            BuildPerson newInfo = new BuildPerson();
+            newInfo.AddMainInfo("Andrey", "Loskutov");
+            newInfo.AddAdress(newAdress);
+            newInfo.AddPassportData(firstPersonData);
+            Person Andrey = newInfo.ReturnPersonInfo();
+
 
             Client clientAndrey = firstBank.CreateClient(Andrey);
 

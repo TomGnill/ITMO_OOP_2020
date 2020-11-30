@@ -3,12 +3,12 @@ namespace BankSystem.Classes
 {
    public class Client
    {
-        public Person Person;
-        public List<BankAccount> Accounts;
+        public BankSystem.Person Person;
+        public List<BankSystem.BankAccount> Accounts;
         public List<Transaction> History;
         public ClientStatus status;
 
-        public Client(Person person, List<BankAccount> accounts)
+        public Client(BankSystem.Person person, List<BankSystem.BankAccount> accounts)
         {
             Person = person;
             Accounts = accounts;

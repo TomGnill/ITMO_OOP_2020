@@ -3,17 +3,17 @@ namespace BankSystem
 {
     public class Person
     {
-        public string Name;
-        public string Surname;
-        public Adress PersonAdress;
-        public PassportData PersonData;
-        public PersonLoyalty Loyalty;
+        readonly string Name;
+        readonly string Surname;
+        internal Adress PersonAdress;
+        internal PassportData PersonData;
+
+        public Person() { }
 
         public Person(string name, string surname)
         {
             Name = name;
             Surname = surname;
-            Loyalty = PersonLoyalty.Doubtful;
         }
 
         public Person(string name, string surname, Adress adress, PassportData data)
@@ -22,16 +22,10 @@ namespace BankSystem
             Surname = surname;
             PersonAdress = adress;
             PersonData = data;
-            Loyalty = PersonLoyalty.Verified;
         }
-    }
 
-    public enum PersonLoyalty
-    {
-        Verified,
-        Doubtful
     }
-   public  class Adress
+    public  class Adress
    {
        public string Street;
        public uint HouseNumber;

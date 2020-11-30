@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using BankSystem.Classes;
+using BankSystem.Classes.BankAccount;
+using BankSystem.Classes.BankOperations;
+using BankSystem.Classes.Transactions_Canceling_;
 using BankSystem.Interfaces;
 
 namespace BankSystem
@@ -28,7 +31,7 @@ namespace BankSystem
 
         public IAccountOperation Transfer(BankAccount account1, BankAccount account2, double cash, Bank secBank)
         {
-            return new TransferOperation(account1,account2, cash , Clients, secBank.Clients, Commission, limitForDoubfulPerson);
+            return new TransferOperation(account1, account2, cash , Clients, secBank.Clients, Commission, limitForDoubfulPerson);
         }
 
         public IAccountOperation Replenishment(BankAccount account, double cash)
@@ -41,29 +44,45 @@ namespace BankSystem
             return new CashWithdrawal(account,cash, Clients, Commission , limitForDoubfulPerson);
         }
 
-        public IAccountOperation ReturnMoney(Client client, int operationID)
+        public ICancelTransaction ReturnMoney(Client client, int operationID)
         {
             return new CancelOperation(client, operationID);
         }
 
         public IAddAccount AddDepositAccount(Client client, double StartSum, DateTime startTime, DateTime endTime)
         {
-            Deposit newDeposit =  new Deposit(StartSum,startTime,endTime,procentOfDepozit);
-            OpenAccount(client, newDeposit);
+            procentOfDepozit.Sort();
+            double percent = 0;
+            for (int i = procentOfDepozit.Count - 1; i >= 0; i--)
+            {
+                if (procentOfDepozit[i].Item1 < StartSum)
+                {
+                    percent = procentOfDepozit[i].Item2;
+                    break;
+                }
+            }
+
+            if (percent == 0)
+            {
+                percent = procentOfDepozit[0].Item2;
+            }
+
+            Deposit newDeposit =  new Deposit(StartSum,startTime,endTime,percent);
+            client.Accounts.Add(newDeposit);
             return newDeposit;
         }
 
         public IAddAccount AddDebitAccount(Client client, DateTime startTime)
         {
             DebitAccount newAccount = new DebitAccount(ResidueProcent, startTime);
-            OpenAccount(client, newAccount);
+            client.Accounts.Add(newAccount);
             return newAccount;
         }
 
         public IAddAccount AddCreditAccount(Client client,  DateTime startTime)
         {
             CreditAccount newAccount = new CreditAccount(Commission, startTime, CreditLimit);
-            OpenAccount(client, newAccount);
+            client.Accounts.Add(newAccount);
             return newAccount;
         }
 
@@ -72,17 +91,6 @@ namespace BankSystem
             account.ReduceSum(time);
             return account.AccountStatus;
         }
-        public void OpenAccount(Client client, BankAccount account)
-        {
-            foreach (Client user in Clients)
-            {
-                if (user == client)
-                {
-                    user.Accounts.Add(account);
-                }
-            }
-        }
-
         public Client CreateClient(Person person)
         {
             List<BankAccount> nullList = new List<BankAccount>();
@@ -90,21 +98,6 @@ namespace BankSystem
             Clients.Add(newClient);
             return newClient;
         }
-
-        public void AddClientInfo(Client client, Adress addAdress, PassportData addPassportData)
-        {
-            if (client.Person.Loyalty == PersonLoyalty.Doubtful)
-            {
-                client.Person.PersonAdress = addAdress;
-                client.Person.PersonData = addPassportData;
-                client.Person.Loyalty = PersonLoyalty.Verified;
-            }
-            else
-            {
-                Console.WriteLine("Клиент уже заполнил все необходимые данные!");
-            }
-        }
-
         public void AddClient(Client client)
         {
             Clients.Add(client);
@@ -142,6 +135,11 @@ namespace BankSystem
                     Clients[i].status = ClientStatus.Active;
                 }
             }
+        }
+
+        public void RefreshClientInfo(Client client, Person newData)
+        {
+            client.Person = newData;
         }
     }
 }

@@ -2,20 +2,20 @@
 namespace BankSystem.Classes
 {
    public class Transaction
-   {
+   {    //создать интерфейс отмены операции и привязать его сюда
         public double Sum;
-        public BankAccount Account;
-        public BankAccount AccountSec;
+        public BankSystem.BankAccount Account;
+        public BankSystem.BankAccount AccountSec;
         public TrasactionType Type;
 
-        public Transaction(double sum, BankAccount account, TrasactionType type)
+        public Transaction(double sum, BankSystem.BankAccount account, TrasactionType type)
         {
             Sum = sum;
             Account = account;
             Type = type;
         }
 
-        public Transaction(double sum, BankAccount account,BankAccount accountSec)
+        public Transaction(double sum, BankSystem.BankAccount account, BankSystem.BankAccount accountSec)
         {
             Sum = sum;
             Account = account;
