@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ReportingSystem.Task
+namespace ReportingSystem.Task.SearchTask
 {
-    interface IManageTask
+    class SearchByEditing
     {
-        public void Act();
     }
 }

@@ -10,12 +10,13 @@ namespace ReportingSystem.Task
         public Description Description;
         public Worker.Worker Responsible;
         public TaskStatus Status;
-        public string Comment;
+        public List<string> Comment;
 
         public Task(string taskName, Description description)
         {
             TaskName = taskName;
             Description = description;
+            Comment = new List<string>();
         }
     }
 

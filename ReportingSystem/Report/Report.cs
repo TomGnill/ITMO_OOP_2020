@@ -7,15 +7,15 @@ namespace ReportingSystem.Report
 {
     class Report// Слой данных
     {
-        public List<ResolvedTaskInfo> report;
+        public List<TaskInfo> report;
         public Report()// за день
         {
-            report = new List<ResolvedTaskInfo>();
+            report = new List<TaskInfo>();
         }
 
         public Report(List<Report> reports)//спринт
         {
-            report = new List<ResolvedTaskInfo>();
+            report = new List<TaskInfo>();
             for (int i = 0; i < reports.Count; i++)
             {
                 report.Union(reports[i].report);
