@@ -85,7 +85,7 @@ namespace Lab2_test
             testList1.Add((104,2));
             testList1.Add((105, 3));
             testList1.Add((109, 1));
-            testList1.Add((109, 1));
+            testList1.Add((110, 1));
             testList1.Add((111, 2));
 
             var res1 = Shop.Bomj(02, 50);
