@@ -4,11 +4,11 @@ using System.Text;
 
 namespace ReportingSystem.Report.Actions
 {
-   public class FormDayReport
+   public class FormDayReport : IFormReport
    {
        public Worker.Worker WhoWorkingAllDay;
 
-       public List<TaskInfo> Report;
+       public Report Report;
 
        public List<TaskInfo> Log;
 
@@ -19,17 +19,17 @@ namespace ReportingSystem.Report.Actions
            WhoWorkingAllDay = worker;
            Log = log;
            Date = day;
-
+           ReturnReport();
        }
 
-       public List<TaskInfo> ReturnReports()
+       public Report ReturnReport()
        {
-           Report = new List<TaskInfo>();
+           Report = new Report();
            foreach (var infos in Log)
            {
-               if (infos.WhoDoAction == WhoWorkingAllDay && infos.LastEditTime == Date)
+               if (infos.WhoDoAction == WhoWorkingAllDay && infos.LastEditTime == Date.Date)
                {
-                    Report.Add(infos);
+                    Report.report.Add(infos);
                }
            }
 

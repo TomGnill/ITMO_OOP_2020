@@ -11,6 +11,7 @@ namespace ReportingSystem.Report
         public DateTime LastEditTime;
         public Change Something;
         public Worker.Worker WhoDoAction;
+        public string Comment;
 
         public TaskInfo(Task.Task task, DateTime time)
         {

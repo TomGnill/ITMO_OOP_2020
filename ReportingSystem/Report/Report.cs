@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ReportingSystem.Report.Actions;
 
 namespace ReportingSystem.Report
 {
-    class Report// Слой данных
+    public class Report// Слой данных
     {
         public List<TaskInfo> report;
         public Report()// за день
@@ -13,13 +14,20 @@ namespace ReportingSystem.Report
             report = new List<TaskInfo>();
         }
 
-        public Report(List<Report> reports)//спринт
+        public Report(List<IFormReport> reports)//спринт
         {
             report = new List<TaskInfo>();
-            for (int i = 0; i < reports.Count; i++)
+            foreach (var repos in reports)
             {
-                report.Union(reports[i].report);
+                if (repos.ReturnReport().report != null)
+                {
+                    for (int i = 0; i < repos.ReturnReport().report.Count; i++)
+                    {
+                        report.Add(repos.ReturnReport().report[i]);
+                    }
+                }
             }
+            
         }
     }
 }

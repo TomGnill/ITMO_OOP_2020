@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ReportingSystem.Report.Actions;
 using ReportingSystem.Task.SearchTask;
+using ReportingSystem.Worker;
 
 namespace ReportingSystem.Task
 {
@@ -27,9 +29,14 @@ namespace ReportingSystem.Task
 
        public ISearchAlgorithms SearchByEdit(Worker.Worker worker);
 
+       public IFormReport FormDayReport(Worker.Worker worker, DateTime date);
 
+       public IFormReport FormBossReport(Worker.Worker worker, DateTime date);
 
+       public IFormReport FormFinalReport(Worker.Worker worker, DateTime date);
 
+       public IManageWorkers GiveChief(string ChiefName, string WorkerName);
 
-    }
+       public IManageWorkers GiveWorkers(string ChiefName, List<Worker.Worker> workers);
+   }
 }

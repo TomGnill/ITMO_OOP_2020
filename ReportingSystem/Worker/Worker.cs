@@ -12,7 +12,9 @@ namespace ReportingSystem.Worker
 
        public Worker(string name)
        {
+           Chief = null;
            Name = name;
+           SubWorkers = new List<Worker>();
        }
    }
 }
