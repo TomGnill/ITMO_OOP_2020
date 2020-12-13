@@ -15,8 +15,21 @@ namespace ReportingSystem.Task
 
        public IManageTask AddComment(Task task, string comment);
 
-       public ISearchAlgorithms SearchByID();
+       public IManageTask WorkerDoSomething(Task task);
+
+       public ISearchAlgorithms SearchByID(uint id);
+
+       public ISearchAlgorithms SearchByLastEditDate(DateTime time);
+
+       public ISearchAlgorithms SearchByCreateDate(DateTime time);
+
+       public ISearchAlgorithms SearchByWorker(Worker.Worker Boss);
+
+       public ISearchAlgorithms SearchByEdit(Worker.Worker worker);
 
 
-   }
+
+
+
+    }
 }

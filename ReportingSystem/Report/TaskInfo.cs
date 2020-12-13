@@ -4,17 +4,29 @@ using System.Text;
 
 namespace ReportingSystem.Report
 {
-    class TaskInfo //Слой данных
-    {
+   public class TaskInfo //Слой данных
+   {
         public Task.Task ResolvedTask;
-        public DateTime CreatTime;
+        public DateTime CreateTime;
         public DateTime LastEditTime;
+        public Change Something;
+        public Worker.Worker WhoDoAction;
 
         public TaskInfo(Task.Task task, DateTime time)
         {
             ResolvedTask = task;
-            CreatTime = time;
+            CreateTime = time;
             LastEditTime = time;
+            Something = Change.Creating;
         }
-    }
+
+        public enum Change
+        {
+            Creating,
+            ChangeWorker,
+            AddComment,
+            ChangeStatus,
+            WorkerDoSomething
+        }
+   }
 }

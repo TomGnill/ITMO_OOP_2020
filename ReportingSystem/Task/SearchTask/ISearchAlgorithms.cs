@@ -6,6 +6,6 @@ namespace ReportingSystem.Task.SearchTask
 {
     public interface ISearchAlgorithms
     { 
-        public Task ReturnTasks();
+        public List<Task> ReturnTasks();
     }
 }

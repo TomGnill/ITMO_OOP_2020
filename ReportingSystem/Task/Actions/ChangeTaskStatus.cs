@@ -8,6 +8,7 @@ namespace ReportingSystem.Task.Actions
     {
         public Task SomeTask;
         public TaskStatus NewStatus;
+        public Worker.Worker WhoDoAction;
 
         public ChangeTaskStatus(Task ourTask, TaskStatus taskStatus)
         {
