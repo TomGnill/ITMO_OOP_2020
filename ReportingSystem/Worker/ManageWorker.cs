@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ReportingSystem.Worker
 {
-    public class GiveWorkers : IManageWorkers// Слой логики
+    public class GiveWorkers : IManageWorkers// Слой логики~~~
     {
         public List<Worker> SubWorkers;
         public List<Worker> Workers;
@@ -34,9 +35,9 @@ namespace ReportingSystem.Worker
         public Worker Action()
         {
             Chief.SubWorkers = SubWorkers; 
-            for (int i = 0; i<SubWorkers.Count; i++)
+            foreach (var t in SubWorkers)
             {
-                SubWorkers[i].Chief = Chief;
+                t.Chief = Chief;
             }
 
             return Chief;
@@ -46,7 +47,7 @@ namespace ReportingSystem.Worker
     public class ChangeChief : IManageWorkers
     {
         public List<Worker> Workers;
-        public Worker Workere, Chief;
+        public Worker Person, Chief;
 
         public ChangeChief(List<Worker> workers, string ChiefName, string WorkerName)
         {
@@ -57,28 +58,21 @@ namespace ReportingSystem.Worker
         
         public void Action(string ChiefName,string WorkerName)
         {
-            foreach (var Boss in Workers)
+            foreach (var boss in Workers.Where(boss => ChiefName == boss.Name))
             {
-                if (ChiefName == Boss.Name)
+                Chief = boss;
+                foreach (var worker in Workers.Where(worker => WorkerName == worker.Name))
                 {
-                    Chief = Boss;
-                    foreach (var worker in Workers)
-                    {
-                        if (WorkerName == worker.Name)
-                        {
-                            Workere = worker;
-                            Action();
-                        }
-                    }
+                    Person = worker;
+                    Action();
                 }
             }
-
         }
 
         public Worker Action()
         {
-            Workere.Chief = Chief;
-            Chief.SubWorkers.Add(Workere);
+            Person.Chief = Chief;
+            Chief.SubWorkers.Add(Person);
             return Chief;
         }
     }

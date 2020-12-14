@@ -19,15 +19,15 @@ namespace ReportingSystem.Task
 
        public IManageTask WorkerDoSomething(Task task);
 
-       public ISearchAlgorithms SearchByID(uint id);
+       public IExecuteSearch SearchById(uint id);
 
-       public ISearchAlgorithms SearchByLastEditDate(DateTime time);
+       public IExecuteSearch SearchByLastEditDate(DateTime time);
 
-       public ISearchAlgorithms SearchByCreateDate(DateTime time);
+       public IExecuteSearch SearchByCreateDate(DateTime time);
 
-       public ISearchAlgorithms SearchByWorker(Worker.Worker Boss);
+       public IExecuteSearch SearchByWorker(Worker.Worker Boss);
 
-       public ISearchAlgorithms SearchByEdit(Worker.Worker worker);
+       public IExecuteSearch SearchByEdit(Worker.Worker worker);
 
        public IFormReport FormDayReport(Worker.Worker worker, DateTime date);
 

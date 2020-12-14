@@ -1,67 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using ReportingSystem.Report;
+using ReportingSystem.Report.Actions;
 using ReportingSystem.Task;
 
 namespace ReportingSystem
 {
-    public class HelloUser // пользовательский слой
+    public class UserCommands // пользовательский слой
     {
         public ITaskSystem System;
-        public TaskSystem newSystem;
+        public TaskSystem NewSystem;
 
-        public HelloUser()
+        public UserCommands()
         {
-            newSystem = new TaskSystem();
-            System = newSystem;
+            NewSystem = new TaskSystem();
+            System = NewSystem;
         }
-        public void PrintReport(ReportMode mode, Worker.Worker worker, DateTime date)
+        public IFormReport GenerateNewReport(ReportMode mode, Worker.Worker worker, DateTime date)//подумац
         {
-            List<TaskInfo> reports = new List<TaskInfo>();
+            IFormReport newReport;
             switch (mode)
             {
                 case ReportMode.DayReport:
-                    reports =  System.FormDayReport(worker, date).ReturnReport().report;
-                    break;
+                    return System.FormDayReport(worker, date);
+                    
                 case ReportMode.BossReport:
-                    reports = System.FormBossReport(worker, date).ReturnReport().report;
-                    break;
+                   return System.FormBossReport(worker, date);
+                   
                 case ReportMode.FinalReport:
-                    reports = System.FormFinalReport(worker, date).ReturnReport().report;
-                    break;
+                  return System.FormFinalReport(worker, date);
             }
+            return null;
+        } 
+        public void PrintNewReport(IFormReport report)
+        {
+            var newReport = report.GenerateReport();
+            if (newReport.report.Count == 0) return;
+            newReport.GenerateInString();
+        }
 
-            if(reports.Count != 0)
-             for (int i = 0; i < reports.Count; i++)
-             {
-                    Console.WriteLine($"Имя задачи: {reports[i].ResolvedTask.TaskName}, Дата изменения: {reports[i].LastEditTime}, изменения внёс {reports[i].ResolvedTask.Responsible.Name} ");
-              
-             }
+        public Report.Report GetReport(IFormReport report)
+        {
+            var newReport = report.GenerateReport();
+            return newReport;
         }
 
         public void PrintLog()
         {
-            foreach (var taskInfo in newSystem.Log)
+            foreach (var taskInfo in NewSystem.Log)
             {
-                if (taskInfo.Something == TaskInfo.Change.WorkerDoSomething)
+                if (taskInfo.Something == TaskInfo.Option.WorkerDoSomething)
                 {
                     Console.WriteLine($"Работяга {taskInfo.ResolvedTask.Responsible.Name} внёс изменения в задачу {taskInfo.ResolvedTask.TaskName} ({taskInfo.LastEditTime})");
                 }
-                if (taskInfo.Something == TaskInfo.Change.ChangeWorker)
+                if (taskInfo.Something == TaskInfo.Option.ChangeWorker)
                 {
                     Console.WriteLine($"У задачи {taskInfo.ResolvedTask.TaskName}, сменился исполнитель на {taskInfo.ResolvedTask.Responsible.Name}");
                 }
-                if (taskInfo.Something == TaskInfo.Change.Creating)
+                if (taskInfo.Something == TaskInfo.Option.Creating)
                 {
                     Console.WriteLine($"Создана задача {taskInfo.ResolvedTask.TaskName} {taskInfo.CreateTime.Date}");
                 }
 
-                if (taskInfo.Something == TaskInfo.Change.AddComment)
+                if (taskInfo.Something == TaskInfo.Option.AddComment)
                 {
                     Console.WriteLine($"пользователь {taskInfo.ResolvedTask.Responsible.Name} прокомментировал задачу {taskInfo.ResolvedTask.TaskName}: {taskInfo.Comment}");
                 }
-                if (taskInfo.Something == TaskInfo.Change.ChangeStatus)
+                if (taskInfo.Something == TaskInfo.Option.ChangeStatus)
                 {
                     Console.WriteLine($"пользоватенль {taskInfo.ResolvedTask.Responsible.Chief.Name} пометил задачу {taskInfo.ResolvedTask.TaskName} как {taskInfo.ResolvedTask.Status}");
                 }
@@ -69,9 +75,9 @@ namespace ReportingSystem
             }
         }
 
-        public void SearchByID(uint id)
+        public void SearchById(uint id)
         {
-           List<Task.Task> newList = System.SearchByID(id).ReturnTasks();
+           var newList = System.SearchById(id).ReturnTasks();
            foreach (var task in newList)
            {
                Console.WriteLine($"Имя задачи {task.TaskName}");
@@ -80,37 +86,23 @@ namespace ReportingSystem
 
         public void SearchByEdit(string name)
         {
-            foreach (var worker in newSystem.Workers)
+            foreach (var task in NewSystem.Workers.Where(worker => worker.Name == name).Select(worker => System.SearchByEdit(worker).ReturnTasks()).SelectMany(newList => newList))
             {
-                if (worker.Name == name)
-                {
-                    List<Task.Task> newList = System.SearchByEdit(worker).ReturnTasks();
-                    foreach (var task in newList)
-                    {
-                       Console.WriteLine($"Имя задачи {task.TaskName}");
-                    }
-                }
+                Console.WriteLine($"Имя задачи {task.TaskName}");
             }
         }
 
         public void SearchByWorker(string Name)
         {
-            foreach (var worker in newSystem.Workers)
+            foreach (var task in NewSystem.Workers.Where(worker => worker.Name == Name).Select(worker => System.SearchByWorker(worker).ReturnTasks()).SelectMany(newList => newList))
             {
-                if (worker.Name == Name)
-                {
-                    List<Task.Task> newList = System.SearchByWorker(worker).ReturnTasks();
-                    foreach (var task in newList)
-                    {
-                        Console.WriteLine($"Имя задачи {task.TaskName}");
-                    }
-                }
+                Console.WriteLine($"Имя задачи {task.TaskName}");
             }
         }
 
         public void SearchByCreatingDate(DateTime date)
         {
-            List<Task.Task> newList = System.SearchByCreateDate(date).ReturnTasks();
+            var newList = System.SearchByCreateDate(date).ReturnTasks();
             foreach (var task in newList)
             {
                 Console.WriteLine($"Имя задачи {task.TaskName}");
@@ -119,7 +111,7 @@ namespace ReportingSystem
 
         public void SearchLastEditingDate(DateTime date)
         {
-            List<Task.Task> newList = System.SearchByLastEditDate(date).ReturnTasks();
+            var newList = System.SearchByLastEditDate(date).ReturnTasks();
             foreach (var task in newList)
             {
                 Console.WriteLine($"Имя задачи {task.TaskName}");
@@ -128,13 +120,11 @@ namespace ReportingSystem
 
         public void ChangesInCode(uint id)
         {
-            foreach (var task in newSystem.TaskList)
+            foreach (var task in NewSystem.TaskList.Where(task => task.Value == id))
             {
-                if (task.Value == id)
-                {
-                    System.WorkerDoSomething(task.Key);
-                }
+                System.WorkerDoSomething(task.Key);
             }
+
             Console.WriteLine("работяга внёс изменения в задачу");
         }
 
@@ -147,20 +137,18 @@ namespace ReportingSystem
 
         public void WriteComment(uint id, string comment)
         {
-            foreach (var task in newSystem.TaskList)
+            foreach (var task in NewSystem.TaskList.Where(task => task.Value == id))
             {
-                if (task.Value == id)
-                {
-                    System.AddComment(task.Key, comment);
-                }
+                System.AddComment(task.Key, comment);
             }
+
             Console.WriteLine("Задача прокомментирована");
         }
 
         public void ChangeWorker(uint id, string WorkerName)
         {
             Worker.Worker Worker = null;
-            foreach (var worker in newSystem.Workers)
+            foreach (var worker in NewSystem.Workers)
             {
                 if (worker.Name == WorkerName)
                 {
@@ -169,7 +157,7 @@ namespace ReportingSystem
 
             }
 
-            foreach (var task in newSystem.TaskList)
+            foreach (var task in NewSystem.TaskList)
             {
                 if (task.Value == id)
                 {
@@ -180,59 +168,46 @@ namespace ReportingSystem
 
         public void ChangeTaskStatus(uint id, TaskStatus status)
         {
-            foreach (var task in newSystem.TaskList)
+            foreach (var task in NewSystem.TaskList.Where(task => task.Value == id))
             {
-                if (task.Value == id)
-                {
-                    System.ChangeStatus(task.Key, status);
-                }
+                System.ChangeStatus(task.Key, status);
             }
-
         }
 
         public Worker.Worker CreateWorker(string Name)
         {
-            var worker = newSystem.CreateWorker(Name);
+            var worker = NewSystem.CreateWorker(Name);
             Console.WriteLine("Работяга создан");
             return worker;
         }
 
-        public void GiveWorkeres(string ChiefName, List<Worker.Worker> workers)
+        public void GiveWorkeres(string chiefName, List<Worker.Worker> workers)
         {
-            System.GiveWorkers(ChiefName, workers);
+            System.GiveWorkers(chiefName, workers);
             Console.WriteLine("Работяги переданы");
         }
 
-        public void ChangeChief(string ChiefName, string WorkerName)
+        public void ChangeChief(string chiefName, string workerName)
         {
-            System.GiveChief(ChiefName, WorkerName);
+            System.GiveChief(chiefName, workerName);
             Console.WriteLine("У работяги новый bossOfGYM");
         }
 
-        public void PrintWorkersHierarchy()
+        public void PrintWorkersHierarchy()//tree
         {
 
-            foreach (var Person in newSystem.Workers)
+            foreach (var person in NewSystem.Workers)
             {
-                Console.Write($" {Person.Name} ");
+                Console.Write($" {person.Name} ");
             }
 
             Console.WriteLine("\n");
-            foreach (var Person in newSystem.Workers)
+            foreach (var Person in NewSystem.Workers)
             {
 
-                foreach (var subWorkers in newSystem.Workers)
+                foreach (var subWorkers in NewSystem.Workers)
                 {
-                    
-                    if (Person.SubWorkers.Contains(subWorkers))
-                    {
-                        Console.Write("    1    ");
-
-                    }
-                    else
-                    {
-                        Console.Write("    0    ");
-                    }
+                    Console.Write(Person.SubWorkers.Contains(subWorkers) ? "    1    " : "    0    ");
                 }
 
                 Console.WriteLine($" {Person.Name} ");

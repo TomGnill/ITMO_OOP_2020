@@ -9,7 +9,7 @@ using ReportingSystem.Worker;
 
 namespace ReportingSystem.Task
 {
-    public class TaskSystem : ITaskSystem // Слой данных
+    public class TaskSystem : ITaskSystem // Слой данных```
     {
         public Dictionary<Task, uint> TaskList;
         public List<TaskInfo> Log;
@@ -24,11 +24,12 @@ namespace ReportingSystem.Task
 
         public IManageTask Create(string Name, Description description)
         {
-            Task newTask = new Task(Name, description);
+            var newTask = new Task(Name, description);
 
-            TaskInfo newInfo = new TaskInfo(newTask, DateTime.Now.Date);
-            FixChange(newTask, TaskInfo.Change.Creating);
-            TaskList.Add(newTask, GiveId());
+            
+            Log.Add(new TaskInfo(newTask, DateTime.Now));
+
+            TaskList.Add(newTask, Convert.ToUInt32(TaskList.Count + 1));
 
             return new CreateTask(Name, description);
         }
@@ -36,55 +37,55 @@ namespace ReportingSystem.Task
         public IManageTask AddComment(Task task, string comment)
         {
 
-            FixComment(task, comment);
+            RecordCommentInLog(task, comment);
 
             return new AddTaskComment(task, comment);
         }
 
         public IManageTask ChangeStatus(Task task, TaskStatus newStatus)
         {
-            FixChange(task, TaskInfo.Change.ChangeStatus);
+            RecordChange(task, TaskInfo.Option.ChangeStatus);
 
             return new ChangeTaskStatus(task, newStatus);
         }
 
         public IManageTask ChangeWorker(Task task, Worker.Worker worker)
         {
-            FixChange(task, TaskInfo.Change.ChangeWorker);
+            RecordChange(task, TaskInfo.Option.ChangeWorker);
 
-            return new CnangeTaskWorker(task, worker);
+            return new ChangeTaskWorker(task, worker);
         }
 
         public IManageTask WorkerDoSomething(Task task)
         {
-            FixChange(task, TaskInfo.Change.WorkerDoSomething);
+            RecordChange(task, TaskInfo.Option.WorkerDoSomething);
 
             return new WorkerDoSomething(task);
         }
 
-        public ISearchAlgorithms SearchByID(uint id)
+        public IExecuteSearch SearchById(uint id)
         {
-            return new SearchByTaskID(TaskList, id);
+            return new ExecuteSearchByTaskId(TaskList, id);
         }
 
-        public ISearchAlgorithms SearchByLastEditDate(DateTime time)
+        public IExecuteSearch SearchByLastEditDate(DateTime time)
         {
-            return new SearchByDate(Log, SearchByDate.Mode.LastEditing);
+            return new ExecuteSearchByDate(Log, ExecuteSearchByDate.Mode.LastEditing);
         }
 
-        public ISearchAlgorithms SearchByCreateDate(DateTime time)
+        public IExecuteSearch SearchByCreateDate(DateTime time)
         {
-            return new SearchByDate(Log, SearchByDate.Mode.CreatingDate);
+            return new ExecuteSearchByDate(Log, ExecuteSearchByDate.Mode.CreatingDate);
         }
 
-        public ISearchAlgorithms SearchByWorker(Worker.Worker Boss)
+        public IExecuteSearch SearchByWorker(Worker.Worker Boss)
         {
-            return new SearchByWorker(Boss, TaskList);
+            return new ExecuteSearchByWorker(Boss, TaskList);
         }
 
-        public ISearchAlgorithms SearchByEdit(Worker.Worker worker)
+        public IExecuteSearch SearchByEdit(Worker.Worker worker)
         {
-            return new SearchByEditing(worker, Log);
+            return new ExecuteSearchByEditing(worker, Log);
         }
 
         public IFormReport FormDayReport(Worker.Worker worker, DateTime date)
@@ -112,60 +113,33 @@ namespace ReportingSystem.Task
             return new GiveWorkers(workers, Workers, ChiefName);
         }
 
-        public void FixChange(Task task, TaskInfo.Change someChange)
+        public void RecordChange(Task task, TaskInfo.Option someOption)
         {
-            TaskInfo newLine = new TaskInfo(task, DateTime.Now);
-            newLine.LastEditTime = DateTime.Now.Date;
-            newLine.Something = someChange;
-            switch (newLine.Something)
+            switch (someOption)
             {
-                case TaskInfo.Change.WorkerDoSomething:
-                    newLine.WhoDoAction = task.Responsible;
+                case TaskInfo.Option.WorkerDoSomething:
+                   Log.Add(new TaskInfo(task, DateTime.Now, task.Responsible));
                     break;
-                case TaskInfo.Change.ChangeStatus:
+                case TaskInfo.Option.ChangeStatus:
                 {
-                    if (newLine.ResolvedTask.Status == TaskStatus.Resolved)
+                    if (task.Status == TaskStatus.Resolved)
                     {
-                        newLine.WhoDoAction = task.Responsible.Chief;
+                        Log.Add(new TaskInfo(task, DateTime.Now, task.Responsible.Chief, TaskInfo.Option.ChangeStatus));break;
                     }
-
-                    break;
+                    
+                    Log.Add(new TaskInfo(task, DateTime.Now, task.Responsible, TaskInfo.Option.ChangeStatus));break;
                 }
+                case TaskInfo.Option.ChangeWorker:
+                    Log.Add(new TaskInfo(task, DateTime.Now, task.Responsible, TaskInfo.Option.ChangeWorker));
+                    break;
+
             }
-
-            Log.Add(newLine);
         }
 
-
-        public void FixComment(Task task, string comment)
+        public void RecordCommentInLog(Task task, string comment)
         {
-
-            var newLine = new TaskInfo(task, DateTime.Now);
-            newLine.LastEditTime = DateTime.Now.Date;
-            newLine.Something = TaskInfo.Change.AddComment;
-            newLine.Comment = comment;
+            var newLine = new TaskInfo(task, DateTime.Now, comment );
             Log.Add(newLine);
-
-        }
-
-    
-
-    private uint GiveId()
-        {
-           uint id = 0;
-
-           if (TaskList.Count == 0)
-           {
-               id = 1;
-               return id;
-           }
-           foreach (var pair in TaskList)
-           {
-                   id = pair.Value;
-           }
-           id += 1;
-
-               return id;
         }
 
         public Worker.Worker CreateWorker(string name)

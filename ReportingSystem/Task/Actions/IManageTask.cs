@@ -6,6 +6,6 @@ namespace ReportingSystem.Task
 {
    public interface IManageTask
    {
-        public Task Act();
+        public Task SomeActionInTask();
    }
 }

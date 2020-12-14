@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ReportingSystem.Task.SearchTask
 {
-    public interface ISearchAlgorithms
+    public interface IExecuteSearch
     { 
         public List<Task> ReturnTasks();
     }

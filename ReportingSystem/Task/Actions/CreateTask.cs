@@ -8,13 +8,13 @@ namespace ReportingSystem.Task.Actions
     {
         public Task NewTask;
 
-        public CreateTask(string Name, Description description)
+        public CreateTask(string name, Description description)
         {
-            NewTask = new Task(Name, description);
-            Act();
+            NewTask = new Task(name, description);
+            SomeActionInTask();
         }
 
-        public Task Act()
+        public Task SomeActionInTask()
         {
             NewTask.Status = TaskStatus.Open;
             return NewTask;

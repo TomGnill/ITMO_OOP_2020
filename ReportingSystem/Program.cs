@@ -8,7 +8,7 @@ namespace ReportingSystem
     {
         static void Main(string[] args)
         {
-           HelloUser Yandex = new HelloUser();
+           UserCommands Yandex = new UserCommands();
            List<Worker.Worker> newWorkers = new List<Worker.Worker>();
            
           Worker.Worker Kristina = Yandex.CreateWorker("Кристина");
@@ -29,11 +29,12 @@ namespace ReportingSystem
 
            Yandex.ChangesInCode(2);
            Yandex.ChangesInCode(2);
-          // Yandex.PrintReport(ReportMode.BossReport, Fredi, DateTime.Now);
+           Yandex.GenerateNewReport(ReportMode.BossReport, Fredi, DateTime.Now);
+           Yandex.GenerateNewReport(ReportMode.DayReport, Fredi, DateTime.Now);
            //Yandex.PrintLog();
            
            Yandex.PrintWorkersHierarchy();
-           Yandex.PrintLog();
+          
 
         }
     }

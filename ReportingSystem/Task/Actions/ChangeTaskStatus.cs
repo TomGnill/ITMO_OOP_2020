@@ -14,10 +14,10 @@ namespace ReportingSystem.Task.Actions
         {
             SomeTask = ourTask;
             NewStatus = taskStatus;
-            Act();
+            SomeActionInTask();
         }
 
-        public Task Act()
+        public Task SomeActionInTask()
         { 
             if (SomeTask.Status != TaskStatus.Resolved)
             {

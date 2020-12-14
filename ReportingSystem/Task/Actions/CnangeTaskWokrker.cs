@@ -4,19 +4,19 @@ using System.Text;
 
 namespace ReportingSystem.Task.Actions
 {
-    public class CnangeTaskWorker : IManageTask
+    public class ChangeTaskWorker : IManageTask
     {
         public Task SomeTask;
         public Worker.Worker SomeWorker;
 
-        public CnangeTaskWorker(Task task, Worker.Worker newWorker)
+        public ChangeTaskWorker(Task task, Worker.Worker newWorker)
         {
             SomeTask = task;
             SomeWorker = newWorker;
-            Act();
+            SomeActionInTask();
         }
 
-        public Task Act()
+        public Task SomeActionInTask()
         {
             SomeTask.Responsible = SomeWorker;
             return SomeTask;

@@ -6,6 +6,6 @@ namespace ReportingSystem.Report.Actions
 {
    public interface IFormReport
    {
-       public Report ReturnReport();
+       public Report GenerateReport();
    }
 }

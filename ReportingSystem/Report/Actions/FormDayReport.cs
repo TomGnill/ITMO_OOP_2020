@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ReportingSystem.Report.Actions
 {
    public class FormDayReport : IFormReport
    {
-       public Worker.Worker WhoWorkingAllDay;
-
-       public Report Report;
+       public Worker.Worker WhoWorkingAllDay;// нейминг мудачий я понял!!!!!!
 
        public List<TaskInfo> Log;
 
@@ -19,18 +18,14 @@ namespace ReportingSystem.Report.Actions
            WhoWorkingAllDay = worker;
            Log = log;
            Date = day;
-           ReturnReport();
        }
 
-       public Report ReturnReport()
+       public Report GenerateReport()
        {
-           Report = new Report();
-           foreach (var infos in Log)
+           var Report = new Report();
+           foreach (var infos in Log.Where(infos => infos.Person == WhoWorkingAllDay && infos.LastEditTime == Date.Date))
            {
-               if (infos.WhoDoAction == WhoWorkingAllDay && infos.LastEditTime == Date.Date)
-               {
-                    Report.report.Add(infos);
-               }
+               Report.report.Add(infos);
            }
 
            return Report;

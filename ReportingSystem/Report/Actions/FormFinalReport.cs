@@ -20,14 +20,14 @@ namespace ReportingSystem.Report.Actions
            Date = date;
        }
 
-       public Report ReturnReport()
+       public Report GenerateReport()
        {
            List<IFormReport> workerReports = new List<IFormReport>();
 
 
-           for (int i = 0; i < Workers.Count; i++)
+           foreach (var t in Workers)
            {
-               IFormReport newReport = new FormBossReport(Workers[i],Date.Date, Log);
+               IFormReport newReport = new FormBossReport(t,Date.Date, Log);
                workerReports.Add(newReport);
            }
            IFormReport bossReport = new FormDayReport(Boss, Log, Date.Date);

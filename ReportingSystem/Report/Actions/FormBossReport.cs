@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ReportingSystem.Report.Actions
@@ -20,16 +21,11 @@ namespace ReportingSystem.Report.Actions
            Date = date;
        }
 
-       public Report ReturnReport()
+       public Report GenerateReport()
        {
-            List<IFormReport> workerReports = new List<IFormReport>();
-            
-            
-            for (int i = 0; i < Workers.Count; i++)
-            {
-                IFormReport newReport = new FormDayReport(Workers[i], Log, Date.Date);
-                workerReports.Add(newReport);
-            }
+            var workerReports = Workers.Select(t => new FormDayReport(t, Log, Date.Date)).Cast<IFormReport>().ToList();
+
+
             IFormReport bossReport = new FormDayReport(Boss, Log, Date.Date);
             workerReports.Add(bossReport);
 

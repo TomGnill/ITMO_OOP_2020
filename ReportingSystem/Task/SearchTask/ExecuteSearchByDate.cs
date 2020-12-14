@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ReportingSystem.Report;
 
 namespace ReportingSystem.Task.SearchTask
 {
-   public class SearchByDate : ISearchAlgorithms
+   public class ExecuteSearchByDate : IExecuteSearch
    {
        public DateTime Time;
        public List<Task> TaskList;
@@ -13,33 +14,27 @@ namespace ReportingSystem.Task.SearchTask
        public Mode SomeMode;
 
 
-       public SearchByDate(List<TaskInfo> info, Mode ourmode)
+       public ExecuteSearchByDate(List<TaskInfo> info, Mode ourMode)
        {
           TaskInfos = info;
-          SomeMode = ourmode;
+          SomeMode = ourMode;
        }
 
        public void SearchByCreatingDate(DateTime time)
        {
            TaskList = new List<Task>();
-           foreach (var task in TaskInfos)
+           foreach (var task in TaskInfos.Where(task => task.CreateTime.Date == Time.Date))
            {
-               if (task.CreateTime == Time)
-               {
-                   TaskList.Add(task.ResolvedTask);
-               }
+               TaskList.Add(task.ResolvedTask);
            }
        }
 
        public void SearchByLastEditingDate(DateTime time)
        {
            TaskList = new List<Task>();
-           foreach (var task in TaskInfos)
+           foreach (var task in TaskInfos.Where(task => task.LastEditTime.Date == Time.Date))
            {
-               if (task.LastEditTime == Time)
-               {
-                   TaskList.Add(task.ResolvedTask);
-               }
+               TaskList.Add(task.ResolvedTask);
            }
        }
 

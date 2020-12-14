@@ -12,10 +12,10 @@ namespace ReportingSystem.Task.Actions
        public WorkerDoSomething(Task task)
        {
            OurTask = task;
-           Act();
+           SomeActionInTask();
        }
 
-       public Task Act()
+       public Task SomeActionInTask()
        {
            OurTask.Status = TaskStatus.Active;
            return OurTask;

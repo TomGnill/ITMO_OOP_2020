@@ -13,10 +13,10 @@ namespace ReportingSystem.Task.Actions
         {
             SomeTask = task;
             SomeComment = comment;
-            Act();
+            SomeActionInTask();
         }
 
-        public Task Act()
+        public Task SomeActionInTask()
         {
             SomeTask.Comment.Add(SomeComment);
             return SomeTask;
