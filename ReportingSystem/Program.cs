@@ -27,10 +27,10 @@ namespace ReportingSystem
            Yandex.ChangesInCode(1);
            Yandex.ChangesInCode(2);
            Yandex.ChangesInCode(2);
-           Yandex.PrintReport(ReportMode.BossReport, Fredi, DateTime.Now);
-         Yandex.PrintLog();
+          // Yandex.PrintReport(ReportMode.BossReport, Fredi, DateTime.Now);
            //Yandex.PrintLog();
-
+           //Yandex.PrintLog();
+           Yandex.GiveWorkersHierarchy();
         }
     }
 }

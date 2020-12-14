@@ -208,6 +208,37 @@ namespace ReportingSystem
             System.GiveChief(ChiefName, WorkerName);
             Console.WriteLine("У работяги новый bossOfGYM");
         }
+
+        public void GiveWorkersHierarchy()
+        {
+
+            foreach (var Person in newSystem.Workers)
+            {
+                Console.Write($" {Person.Name} ");
+            }
+
+            Console.WriteLine("\n");
+            foreach (var Person in newSystem.Workers)
+            {
+
+                foreach (var subWorkers in newSystem.Workers)
+                {
+                    
+                    if (Person.SubWorkers.Contains(subWorkers))
+                    {
+                        Console.Write("    1    ");
+
+                    }
+                    else
+                    {
+                        Console.Write("    0    ");
+                    }
+                }
+
+                Console.WriteLine($" {Person.Name} ");
+            }
+        
+        }
     }
 
     public enum ReportMode
