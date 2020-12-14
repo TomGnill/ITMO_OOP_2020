@@ -59,7 +59,7 @@ namespace ReportingSystem.Task
         {
             FixChange(task, TaskInfo.Change.WorkerDoSomething);
 
-            return new WorkerDoSomethig(task);
+            return new WorkerDoSomething(task);
         }
 
         public ISearchAlgorithms SearchByID(uint id)

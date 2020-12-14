@@ -18,19 +18,23 @@ namespace ReportingSystem
           Worker.Worker Fredi = Yandex.CreateWorker("Алексей");
           Yandex.GiveWorkeres("Алексей", newWorkers);
         
-            Yandex.CreateTask("Лаба1", "Проебать лабу");
+            Yandex.CreateTask("Лаба1", "написать парсер");
             Yandex.CreateTask("Лаба 6", "Написать гитхаб");
             Yandex.ChangeWorker(1, "Кристина");
             Yandex.ChangeWorker(2, "Andrey");
+
            Yandex.ChangesInCode(1);
            Yandex.ChangesInCode(1);
            Yandex.ChangesInCode(1);
+
            Yandex.ChangesInCode(2);
            Yandex.ChangesInCode(2);
           // Yandex.PrintReport(ReportMode.BossReport, Fredi, DateTime.Now);
            //Yandex.PrintLog();
-           //Yandex.PrintLog();
-           Yandex.GiveWorkersHierarchy();
+           
+           Yandex.PrintWorkersHierarchy();
+           Yandex.PrintLog();
+
         }
     }
 }

@@ -4,14 +4,15 @@ using System.Text;
 
 namespace ReportingSystem.Task.Actions
 {
-   public class WorkerDoSomethig : IManageTask
+   public class WorkerDoSomething : IManageTask
    {
        public Task OurTask;
 
 
-       public WorkerDoSomethig(Task task)
+       public WorkerDoSomething(Task task)
        {
            OurTask = task;
+           Act();
        }
 
        public Task Act()

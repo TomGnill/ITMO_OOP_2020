@@ -209,7 +209,7 @@ namespace ReportingSystem
             Console.WriteLine("У работяги новый bossOfGYM");
         }
 
-        public void GiveWorkersHierarchy()
+        public void PrintWorkersHierarchy()
         {
 
             foreach (var Person in newSystem.Workers)

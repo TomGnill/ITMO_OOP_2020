@@ -23,9 +23,7 @@ namespace ReportingSystem.Task.Actions
             {
                 SomeTask.Status = NewStatus;
             }
-
             return SomeTask;
         }
-    
     }
 }
