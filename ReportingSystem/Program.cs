@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ReportingSystem.Task;
+using ReportingSystem.DataAccesslayer.Worker;
+using ReportingSystem.Presentationlayer;
 
 namespace ReportingSystem
 {
@@ -9,32 +10,29 @@ namespace ReportingSystem
         static void Main(string[] args)
         {
            UserCommands Yandex = new UserCommands();
-           List<Worker.Worker> newWorkers = new List<Worker.Worker>();
+           List<Worker> newWorkers = new List<Worker>();
            
-          Worker.Worker Kristina = Yandex.CreateWorker("Кристина");
-          Worker.Worker Andrey = Yandex.CreateWorker("Andrey");
+          Worker Kristina = Yandex.CreateWorker("Кристина");
+          Worker Andrey = Yandex.CreateWorker("Andrey");
+          Worker Fredi = Yandex.CreateWorker("Алексей");
           newWorkers.Add(Kristina);
           newWorkers.Add(Andrey);
-          Worker.Worker Fredi = Yandex.CreateWorker("Алексей");
+
           Yandex.GiveWorkeres("Алексей", newWorkers);
-        
-            Yandex.CreateTask("Лаба1", "написать парсер");
-            Yandex.CreateTask("Лаба 6", "Написать гитхаб");
-            Yandex.ChangeWorker(1, "Кристина");
-            Yandex.ChangeWorker(2, "Andrey");
 
-           Yandex.ChangesInCode(1);
-           Yandex.ChangesInCode(1);
-           Yandex.ChangesInCode(1);
+          using (WorkerContext db = new WorkerContext())
+          {
+              var workers = db.Workers;
+             Console.WriteLine("Список объектов:");
+             foreach (Worker u in workers)
+             {
+              Console.WriteLine("{0}-{1}", u.Id,u.Name);
+             }
+          }
 
-           Yandex.ChangesInCode(2);
-           Yandex.ChangesInCode(2);
-           Yandex.GenerateNewReport(ReportMode.BossReport, Fredi, DateTime.Now);
-           Yandex.GenerateNewReport(ReportMode.DayReport, Fredi, DateTime.Now);
-           //Yandex.PrintLog();
-           
-           Yandex.PrintWorkersHierarchy();
+          Yandex.PrintWorkersHierarchy();
           
+
 
         }
     }

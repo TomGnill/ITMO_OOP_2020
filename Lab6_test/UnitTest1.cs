@@ -2,7 +2,10 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using ReportingSystem;
-using ReportingSystem.Report.Actions;
+using ReportingSystem.Businesslayer.FormReport;
+using ReportingSystem.DataAccesslayer.Task;
+using ReportingSystem.DataAccesslayer.Worker;
+using ReportingSystem.Presentationlayer;
 using ReportingSystem.Task;
 
 namespace Lab6_test
@@ -17,8 +20,8 @@ namespace Lab6_test
         [Test()]
         public void Test1()
         {
-            HelloUser Yandex = new HelloUser();
-            ReportingSystem.Worker.Worker Andrey = Yandex.CreateWorker("Andrey");
+            UserCommands Yandex = new UserCommands();
+            Worker Andrey = Yandex.CreateWorker("Andrey");
             Yandex.CreateTask("Лаба1", "написать парсер");
             Yandex.ChangeWorker(1, "Andrey");
             Task tasks = Yandex.NewSystem.TaskList.ElementAt(0).Key;
@@ -31,8 +34,8 @@ namespace Lab6_test
         [Test()]
         public void Test2()
         {
-            HelloUser Yandex = new HelloUser();
-            ReportingSystem.Worker.Worker Andrey = Yandex.CreateWorker("Andrey");
+            UserCommands Yandex = new UserCommands();
+            Worker Andrey = Yandex.CreateWorker("Andrey");
             Yandex.CreateTask("Лаба1", "написать парсер");
             Yandex.ChangeWorker(1, "Andrey");
             Task tasks = Yandex.NewSystem.TaskList.ElementAt(0).Key;
@@ -45,8 +48,8 @@ namespace Lab6_test
         [Test()]
         public void Test3()
         {
-            HelloUser Yandex = new HelloUser();
-            ReportingSystem.Worker.Worker Andrey = Yandex.CreateWorker("Andrey");
+            UserCommands Yandex = new UserCommands();
+            Worker Andrey = Yandex.CreateWorker("Andrey");
             Yandex.CreateTask("Лаба1", "написать парсер");
             Yandex.ChangeWorker(1, "Andrey");
             Task tasks = Yandex.NewSystem.TaskList.ElementAt(0).Key;
