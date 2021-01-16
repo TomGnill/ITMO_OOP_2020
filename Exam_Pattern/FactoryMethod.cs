@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Exam_Pattern
 {
-     abstract class Factory
+   /*  abstract class Factory
     {
         public  abstract  IProduct Product();
 
@@ -62,7 +62,7 @@ namespace Exam_Pattern
     }
 
      class Client
-    {
+     {
         public void Main()
         {
             Console.WriteLine("Запуск фабрики шоколадок");
@@ -77,7 +77,7 @@ namespace Exam_Pattern
         }
     }
 
-   /* class Program
+    class Program
     {
         static void Main(string[] args)
         {
