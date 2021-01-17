@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Exam_Pattern
+namespace Exam_Pattern.Behavioral
 {
     abstract class Iterator : IEnumerator
     {

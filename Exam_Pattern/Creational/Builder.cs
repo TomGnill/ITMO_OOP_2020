@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace Exam_Pattern
+namespace Exam_Pattern.Creational
 {
     public interface IBuilder
     {

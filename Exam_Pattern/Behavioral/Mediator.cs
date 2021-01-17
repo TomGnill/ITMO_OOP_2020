@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Exam_Pattern
+namespace Exam_Pattern.Behavioral
 {
     // Интерфейс Посредника предоставляет метод, используемый компонентами для
     // уведомления посредника о различных событиях. Посредник может реагировать

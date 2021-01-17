@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Exam_Pattern
+namespace Exam_Pattern.Behavioral
 {
     // Интерфейс Команды объявляет метод для выполнения команд.
     public interface ICommand

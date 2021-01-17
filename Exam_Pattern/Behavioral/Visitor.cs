@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Exam_Pattern
+namespace Exam_Pattern.Behavioral
 {
     // Интерфейс Компонента объявляет метод accept, который в качестве аргумента
     // может получать любой объект, реализующий интерфейс посетителя.

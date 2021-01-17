@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Exam_Pattern
+namespace Exam_Pattern.Behavioral
 {
     // Абстрактный Класс определяет шаблонный метод, содержащий скелет
     // некоторого алгоритма, состоящего из вызовов (обычно) абстрактных

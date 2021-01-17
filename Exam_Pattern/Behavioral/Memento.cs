@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
-namespace Exam_Pattern
+namespace Exam_Pattern.Behavioral
 {
     // Создатель содержит некоторое важное состояние, которое может со временем
     // меняться. Он также объявляет метод сохранения состояния внутри снимка и

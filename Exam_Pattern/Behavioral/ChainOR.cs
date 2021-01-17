@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Exam_Pattern
+﻿namespace Exam_Pattern.Behavioral
 {
 
     // Интерфейс Обработчика объявляет метод построения цепочки обработчиков. Он

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
-namespace Exam_Pattern
+namespace Exam_Pattern.Behavioral
 {
     public interface IObserver
     {
